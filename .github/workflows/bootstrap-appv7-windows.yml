@@ -49,6 +49,10 @@ jobs:
         shell: pwsh
         run: python bootstrap-appv7/apply_app_compile_batch2.py reconstructed
 
+      - name: Regression gate - resume checkpoint contract
+        shell: pwsh
+        run: python bootstrap-appv7/check_resume_checkpoint_contract.py reconstructed
+
       - name: Verify reconstructed SDK pin
         shell: pwsh
         run: |
