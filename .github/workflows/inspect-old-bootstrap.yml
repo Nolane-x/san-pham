@@ -1,57 +1,87 @@
-name: Inspect historical bootstrap payloads
+name: Promote verified 4.16 clean source
 
 on:
   push:
     branches: [promotion-stage-v416]
 
 jobs:
-  inspect:
+  promote:
     runs-on: windows-latest
+    permissions:
+      contents: write
+
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Inspect v2 and v4 archives
-        shell: bash
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Lock green authority
+        shell: pwsh
         run: |
-          git fetch origin bootstrap-4.16-v2 bootstrap-4.16-v4
-          python - <<'PY'
-          import base64, hashlib, io, subprocess, tarfile
-          from pathlib import Path
+          git fetch origin bootstrap-4.16-v5 bootstrap-4.16-v2 main
+          $expected = 'c9d54515b85b9e7604e26325e2e82898a7c1a4b3'
+          $actual = (git rev-parse origin/bootstrap-4.16-v5).Trim()
+          if ($actual -ne $expected) { throw "Bootstrap authority moved: $actual != $expected" }
+          git checkout $expected -- bootstrap-appv7 bootstrap-tests-v416
 
-          def materialize(ref, folder, pattern, out):
-              subprocess.run(['git','archive','--format=tar',ref,folder], check=True, stdout=open(out+'.tar','wb'))
-              Path(out).mkdir(parents=True, exist_ok=True)
-              subprocess.run(['tar','-xf',out+'.tar','-C',out], check=True)
-              root=Path(out)/folder
-              files=sorted(root.glob(pattern))
-              print(ref, folder, 'pieces', len(files))
-              raws=[]
-              for p in files:
-                  lines=p.read_text().splitlines()
-                  meta={}
-                  payload=[]
-                  in_payload=False
-                  for line in lines:
-                      if line == 'payload_base64=':
-                          in_payload=True; continue
-                      if in_payload: payload.append(line.strip())
-                      elif '=' in line:
-                          k,v=line.split('=',1); meta[k]=v
-                  raw=base64.b64decode(''.join(payload), validate=True)
-                  if 'raw_size' in meta and len(raw)!=int(meta['raw_size']): raise SystemExit(f'{p}: size')
-                  if 'raw_sha256' in meta and hashlib.sha256(raw).hexdigest()!=meta['raw_sha256']: raise SystemExit(f'{p}: sha')
-                  raws.append(raw)
-              blob=b''.join(raws)
-              print('concat bytes',len(blob),'sha',hashlib.sha256(blob).hexdigest(),'head',blob[:8].hex())
-              try:
-                  with tarfile.open(fileobj=io.BytesIO(blob), mode='r:*') as tf:
-                      names=tf.getnames()
-                      print('tar members',len(names),'first',names[:20],'roots',sorted({n.split('/')[0] for n in names if n})[:30])
-                      for n in names: print('MEMBER',n)
-              except Exception as e:
-                  print('TAR_OPEN_FAILED',type(e).__name__,str(e))
+      - name: Reconstruct verified clean source
+        shell: pwsh
+        run: |
+          python bootstrap-appv7/reconstruct_appv7.py bootstrap-appv7 ../promote-source
+          python bootstrap-appv7/apply_core_compile_fixes.py ../promote-source
+          python bootstrap-appv7/apply_winui_xaml_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_csharp_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_contract_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_compile_batch2.py ../promote-source
+          python bootstrap-appv7/apply_app_compile_batch3.py ../promote-source
+          python bootstrap-appv7/check_resume_checkpoint_contract.py ../promote-source
+          python bootstrap-tests-v416/reconstruct_tests.py bootstrap-tests-v416 ../promote-source
+          python bootstrap-tests-v416/apply_test_compile_fixes.py ../promote-source
+          python bootstrap-tests-v416/check_history_monitor_literals.py ../promote-source
+          python promotion-v416/reconstruct_legacy_root.py ../promote-source
+          python promotion-v416/prepare_main_source.py ../promote-source
 
-          materialize('origin/bootstrap-4.16-v2','bootstrap-ci','chunk-*.txt','oldv2')
-          materialize('origin/bootstrap-4.16-v4','bootstrap-winui-v4','chunk-*.txt','oldv4chunks')
-          PY
+      - name: Static verification on clean source
+        shell: pwsh
+        working-directory: ../promote-source
+        run: |
+          $verifiers = @(
+            'verify-repo.py',
+            'verify-structure.py',
+            'verify-csharp-lexical.py',
+            'verify-workflow-triggers.py',
+            'verify-workflow-control-flow.py',
+            'verify-history-intelligence.py',
+            'verify-settings-personalization.py',
+            'verify-settings-consistency.py',
+            'verify-work-recovery.py'
+          )
+          foreach ($verifier in $verifiers) {
+            python (Join-Path 'scripts' $verifier)
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Commit clean source to main
+        shell: pwsh
+        run: |
+          $source = (Resolve-Path ../promote-source).Path
+          git fetch origin main
+          git checkout -B main origin/main
+          Get-ChildItem -Force | Where-Object { $_.Name -ne '.git' } | Remove-Item -Recurse -Force
+          Get-ChildItem -Force $source | ForEach-Object { Copy-Item $_.FullName -Destination . -Recurse -Force }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          $tracked = (git ls-files | Measure-Object -Line).Lines
+          if ($tracked -ne 633) { throw "Expected 633 tracked clean-source files, got $tracked" }
+          if (git ls-files | Select-String -Pattern '^bootstrap-|^promotion-v416/|^reconstructed/') {
+            throw "Bootstrap transport leaked into main staging"
+          }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { throw "Promotion produced no changes" }
+          git commit -m "release: promote verified Magic Capture Desktop 4.16.0"
+          git push origin HEAD:main
