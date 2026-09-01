@@ -41,6 +41,10 @@ jobs:
         shell: pwsh
         run: python bootstrap-appv7/apply_app_csharp_fixes.py reconstructed
 
+      - name: Apply verified app contract fixes
+        shell: pwsh
+        run: python bootstrap-appv7/apply_app_contract_fixes.py reconstructed
+
       - name: Verify reconstructed SDK pin
         shell: pwsh
         run: |
