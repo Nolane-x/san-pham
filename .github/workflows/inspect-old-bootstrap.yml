@@ -1,0 +1,57 @@
+name: Inspect historical bootstrap payloads
+
+on:
+  push:
+    branches: [promotion-stage-v416]
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Inspect v2 and v4 archives
+        shell: bash
+        run: |
+          git fetch origin bootstrap-4.16-v2 bootstrap-4.16-v4
+          python - <<'PY'
+          import base64, hashlib, io, subprocess, tarfile
+          from pathlib import Path
+
+          def materialize(ref, folder, pattern, out):
+              subprocess.run(['git','archive','--format=tar',ref,folder], check=True, stdout=open(out+'.tar','wb'))
+              Path(out).mkdir(parents=True, exist_ok=True)
+              subprocess.run(['tar','-xf',out+'.tar','-C',out], check=True)
+              root=Path(out)/folder
+              files=sorted(root.glob(pattern))
+              print(ref, folder, 'pieces', len(files))
+              raws=[]
+              for p in files:
+                  lines=p.read_text().splitlines()
+                  meta={}
+                  payload=[]
+                  in_payload=False
+                  for line in lines:
+                      if line == 'payload_base64=':
+                          in_payload=True; continue
+                      if in_payload: payload.append(line.strip())
+                      elif '=' in line:
+                          k,v=line.split('=',1); meta[k]=v
+                  raw=base64.b64decode(''.join(payload), validate=True)
+                  if 'raw_size' in meta and len(raw)!=int(meta['raw_size']): raise SystemExit(f'{p}: size')
+                  if 'raw_sha256' in meta and hashlib.sha256(raw).hexdigest()!=meta['raw_sha256']: raise SystemExit(f'{p}: sha')
+                  raws.append(raw)
+              blob=b''.join(raws)
+              print('concat bytes',len(blob),'sha',hashlib.sha256(blob).hexdigest(),'head',blob[:8].hex())
+              try:
+                  with tarfile.open(fileobj=io.BytesIO(blob), mode='r:*') as tf:
+                      names=tf.getnames()
+                      print('tar members',len(names),'first',names[:20],'roots',sorted({n.split('/')[0] for n in names if n})[:30])
+                      for n in names: print('MEMBER',n)
+              except Exception as e:
+                  print('TAR_OPEN_FAILED',type(e).__name__,str(e))
+
+          materialize('origin/bootstrap-4.16-v2','bootstrap-ci','chunk-*.txt','oldv2')
+          materialize('origin/bootstrap-4.16-v4','bootstrap-winui-v4','chunk-*.txt','oldv4chunks')
+          PY
