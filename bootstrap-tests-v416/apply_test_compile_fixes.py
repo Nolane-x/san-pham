@@ -12,6 +12,12 @@ FILES = {
     'tests/Magic.Capture.Core.Tests/Magic.Capture.Core.Tests.csproj': (
         'e6595ac6c7fe0745f3a0a2cf8c1033cc99ebea3cf162acff08d7b3ca607090cd',
         '71c50c7e3d7581a5933dffe6ca62b2dbff1b17f31176004dc1a8e3254d15ee71'),
+    'tests/Magic.Capture.Core.Tests/SettingsReferencePolicyTests.cs': (
+        '27f7a144749d88d6dc3165bc420a707fdc6c14688ef4db7218bf714e63910286',
+        '4135fc98a9647808e7311e4ce64187b3859ee5d4c33bee3ac4f5899d33bd50c1'),
+    'tests/Magic.Capture.Core.Tests/MagicActionTests.cs': (
+        'bdf2890540139072434efbe1c4cb381a3095d59fae0bb6906ce6fa5020700123',
+        '6daa3cdf7996dfac555f4b2f9ae28939ce40dc3d38275be74c804014a4b3abcf'),
 }
 
 
@@ -47,6 +53,15 @@ texts[project] = replace_once(
     '  <ItemGroup>\n    <Using Include="Xunit" />\n  </ItemGroup>\n  <ItemGroup>\n    <ProjectReference Include="..\\..\\src\\Magic.Capture.Core\\Magic.Capture.Core.csproj" />\n  </ItemGroup>',
     project)
 
+settings = 'tests/Magic.Capture.Core.Tests/SettingsReferencePolicyTests.cs'
+if texts[settings].count('CaptureSourceKind.Region') != 2:
+    raise SystemExit(f'{settings}: expected two stale CaptureSourceKind.Region references')
+texts[settings] = texts[settings].replace('CaptureSourceKind.Region', 'CaptureProfileSource.Region')
+
+magic_action = 'tests/Magic.Capture.Core.Tests/MagicActionTests.cs'
+texts[magic_action] = replace_once(
+    texts[magic_action], 'schemaVersion: 99', 'SchemaVersion: 99', magic_action)
+
 for rel, (_, after) in FILES.items():
     text = texts[rel]
     actual = digest(text)
@@ -54,4 +69,4 @@ for rel, (_, after) in FILES.items():
         raise SystemExit(f'{rel}: postimage sha256 {actual} != {after}')
     (ROOT / rel).write_text(text, encoding='utf-8', newline='')
 
-print('OK test compile fixes: history monitor literals + xUnit global using, verified pre/post SHA-256')
+print('OK test compile fixes: monitor literals + xUnit global using + capture profile enum + MagicAction schema named arg, verified pre/post SHA-256')
