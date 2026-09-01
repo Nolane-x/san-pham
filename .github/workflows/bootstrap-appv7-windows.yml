@@ -29,9 +29,13 @@ jobs:
         shell: pwsh
         run: python bootstrap-appv7/reconstruct_appv7.py bootstrap-appv7 reconstructed
 
-      - name: Apply verified Core compile fixes
+      - name: Apply verified Core and package fixes
         shell: pwsh
         run: python bootstrap-appv7/apply_core_compile_fixes.py reconstructed
+
+      - name: Apply verified WinUI XAML fixes
+        shell: pwsh
+        run: python bootstrap-appv7/apply_winui_xaml_fixes.py reconstructed
 
       - name: Verify reconstructed SDK pin
         shell: pwsh
