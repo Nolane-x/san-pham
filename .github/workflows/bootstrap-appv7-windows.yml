@@ -29,6 +29,10 @@ jobs:
         shell: pwsh
         run: python bootstrap-appv7/reconstruct_appv7.py bootstrap-appv7 reconstructed
 
+      - name: Apply verified Core compile fixes
+        shell: pwsh
+        run: python bootstrap-appv7/apply_core_compile_fixes.py reconstructed
+
       - name: Verify reconstructed SDK pin
         shell: pwsh
         run: |
