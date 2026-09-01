@@ -18,7 +18,8 @@ KNOWN_PADDING_REPAIR = {14: '='}
 MID_PATH = 'bootstrap-ci/mid-000.txt'
 MID_INDEX = '000'
 MID_OFFSET = 70000
-MID_SIZE = 28000
+MID_SIZE = 14000
+MID_DECLARED_SIZE = 28000
 MID_SHA256 = 'f5589025f87a84e344fb46be795d8d72e42f76ce0f8068784f8e2a00d95693f3'
 
 
@@ -33,7 +34,6 @@ def read_transport(path: str, expected_header: str) -> tuple[dict[str, str], str
         )
     except subprocess.CalledProcessError as exc:
         fail(f'could not read historical bootstrap piece {path}: {exc}')
-
     lines = raw_text.splitlines()
     if not lines or lines[0] != expected_header:
         fail(f'{path}: unexpected header')
@@ -64,9 +64,9 @@ def decode_verified(path: str, encoded: str, expected_size: int, expected_sha: s
         decoded = base64.b64decode(encoded, validate=True)
     except Exception as exc:
         fail(f'{path}: invalid payload base64 after allowed repairs: {exc}')
-    if len(decoded) != expected_size:
-        fail(f'{path}: raw size mismatch: {len(decoded)} != {expected_size}')
     digest = hashlib.sha256(decoded).hexdigest()
+    if len(decoded) != expected_size:
+        fail(f'{path}: raw size mismatch: {len(decoded)} != {expected_size}; actual_sha256={digest}')
     if digest != expected_sha:
         fail(f'{path}: raw SHA-256 mismatch: {digest} != {expected_sha}')
     return decoded
@@ -81,13 +81,7 @@ def load_chunk(index: int) -> bytes:
     declared = meta.get('raw_sha256', '')
     repair = KNOWN_PADDING_REPAIR.get(index)
     if index in KNOWN_METADATA_EXCEPTION:
-        decoded = decode_verified(
-            path,
-            encoded,
-            expected_size,
-            KNOWN_METADATA_EXCEPTION[index],
-            padding=repair,
-        )
+        decoded = decode_verified(path, encoded, expected_size, KNOWN_METADATA_EXCEPTION[index], padding=repair)
         print(
             f'KNOWN legacy metadata mismatch accepted for {path}: '
             f'actual={KNOWN_METADATA_EXCEPTION[index]} declared={declared}; '
@@ -103,11 +97,16 @@ def load_mid() -> bytes:
         fail(f'{MID_PATH}: index metadata mismatch')
     if int(meta.get('offset', '-1')) != MID_OFFSET:
         fail(f'{MID_PATH}: offset metadata mismatch')
-    if int(meta.get('raw_size', '-1')) != MID_SIZE:
-        fail(f'{MID_PATH}: raw size metadata mismatch')
+    if int(meta.get('raw_size', '-1')) != MID_DECLARED_SIZE:
+        fail(f'{MID_PATH}: unexpected historical raw-size metadata')
     if meta.get('raw_sha256') != MID_SHA256:
         fail(f'{MID_PATH}: raw SHA metadata mismatch')
-    return decode_verified(MID_PATH, encoded, MID_SIZE, MID_SHA256)
+    decoded = decode_verified(MID_PATH, encoded, MID_SIZE, MID_SHA256)
+    print(
+        f'KNOWN legacy mid size metadata mismatch accepted for {MID_PATH}: '
+        f'actual={MID_SIZE} declared={MID_DECLARED_SIZE}; SHA-256 matched'
+    )
+    return decoded
 
 
 def normalized_member_path(name: str) -> PurePosixPath | None:
@@ -127,12 +126,11 @@ def normalized_member_path(name: str) -> PurePosixPath | None:
 def main() -> None:
     output = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('reconstructed')
     subprocess.run(['git', 'fetch', 'origin', 'bootstrap-4.16-v2'], check=True)
-
     prefix = b''.join(load_chunk(index) for index in range(5))
     if len(prefix) != MID_OFFSET:
         fail(f'legacy prefix size mismatch before mid repair: {len(prefix)} != {MID_OFFSET}')
     mid = load_mid()
-    suffix = b''.join(load_chunk(index) for index in range(7, 15))
+    suffix = b''.join(load_chunk(index) for index in range(6, 15))
     archive = prefix + mid + suffix
     archive_digest = hashlib.sha256(archive).hexdigest()
     extracted = 0
@@ -152,11 +150,9 @@ def main() -> None:
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_bytes(source.read())
             extracted += 1
-
     print(
-        f'OK legacy root transport: prefix_chunks=5 mid_bytes={len(mid)} suffix_chunks=8 '
-        f'archive_bytes={len(archive)} archive_sha256={archive_digest} '
-        f'extracted_root_files={extracted}'
+        f'OK legacy root transport: prefix_chunks=5 mid_bytes={len(mid)} suffix_chunks=9 '
+        f'archive_bytes={len(archive)} archive_sha256={archive_digest} extracted_root_files={extracted}'
     )
 
 
