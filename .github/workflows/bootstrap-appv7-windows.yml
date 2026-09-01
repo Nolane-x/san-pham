@@ -84,9 +84,19 @@ jobs:
         working-directory: reconstructed
         run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore
 
+      - name: Verify platform build output
+        shell: pwsh
+        run: |
+          $root = "reconstructed/src/Magic.Capture.App/bin/${{ matrix.platform }}/Release"
+          if (-not (Test-Path $root)) { throw "Missing build output root: $root" }
+          $desktop = Get-ChildItem $root -Recurse -File -Filter Magic.Capture.Desktop.dll
+          if (-not $desktop) { throw "Magic.Capture.Desktop.dll not found under $root" }
+          $count = (Get-ChildItem $root -Recurse -File).Count
+          Write-Host "Verified ${{ matrix.platform }} output: files=$count desktop=$($desktop.FullName)"
+
       - name: Upload build output
         uses: actions/upload-artifact@v4
         with:
           name: magic-capture-desktop-bootstrap-${{ matrix.platform }}
-          path: reconstructed/src/Magic.Capture.App/bin/Release/**
+          path: reconstructed/src/Magic.Capture.App/bin/${{ matrix.platform }}/Release/**
           if-no-files-found: error
