@@ -1,36 +1,28 @@
 from __future__ import annotations
 import hashlib
+import runpy
 import sys
 from pathlib import Path
 
-ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else 'reconstructed')
+runpy.run_path(str(Path(__file__).with_name('apply_core_compile_fixes_base.py')), run_name='__main__')
 
+ROOT = Path(sys.argv[1] if len(sys.argv) > 1 else 'reconstructed')
 FILES = {
-    'src/Magic.Capture.Core/Documentation/DocumentationArchivePolicy.cs': (
-        'e1413015cd232c83df14d827dfe2a08d78c231b9993f73947869288454bf1f4a',
-        'e43b7de63e8350476f5d8dabc8fb4409604e6e6e14f02936dfd0446a5e226cad'),
-    'src/Magic.Capture.Core/Portability/PortableArchivePolicy.cs': (
-        '2e95b1f5c234573dcb1fbc7d5f4aacb0899bb4c628b2b03dbf47ad4e349479bf',
-        '2183c88629c8fb1e15da15b479f030c451bdb2a843ab7413e85dd3b19a3d0ae7'),
-    'src/Magic.Capture.Core/Imaging/BgraContentBounds.cs': (
-        '9a41134aac57ef5acbc534c8335bd298175890aa64bb5badff9dcbb75fffc344',
-        '6fb93fa76010d492fbb5643f34c108d08ceb5cad0639a5a5a635d3833b1b31db'),
-    'src/Magic.Capture.Core/Imaging/TranslationAlignment.cs': (
-        '486ab55252a10e834623d2f3d10ce64f5c7ef19ee728c1bb7f065188678409f2',
-        'ad65535d94eb164edc95d46fbc7b0b663285895b7f7e266ae4c21bbac0895875'),
-    'src/Magic.Capture.Core/Settings/AppSettingsRules.cs': (
-        'cf8247f01b9e899b6bab55ffa5030a7197a9228dc9168f63de32dcd72e563138',
-        '5d68b8d93067576af3f198b105e4893c4be092e82764e92906e5ad81bfed8bc6'),
-    'src/Magic.Capture.Core/Ocr/OcrLayoutDiff.cs': (
-        '83d8bcd6e5957e3253da06e24dc470cc4371415cd20cbf3bf7a99fdfa97e20f1',
-        '593d3555506a86f156f6cd9f01cc4a0c8477bbfd8d10ff21da3e6b9c94826c5c'),
-    'src/Magic.Capture.App/Magic.Capture.App.csproj': (
-        '70483cf3c5dc00f26b1b6ced607e08699c54f69b6dbe5436204f5b930164dc75',
-        '8b2b199f027725a2a86b2858ca924376957e17448b20503abb38c9788e01f478'),
+    'src/Magic.Capture.Core/Projects/EditableProjectRecoveryPolicy.cs': (
+        '0d557ecce39d182ed42450963ed7ad44c4a21a13226c7dc55559e1f945e5e879',
+        '7dab069728eb352359091e4c0ef13f98b620328a297cc8cb62e1b11669784cdd'),
+    'src/Magic.Capture.Core/History/HistoryRetentionPlanner.cs': (
+        '8be10228b4e2a52582ac884a3d7d40b1ea446c5dc24392bcfb42d66a6c825ca7',
+        'fd757eb9015588d52233ed7a4201d8f34fcadbc7f1c8bbfd9b92b8fc6a6cd09d'),
+    'src/Magic.Capture.Core/Tables/TableCellInference.cs': (
+        'e6b0808db3f6437e8a0e29ca0d5cc7af0412104287614f08c73909ab757eaa8d',
+        '398810af58a7e64eb552c39082b427556f86df6928c099252d74edf0c66b6818'),
 }
+
 
 def digest(text: str) -> str:
     return hashlib.sha256(text.encode('utf-8')).hexdigest()
+
 
 def replace_once(text: str, old: str, new: str, label: str) -> str:
     count = text.count(old)
@@ -38,86 +30,99 @@ def replace_once(text: str, old: str, new: str, label: str) -> str:
         raise SystemExit(f'{label}: expected one replacement target, found {count}')
     return text.replace(old, new, 1)
 
+
 texts: dict[str, str] = {}
 for rel, (before, _) in FILES.items():
-    p = ROOT / rel
-    text = p.read_text(encoding='utf-8')
+    text = (ROOT / rel).read_text(encoding='utf-8')
     actual = digest(text)
     if actual != before:
-        raise SystemExit(f'{rel}: preimage sha256 {actual} != {before}')
+        raise SystemExit(f'{rel}: behavior preimage sha256 {actual} != {before}')
     texts[rel] = text
 
-for rel in [
-    'src/Magic.Capture.Core/Documentation/DocumentationArchivePolicy.cs',
-    'src/Magic.Capture.Core/Portability/PortableArchivePolicy.cs',
-]:
-    texts[rel] = replace_once(
-        texts[rel],
-        "name.StartsWith('/', StringComparison.Ordinal) || name.EndsWith('/', StringComparison.Ordinal)",
-        'name.StartsWith("/", StringComparison.Ordinal) || name.EndsWith("/", StringComparison.Ordinal)',
-        rel)
+recovery = 'src/Magic.Capture.Core/Projects/EditableProjectRecoveryPolicy.cs'
+texts[recovery] = replace_once(
+    texts[recovery],
+    '''            .Select(group => new EditableProjectRecoveryCandidate(group
+                .OrderByDescending(item => item.Journal!.UpdatedUtc)
+                .First().Journal!))''',
+    '''            .Select(group => new EditableProjectRecoveryCandidate(group
+                .OrderByDescending(item => item.Journal!.DirtyRevision)
+                .ThenByDescending(item => item.Journal!.UpdatedUtc)
+                .First().Journal!))''',
+    recovery)
 
-rel = 'src/Magic.Capture.Core/Imaging/BgraContentBounds.cs'
-texts[rel] = replace_once(texts[rel],
-'''        var bb = Median(corners.Select(i => bgra[i]).ToArray());
-        var bg = Median(corners.Select(i => bgra[i + 1]).ToArray());
-        var br = Median(corners.Select(i => bgra[i + 2]).ToArray());''',
-'''        var bb = Median(new byte[] { bgra[corners[0]], bgra[corners[1]], bgra[corners[2]], bgra[corners[3]] });
-        var bg = Median(new byte[] { bgra[corners[0] + 1], bgra[corners[1] + 1], bgra[corners[2] + 1], bgra[corners[3] + 1] });
-        var br = Median(new byte[] { bgra[corners[0] + 2], bgra[corners[1] + 2], bgra[corners[2] + 2], bgra[corners[3] + 2] });''', rel)
+history = 'src/Magic.Capture.Core/History/HistoryRetentionPlanner.cs'
+texts[history] = replace_once(
+    texts[history],
+    '''        if (policy.MaximumBytes is >= 0)
+        {
+            long keptBytes = 0;
+            foreach (var item in remaining)
+            {
+                if (keptBytes + item.FileBytes <= policy.MaximumBytes.Value)
+                    keptBytes += item.FileBytes;
+                else
+                    deleted.Add(item.Id);
+            }
+        }''',
+    '''        if (policy.MaximumBytes is >= 0)
+        {
+            long keptBytes = 0;
+            var budgetExhausted = false;
+            foreach (var item in remaining)
+            {
+                var fileBytes = Math.Max(0, item.FileBytes);
+                if (!budgetExhausted && fileBytes <= policy.MaximumBytes.Value - keptBytes)
+                {
+                    keptBytes += fileBytes;
+                    continue;
+                }
 
-rel = 'src/Magic.Capture.Core/Imaging/TranslationAlignment.cs'
-texts[rel] = replace_once(texts[rel],
-'        void Consider(int offsetX, int offsetY, int evaluationSampleStep)',
-'''        static void Consider(
-            ReadOnlySpan<byte> first,
-            ReadOnlySpan<byte> second,
-            int width,
-            int height,
-            int maxOffset,
-            long pixelCount,
-            CancellationToken cancellationToken,
-            int offsetX,
-            int offsetY,
-            int evaluationSampleStep,
-            ref TranslationAlignmentResult best,
-            ref int bestDistance,
-            ref int evaluated)''', rel)
-texts[rel] = replace_once(texts[rel], '            Consider(0, 0, fineSampleStep);',
-'''            Consider(first, second, width, height, maxOffset, pixelCount, cancellationToken,
-                0, 0, fineSampleStep, ref best, ref bestDistance, ref evaluated);''', rel)
-texts[rel] = replace_once(texts[rel], '                Consider(offsetX, offsetY, stageSampleStep);',
-'''                Consider(first, second, width, height, maxOffset, pixelCount, cancellationToken,
-                    offsetX, offsetY, stageSampleStep, ref best, ref bestDistance, ref evaluated);''', rel)
+                budgetExhausted = true;
+                deleted.Add(item.Id);
+            }
+        }''',
+    history)
 
-rel = 'src/Magic.Capture.Core/Settings/AppSettingsRules.cs'
-texts[rel] = texts[rel].replace(
-    '            var action = source.PostCaptureAction is { } candidate && Enum.IsDefined(typeof(PostCaptureAction), candidate) ? candidate : null;',
-    '            PostCaptureAction? action = source.PostCaptureAction is { } candidate && Enum.IsDefined(typeof(PostCaptureAction), candidate) ? candidate : null;')
-if texts[rel].count('PostCaptureAction? action = source.PostCaptureAction') != 2:
-    raise SystemExit(f'{rel}: expected two nullable action declarations')
-texts[rel] = replace_once(texts[rel],
-    '            var region = profile.Region is { } candidate && !candidate.IsEmpty ? candidate : null;',
-    '            PixelRect? region = profile.Region is { } candidate && !candidate.IsEmpty ? candidate : null;', rel)
+table = 'src/Magic.Capture.Core/Tables/TableCellInference.cs'
+texts[table] = replace_once(
+    texts[table],
+    '''    private static bool TryParseInteger(string value, CultureInfo culture, out long number)
+    {
+        var styles = NumberStyles.Integer | NumberStyles.AllowThousands;
+        if (long.TryParse(value, styles, culture, out number)) return true;
+        return long.TryParse(value, styles, CultureInfo.InvariantCulture, out number);
+    }''',
+    '''    private static bool TryParseInteger(string value, CultureInfo culture, out long number)
+    {
+        if (LooksLikeFractionalNumber(value, culture))
+        {
+            number = default;
+            return false;
+        }
 
-rel = 'src/Magic.Capture.Core/Ocr/OcrLayoutDiff.cs'
-for old, new in [
-    ('changes.Add(new(a.Text, a.Bounds, PixelRect.Empty, true, true));', 'changes.Add(new(a.Text ?? string.Empty, a.Bounds, PixelRect.Empty, true, true));'),
-    ('if (textChanged || moved) changes.Add(new(b.Text, a.Bounds, b.Bounds, textChanged, moved));', 'if (textChanged || moved) changes.Add(new(b.Text ?? string.Empty, a.Bounds, b.Bounds, textChanged, moved));'),
-    ('if (!used[j]) changes.Add(new(rightLines[j].Text, PixelRect.Empty, rightLines[j].Bounds, true, true));', 'if (!used[j]) changes.Add(new(rightLines[j].Text ?? string.Empty, PixelRect.Empty, rightLines[j].Bounds, true, true));'),
-]:
-    texts[rel] = replace_once(texts[rel], old, new, rel)
+        var styles = NumberStyles.Integer | NumberStyles.AllowThousands;
+        if (long.TryParse(value, styles, culture, out number)) return true;
+        return long.TryParse(value, styles, CultureInfo.InvariantCulture, out number);
+    }
 
-rel = 'src/Magic.Capture.App/Magic.Capture.App.csproj'
-texts[rel] = replace_once(texts[rel],
-    '    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />',
-    '    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />\n    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />', rel)
+    private static bool LooksLikeFractionalNumber(string value, CultureInfo culture)
+    {
+        var decimalSeparator = culture.NumberFormat.NumberDecimalSeparator;
+        if (!string.IsNullOrEmpty(decimalSeparator) && value.Contains(decimalSeparator, StringComparison.Ordinal))
+            return true;
+
+        return !string.Equals(decimalSeparator, ".", StringComparison.Ordinal)
+            && value.Contains('.', StringComparison.Ordinal)
+            && !value.Contains(decimalSeparator, StringComparison.Ordinal);
+    }''',
+    table)
 
 for rel, (_, after) in FILES.items():
     text = texts[rel]
     actual = digest(text)
     if actual != after:
-        raise SystemExit(f'{rel}: postimage sha256 {actual} != {after}')
+        raise SystemExit(f'{rel}: behavior postimage sha256 {actual} != {after}')
     (ROOT / rel).write_text(text, encoding='utf-8', newline='')
 
-print('OK Windows build fixes: 7 files patched with verified pre/post SHA-256')
+print('OK Core behavior fixes: recovery revision authority + monotonic history byte budget + locale decimal inference, verified pre/post SHA-256')
