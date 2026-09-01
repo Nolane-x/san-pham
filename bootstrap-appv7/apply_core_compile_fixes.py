@@ -24,6 +24,9 @@ FILES = {
     'src/Magic.Capture.Core/Ocr/OcrLayoutDiff.cs': (
         '83d8bcd6e5957e3253da06e24dc470cc4371415cd20cbf3bf7a99fdfa97e20f1',
         '593d3555506a86f156f6cd9f01cc4a0c8477bbfd8d10ff21da3e6b9c94826c5c'),
+    'src/Magic.Capture.App/Magic.Capture.App.csproj': (
+        '70483cf3c5dc00f26b1b6ced607e08699c54f69b6dbe5436204f5b930164dc75',
+        '8b2b199f027725a2a86b2858ca924376957e17448b20503abb38c9788e01f478'),
 }
 
 def digest(text: str) -> str:
@@ -105,6 +108,11 @@ for old, new in [
 ]:
     texts[rel] = replace_once(texts[rel], old, new, rel)
 
+rel = 'src/Magic.Capture.App/Magic.Capture.App.csproj'
+texts[rel] = replace_once(texts[rel],
+    '    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />',
+    '    <PackageReference Include="Microsoft.WindowsAppSDK.Runtime" Version="2.4.0" />\n    <PackageReference Include="Microsoft.WindowsAppSDK.InteractiveExperiences" Version="2.1.6" />', rel)
+
 for rel, (_, after) in FILES.items():
     text = texts[rel]
     actual = digest(text)
@@ -112,4 +120,4 @@ for rel, (_, after) in FILES.items():
         raise SystemExit(f'{rel}: postimage sha256 {actual} != {after}')
     (ROOT / rel).write_text(text, encoding='utf-8', newline='')
 
-print('OK core compile fixes: 6 files patched with verified pre/post SHA-256')
+print('OK Windows build fixes: 7 files patched with verified pre/post SHA-256')
