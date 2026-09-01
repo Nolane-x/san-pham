@@ -177,3 +177,77 @@ jobs:
           name: magic-capture-core-tests
           path: reconstructed/TestResults/**
           if-no-files-found: error
+
+  promote-main:
+    name: Promote verified clean source to main
+    needs: test-core
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Reconstruct verified clean source authority
+        shell: pwsh
+        run: |
+          python bootstrap-appv7/reconstruct_appv7.py bootstrap-appv7 ../promote-source
+          python bootstrap-appv7/apply_core_compile_fixes.py ../promote-source
+          python bootstrap-appv7/apply_winui_xaml_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_csharp_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_contract_fixes.py ../promote-source
+          python bootstrap-appv7/apply_app_compile_batch2.py ../promote-source
+          python bootstrap-appv7/apply_app_compile_batch3.py ../promote-source
+          python bootstrap-appv7/check_resume_checkpoint_contract.py ../promote-source
+          python bootstrap-tests-v416/reconstruct_tests.py bootstrap-tests-v416 ../promote-source
+          python bootstrap-tests-v416/apply_test_compile_fixes.py ../promote-source
+          python bootstrap-tests-v416/check_history_monitor_literals.py ../promote-source
+          python promotion-v416/reconstruct_legacy_root.py ../promote-source
+          python promotion-v416/prepare_main_source.py ../promote-source
+
+      - name: Static verification on clean source
+        shell: pwsh
+        working-directory: ../promote-source
+        run: |
+          $verifiers = @(
+            'verify-repo.py',
+            'verify-structure.py',
+            'verify-csharp-lexical.py',
+            'verify-workflow-triggers.py',
+            'verify-workflow-control-flow.py',
+            'verify-history-intelligence.py',
+            'verify-settings-personalization.py',
+            'verify-settings-consistency.py',
+            'verify-work-recovery.py'
+          )
+          foreach ($verifier in $verifiers) {
+            python (Join-Path 'scripts' $verifier)
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+
+      - name: Commit clean source to main
+        shell: pwsh
+        run: |
+          $source = (Resolve-Path ../promote-source).Path
+          git fetch origin main
+          git checkout -B main origin/main
+          Get-ChildItem -Force | Where-Object { $_.Name -ne '.git' } | Remove-Item -Recurse -Force
+          Get-ChildItem -Force $source | ForEach-Object { Copy-Item $_.FullName -Destination . -Recurse -Force }
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          $tracked = (git ls-files | Measure-Object -Line).Lines
+          if ($tracked -ne 633) { throw "Expected 633 tracked clean-source files, got $tracked" }
+          if (git ls-files | Select-String -Pattern '^bootstrap-|^promotion-v416/|^reconstructed/') {
+            throw "Bootstrap transport leaked into main staging"
+          }
+          git diff --cached --quiet
+          if ($LASTEXITCODE -eq 0) { throw "Promotion produced no changes" }
+          git commit -m "release: promote verified Magic Capture Desktop 4.16.0"
+          git push origin HEAD:main
