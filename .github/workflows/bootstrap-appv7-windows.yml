@@ -129,6 +129,14 @@ jobs:
         shell: pwsh
         run: python bootstrap-tests-v416/reconstruct_tests.py bootstrap-tests-v416 reconstructed
 
+      - name: Apply verified Core test compile fixes
+        shell: pwsh
+        run: python bootstrap-tests-v416/apply_test_compile_fixes.py reconstructed
+
+      - name: Regression gate - history monitor literals
+        shell: pwsh
+        run: python bootstrap-tests-v416/check_history_monitor_literals.py reconstructed
+
       - name: Verify reconstructed SDK pin
         shell: pwsh
         run: |
