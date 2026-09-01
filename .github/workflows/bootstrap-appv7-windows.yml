@@ -152,7 +152,23 @@ jobs:
       - name: Run Core xUnit tests
         shell: pwsh
         working-directory: reconstructed
-        run: dotnet test tests/Magic.Capture.Core.Tests/Magic.Capture.Core.Tests.csproj -c Release --no-restore --logger "trx;LogFileName=core-tests.trx" --results-directory TestResults
+        run: |
+          New-Item -ItemType Directory -Force TestResults | Out-Null
+          $output = & dotnet test tests/Magic.Capture.Core.Tests/Magic.Capture.Core.Tests.csproj -c Release --no-restore --logger "trx;LogFileName=core-tests.trx" --results-directory TestResults --verbosity minimal 2>&1
+          $exitCode = $LASTEXITCODE
+          $output | Set-Content -Path TestResults/core-tests-console.txt -Encoding utf8
+          if ($exitCode -eq 0) {
+            $output | Select-Object -Last 25
+          } else {
+            Write-Host "=== COMPACT XUNIT FAILURE DIAGNOSTICS ==="
+            $matches = $output | Select-String -Pattern 'Failed |Error Message:|Stack Trace:|Assert\.|Xunit\.|error CS|Test Run Failed|Failed!|Total tests:|Passed:|Failed:' -Context 2,8
+            if ($matches) {
+              $matches | ForEach-Object { $_.ToString() }
+            } else {
+              $output | Select-Object -Last 120
+            }
+            exit $exitCode
+          }
 
       - name: Upload Core test results
         if: always()
@@ -160,4 +176,4 @@ jobs:
         with:
           name: magic-capture-core-tests
           path: reconstructed/TestResults/**
-          if-no-files-found: warn
+          if-no-files-found: error
