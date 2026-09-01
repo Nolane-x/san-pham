@@ -1,0 +1,64 @@
+name: Bootstrap App-v7 Windows
+
+on:
+  push:
+    branches: [bootstrap-4.16-v5]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.platform }}
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x64, ARM64]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.400'
+
+      - name: Reconstruct and verify app-v7 source
+        shell: pwsh
+        run: python bootstrap-appv7/reconstruct_appv7.py bootstrap-appv7 reconstructed
+
+      - name: Verify reconstructed SDK pin
+        shell: pwsh
+        run: |
+          $sdk = (Get-Content reconstructed/global.json -Raw | ConvertFrom-Json).sdk.version
+          if ($sdk -ne '10.0.400') { throw "Unexpected SDK pin: $sdk" }
+          dotnet --version
+
+      - name: Restore Core
+        shell: pwsh
+        working-directory: reconstructed
+        run: dotnet restore src/Magic.Capture.Core/Magic.Capture.Core.csproj
+
+      - name: Build Core
+        shell: pwsh
+        working-directory: reconstructed
+        run: dotnet build src/Magic.Capture.Core/Magic.Capture.Core.csproj -c Release --no-restore
+
+      - name: Restore WinUI app for platform
+        shell: pwsh
+        working-directory: reconstructed
+        run: dotnet restore src/Magic.Capture.App/Magic.Capture.App.csproj -p:Platform=${{ matrix.platform }}
+
+      - name: Build WinUI app
+        shell: pwsh
+        working-directory: reconstructed
+        run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-capture-desktop-bootstrap-${{ matrix.platform }}
+          path: reconstructed/src/Magic.Capture.App/bin/Release/**
+          if-no-files-found: error
