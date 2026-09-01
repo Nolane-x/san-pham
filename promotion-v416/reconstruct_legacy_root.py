@@ -14,6 +14,7 @@ HEADER = 'MAGIC_CAPTURE_CI_BOOTSTRAP_V2'
 KNOWN_METADATA_EXCEPTION = {
     7: 'efb206d7cadb21914f370dbeb4bbc5a9c93d99c1bb8ee845e7413ce650248878',
 }
+KNOWN_PADDING_REPAIR = {14: '='}
 
 
 def fail(message: str) -> None:
@@ -48,12 +49,23 @@ def load_piece(index: int) -> bytes:
 
     if meta.get('index') != f'{index:03d}':
         fail(f'{path}: index metadata mismatch')
+
+    encoded = ''.join(payload)
+    repair = KNOWN_PADDING_REPAIR.get(index)
+    if repair is not None:
+        if len(encoded) % 4 != 3:
+            fail(f'{path}: expected exactly one missing base64 padding character, length={len(encoded)}')
+        encoded += repair
+        print(f'KNOWN legacy base64 padding repair applied for {path}')
+    elif len(encoded) % 4 != 0:
+        fail(f'{path}: unexpected non-aligned base64 length: {len(encoded)}')
+
     try:
-        decoded = base64.b64decode(''.join(payload), validate=True)
+        decoded = base64.b64decode(encoded, validate=True)
     except Exception as exc:
-        fail(f'{path}: invalid payload base64: {exc}')
+        fail(f'{path}: invalid payload base64 after allowed repairs: {exc}')
     if len(decoded) != int(meta.get('raw_size', '-1')):
-        fail(f'{path}: raw size mismatch')
+        fail(f'{path}: raw size mismatch: {len(decoded)} != {meta.get("raw_size")}')
 
     digest = hashlib.sha256(decoded).hexdigest()
     declared = meta.get('raw_sha256')
