@@ -8,98 +8,121 @@ import sys
 import tarfile
 from pathlib import Path, PurePosixPath
 
-REF = 'origin/bootstrap-4.16-v2'
-PIECES = 15
-HEADER = 'MAGIC_CAPTURE_CI_BOOTSTRAP_V2'
+PAYLOAD_BRANCH = 'promotion-root-v416'
+PAYLOAD_COMMIT = '3ee8a9d473d613deb9ae063d4b544eb98b6754e5'
+PAYLOAD_DIR = 'promotion-root-clean'
+PIECES = 153
+FULL_PIECE_CHARS = 2000
+TAIL_PIECE_CHARS = 956
+PAYLOAD_CHARS = 304956
+ARCHIVE_BYTES = 228716
+ARCHIVE_SHA256 = 'b14840daec3e047d78f5ed738d4c4ab383c2bc51e70fd88781d7efb1c211ac6f'
+ROOT_FILE_COUNT = 140
+ROOT_MANIFEST_SHA256 = '9feca2d6cd5e55859f77cfc68648bb2bce4bc43a012ce237f9e5d3ec8ddff7a8'
 
 
 def fail(message: str) -> None:
     raise SystemExit(message)
 
 
-def load_piece(index: int) -> bytes:
-    path = f'bootstrap-ci/chunk-{index:03d}.txt'
+def git_show(path: str) -> bytes:
     try:
-        raw_text = subprocess.check_output(
-            ['git', 'show', f'{REF}:{path}'],
-            text=True,
-            encoding='utf-8',
-        )
+        return subprocess.check_output(['git', 'show', f'{PAYLOAD_COMMIT}:{path}'])
     except subprocess.CalledProcessError as exc:
-        fail(f'could not read historical bootstrap piece {path}: {exc}')
+        fail(f'could not read canonical payload piece {path}: {exc}')
 
-    lines = raw_text.splitlines()
-    if not lines or lines[0] != HEADER:
-        fail(f'{path}: unexpected header')
 
-    meta: dict[str, str] = {}
-    payload: list[str] = []
-    in_payload = False
-    for line in lines[1:]:
-        if line == 'payload_base64=':
-            in_payload = True
-            continue
-        if in_payload:
-            payload.append(line.strip())
-        elif '=' in line:
-            key, value = line.split('=', 1)
-            meta[key] = value
-
-    if meta.get('index') != f'{index:03d}':
-        fail(f'{path}: index metadata mismatch')
+def load_piece(index: int) -> bytes:
+    path = f'{PAYLOAD_DIR}/chunk-{index:03d}.b64'
+    raw = git_show(path)
+    expected_len = TAIL_PIECE_CHARS if index == PIECES - 1 else FULL_PIECE_CHARS
+    if len(raw) != expected_len:
+        fail(f'{path}: size mismatch: {len(raw)} != {expected_len}')
     try:
-        decoded = base64.b64decode(''.join(payload), validate=True)
-    except Exception as exc:
-        fail(f'{path}: invalid payload base64: {exc}')
-    if len(decoded) != int(meta.get('raw_size', '-1')):
-        fail(f'{path}: raw size mismatch')
-    digest = hashlib.sha256(decoded).hexdigest()
-    if digest != meta.get('raw_sha256'):
-        fail(f'{path}: raw SHA-256 mismatch: {digest}')
-    return decoded
+        raw.decode('ascii')
+    except UnicodeDecodeError as exc:
+        fail(f'{path}: payload is not ASCII: {exc}')
+    return raw
 
 
-def normalized_member_path(name: str) -> PurePosixPath | None:
-    p = PurePosixPath(name)
-    if p.is_absolute() or '..' in p.parts:
-        fail(f'unsafe historical archive path: {name}')
-    parts = list(p.parts)
-    if not parts:
-        return None
-    if parts[0].startswith('Magic-Capture-Desktop-'):
-        parts = parts[1:]
-    if not parts:
-        return None
-    return PurePosixPath(*parts)
+def safe_member_path(name: str) -> PurePosixPath:
+    path = PurePosixPath(name)
+    if path.is_absolute() or not path.parts or '..' in path.parts:
+        fail(f'unsafe canonical archive path: {name}')
+    if path.parts[0] in {'src', 'tests'}:
+        fail(f'canonical root archive leaked source/test path: {name}')
+    if path.as_posix() in {'Directory.Build.props', 'global.json'}:
+        fail(f'canonical root archive must not overwrite bootstrap authority file: {name}')
+    return path
+
+
+def manifest(entries: list[tuple[str, bytes]]) -> str:
+    digest = hashlib.sha256()
+    for name, data in sorted(entries):
+        digest.update(name.encode('utf-8') + b'\0' + hashlib.sha256(data).digest())
+    return digest.hexdigest()
 
 
 def main() -> None:
     output = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('reconstructed')
-    subprocess.run(['git', 'fetch', 'origin', 'bootstrap-4.16-v2'], check=True)
 
-    archive = b''.join(load_piece(index) for index in range(PIECES))
+    subprocess.run(['git', 'fetch', 'origin', PAYLOAD_BRANCH], check=True)
+    subprocess.run(['git', 'cat-file', '-e', f'{PAYLOAD_COMMIT}^{{commit}}'], check=True)
+
+    payload = b''.join(load_piece(index) for index in range(PIECES))
+    if len(payload) != PAYLOAD_CHARS:
+        fail(f'canonical payload size mismatch: {len(payload)} != {PAYLOAD_CHARS}')
+
+    try:
+        archive = base64.b64decode(payload, validate=True)
+    except Exception as exc:
+        fail(f'canonical payload base64 decode failed: {exc}')
+
     archive_digest = hashlib.sha256(archive).hexdigest()
-    extracted = 0
-    with tarfile.open(fileobj=io.BytesIO(archive), mode='r:*') as tf:
-        for member in tf.getmembers():
-            rel = normalized_member_path(member.name)
-            if rel is None or member.isdir():
-                continue
-            if member.issym() or member.islnk() or not member.isfile():
-                fail(f'non-file historical archive member rejected: {member.name}')
-            if rel.parts[0] in {'src', 'tests'}:
-                continue
-            source = tf.extractfile(member)
-            if source is None:
-                fail(f'could not read historical archive member: {member.name}')
-            target = output / Path(*rel.parts)
-            target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_bytes(source.read())
-            extracted += 1
+    if len(archive) != ARCHIVE_BYTES or archive_digest != ARCHIVE_SHA256:
+        fail(
+            f'canonical root archive mismatch: bytes={len(archive)} sha256={archive_digest}; '
+            f'expected bytes={ARCHIVE_BYTES} sha256={ARCHIVE_SHA256}'
+        )
+
+    entries: list[tuple[str, bytes]] = []
+    seen: set[str] = set()
+    try:
+        with tarfile.open(fileobj=io.BytesIO(archive), mode='r:xz') as tf:
+            for member in tf.getmembers():
+                if not member.isfile() or member.issym() or member.islnk():
+                    fail(f'non-file canonical archive member rejected: {member.name}')
+                rel = safe_member_path(member.name)
+                rel_text = rel.as_posix()
+                if rel_text in seen:
+                    fail(f'duplicate canonical archive member: {rel_text}')
+                seen.add(rel_text)
+                source = tf.extractfile(member)
+                if source is None:
+                    fail(f'could not read canonical archive member: {member.name}')
+                entries.append((rel_text, source.read()))
+    except tarfile.TarError as exc:
+        fail(f'canonical root archive could not be opened: {exc}')
+
+    root_manifest = manifest(entries)
+    if len(entries) != ROOT_FILE_COUNT or root_manifest != ROOT_MANIFEST_SHA256:
+        fail(
+            f'canonical root manifest mismatch: count={len(entries)} manifest={root_manifest}; '
+            f'expected count={ROOT_FILE_COUNT} manifest={ROOT_MANIFEST_SHA256}'
+        )
+
+    for rel_text, data in entries:
+        target = output / Path(*PurePosixPath(rel_text).parts)
+        if target.exists():
+            fail(f'canonical root would overwrite existing file: {rel_text}')
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes(data)
 
     print(
-        f'OK legacy root authority: pieces={PIECES} archive_bytes={len(archive)} '
-        f'archive_sha256={archive_digest} extracted_root_files={extracted}'
+        f'GREEN canonical root authority: commit={PAYLOAD_COMMIT} pieces={PIECES} '
+        f'payload_chars={len(payload)} archive_bytes={len(archive)} '
+        f'archive_sha256={archive_digest} root_files={len(entries)} '
+        f'root_manifest={root_manifest}'
     )
 
 
