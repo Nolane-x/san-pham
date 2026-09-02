@@ -13,10 +13,10 @@ internal sealed class BarcodeService
         var reader = new BarcodeReader
         {
             AutoRotate = true,
-            TryInverted = true,
             Options = new DecodingOptions
             {
                 TryHarder = true,
+                TryInverted = true,
                 PureBarcode = false
             }
         };
