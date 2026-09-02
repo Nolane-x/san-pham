@@ -45,6 +45,15 @@ jobs:
           python promotion-v416/reconstruct_legacy_root.py ../promote-source
           python promotion-v416/prepare_main_source.py ../promote-source
 
+      - name: Upload partial reconstructed source
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: promotion-partial-source
+          path: ../promote-source
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Static verification on clean source
         shell: pwsh
         working-directory: ../promote-source
