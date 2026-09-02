@@ -36,7 +36,7 @@ public sealed class WorkflowTests
     [Fact]
     public void Bug_report_requires_pro_and_magic_action_step()
     {
-        var workflow = Assert.Single(WorkflowCatalog.BuiltIns.Where(w => w.Id == "bug-report"));
+        var workflow = Assert.Single(WorkflowCatalog.BuiltIns, w => w.Id == "bug-report");
         Assert.Equal(ProductTier.ProLifetime, workflow.RequiredTier);
         Assert.Contains(workflow.Steps, s => s.Kind == WorkflowStepKind.RunMagicAction && s.Argument == "developer.bug-report");
     }

@@ -19,7 +19,7 @@ public sealed class AiGuardTests
     public void Finds_private_key_header_without_echoing_whole_secret()
     {
         var findings = AiGuard.Scan("-----BEGIN PRIVATE KEY-----\nabcdef\n-----END PRIVATE KEY-----");
-        var finding = Assert.Single(findings.Where(f => f.Kind == AiGuardFindingKind.PrivateKey));
+        var finding = Assert.Single(findings, f => f.Kind == AiGuardFindingKind.PrivateKey);
         Assert.DoesNotContain("abcdef", finding.Preview, StringComparison.Ordinal);
     }
 

@@ -31,7 +31,7 @@ public sealed class SensitiveDataDetectorTests
     {
         var graph = Graph("customer secret PROJECT-8842");
         var options = new SensitiveDataOptions([new SensitivePattern("project", @"PROJECT-\d{4}")]);
-        var finding = Assert.Single(SensitiveDataDetector.Scan(graph, options).Where(x => x.Kind == SensitiveDataKind.Custom));
+        var finding = Assert.Single(SensitiveDataDetector.Scan(graph, options), x => x.Kind == SensitiveDataKind.Custom);
         Assert.Equal(new PixelRect(10, 20, 300, 30), finding.Bounds);
         Assert.Equal("project", finding.Label);
     }

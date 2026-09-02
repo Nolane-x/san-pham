@@ -22,7 +22,7 @@ public sealed class UiAutomationOcrCorrelationTests
 
         var result = UiAutomationOcrCorrelation.Correlate(controls, ocr);
 
-        var submit = Assert.Single(result.Where(pair => pair.Key == "submit")).Value;
+        var submit = Assert.Single(result, pair => pair.Key == "submit").Value;
         Assert.Equal("Submit", submit.Text);
         Assert.Equal(["w1"], submit.WordIds);
         Assert.False(result.ContainsKey("window"));
