@@ -34,10 +34,10 @@
         <uap:SplashScreen Image="Assets\SplashScreen.png" />
       </uap:VisualElements>
       <Extensions>
-        <uap5:Extension Category="windows.startupTask" Executable="$targetnametoken$.exe" EntryPoint="Windows.FullTrustApplication">
+        <uap5:Extension Category="windows.startupTask" Executable="Magic.Capture.Desktop.exe" EntryPoint="Windows.FullTrustApplication">
           <uap5:StartupTask TaskId="Magic.Capture.Desktop.Startup" Enabled="true" DisplayName="Magic Capture Desktop" />
         </uap5:Extension>
-        <uap5:Extension Category="windows.appExecutionAlias" Executable="$targetnametoken$.exe" EntryPoint="Windows.FullTrustApplication">
+        <uap5:Extension Category="windows.appExecutionAlias" Executable="Magic.Capture.Desktop.exe" EntryPoint="Windows.FullTrustApplication">
           <uap5:AppExecutionAlias>
             <uap5:ExecutionAlias Alias="magiccapture.exe" />
           </uap5:AppExecutionAlias>
