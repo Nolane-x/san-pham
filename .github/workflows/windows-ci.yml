@@ -1,0 +1,68 @@
+name: Windows CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: windows-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x64, ARM64]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.400'
+      - name: Static source verification
+        shell: pwsh
+        run: |
+          $verifiers = @(
+            'verify-repo.py',
+            'verify-structure.py',
+            'verify-csharp-lexical.py',
+            'verify-workflow-triggers.py',
+            'verify-workflow-control-flow.py',
+            'verify-history-intelligence.py',
+            'verify-settings-personalization.py',
+            'verify-settings-consistency.py',
+            'verify-work-recovery.py'
+          )
+          foreach ($verifier in $verifiers) {
+            python (Join-Path 'scripts' $verifier)
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
+      - name: Restore Core tests
+        shell: pwsh
+        run: dotnet restore tests/Magic.Capture.Core.Tests/Magic.Capture.Core.Tests.csproj
+      - name: Core tests
+        shell: pwsh
+        run: dotnet test tests/Magic.Capture.Core.Tests/Magic.Capture.Core.Tests.csproj -c Release --no-restore
+      - name: Restore WinUI app for platform
+        shell: pwsh
+        run: dotnet restore src/Magic.Capture.App/Magic.Capture.App.csproj -p:Platform=${{ matrix.platform }}
+      - name: Build WinUI app
+        shell: pwsh
+        run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-capture-desktop-${{ matrix.platform }}
+          path: src/Magic.Capture.App/bin/${{ matrix.platform }}/Release/**
+          if-no-files-found: error
+
+  source-release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Source release dry run
+        run: python scripts/source-release.py
+      - name: Upload deterministic source bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: magic-capture-desktop-source
+          path: |
+            ../Magic-Capture-Desktop-*-source.zip
+            ../Magic-Capture-Desktop-*-source.zip.sha256
