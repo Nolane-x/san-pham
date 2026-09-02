@@ -160,6 +160,16 @@ if release_version_path.exists():
     if release_meta.get('proOfferToken') != 'magiccapture.desktop.pro':
         ERRORS.append('release/version.json Pro offer token mismatch')
 
+    release_checklist_path = ROOT / 'docs/WINDOWS_RELEASE_CHECKLIST.md'
+    if release_checklist_path.exists():
+        release_checklist_text = release_checklist_path.read_text(encoding='utf-8', errors='replace')
+        expected_heading = f'# Magic Capture Desktop {release_meta.get("semver")} — Windows Release Checklist'
+        expected_msix_line = f'- [ ] MSIX version equals `release/version.json` (`{release_meta.get("msixVersion")}`).'
+        if expected_heading not in release_checklist_text:
+            ERRORS.append('Windows release checklist heading does not match release/version.json semver')
+        if expected_msix_line not in release_checklist_text:
+            ERRORS.append('Windows release checklist MSIX version does not match release/version.json')
+
 for path in list((ROOT / 'src').rglob('*.xaml')) + list((ROOT / 'src').rglob('*.csproj')) + [ROOT / 'src/Magic.Capture.App/Package.appxmanifest']:
     if not path.exists():
         continue
