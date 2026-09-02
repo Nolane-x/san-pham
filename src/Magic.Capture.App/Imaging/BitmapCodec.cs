@@ -1,5 +1,6 @@
 using System.Drawing;
 using System.Drawing.Imaging;
+using System.Runtime.InteropServices;
 using Magic.Capture.Core.Geometry;
 using Magic.Capture.Core.Imaging;
 
@@ -30,6 +31,42 @@ internal static class BitmapCodec
         if (compare) ImageWorkloadLimits.ValidateCompareDimensions(source.Width, source.Height);
         else if (pixelProcessing) ImageWorkloadLimits.ValidatePixelProcessingDimensions(source.Width, source.Height);
         return new Bitmap(source);
+    }
+
+    public static byte[] CopyBgra32Pixels(Bitmap bitmap)
+    {
+        ArgumentNullException.ThrowIfNull(bitmap);
+        ImageWorkloadLimits.ValidatePixelProcessingDimensions(bitmap.Width, bitmap.Height);
+
+        using var normalized = new Bitmap(bitmap.Width, bitmap.Height, PixelFormat.Format32bppArgb);
+        using (var graphics = Graphics.FromImage(normalized))
+        {
+            graphics.DrawImageUnscaled(bitmap, 0, 0);
+        }
+
+        var rectangle = new Rectangle(0, 0, normalized.Width, normalized.Height);
+        var data = normalized.LockBits(rectangle, ImageLockMode.ReadOnly, PixelFormat.Format32bppArgb);
+        try
+        {
+            var rowBytes = checked(normalized.Width * 4);
+            if (Math.Abs((long)data.Stride) < rowBytes)
+            {
+                throw new InvalidDataException("Bitmap stride is smaller than the BGRA32 row width.");
+            }
+
+            var pixels = GC.AllocateUninitializedArray<byte>(checked(rowBytes * normalized.Height));
+            for (var y = 0; y < normalized.Height; y++)
+            {
+                var sourceRow = data.Stride >= 0 ? y : normalized.Height - 1 - y;
+                var sourcePointer = IntPtr.Add(data.Scan0, checked(sourceRow * data.Stride));
+                Marshal.Copy(sourcePointer, pixels, y * rowBytes, rowBytes);
+            }
+            return pixels;
+        }
+        finally
+        {
+            normalized.UnlockBits(data);
+        }
     }
 
     public static byte[] CropPng(byte[] sourcePng, PixelRect bounds)

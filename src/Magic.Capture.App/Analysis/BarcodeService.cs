@@ -1,7 +1,6 @@
 using Magic.Capture.App.Imaging;
 using ZXing;
 using ZXing.Common;
-using ZXing.Windows.Compatibility;
 
 namespace Magic.Capture.App.Analysis;
 
@@ -10,7 +9,8 @@ internal sealed class BarcodeService
     public IReadOnlyList<BarcodeHit> Decode(byte[] imageBytes)
     {
         using var bitmap = BitmapCodec.DecodeForPixelProcessing(imageBytes);
-        var reader = new BarcodeReader
+        var pixels = BitmapCodec.CopyBgra32Pixels(bitmap);
+        var reader = new BarcodeReaderGeneric
         {
             AutoRotate = true,
             Options = new DecodingOptions
@@ -21,10 +21,18 @@ internal sealed class BarcodeService
             }
         };
 
-        var results = reader.DecodeMultiple(bitmap);
+        var results = reader.DecodeMultiple(
+            pixels,
+            bitmap.Width,
+            bitmap.Height,
+            RGBLuminanceSource.BitmapFormat.BGRA32);
         if (results is null || results.Length == 0)
         {
-            var single = reader.Decode(bitmap);
+            var single = reader.Decode(
+                pixels,
+                bitmap.Width,
+                bitmap.Height,
+                RGBLuminanceSource.BitmapFormat.BGRA32);
             return single is null ? [] : [ToHit(single)];
         }
 
