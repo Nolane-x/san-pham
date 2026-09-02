@@ -41,4 +41,14 @@ New-Item -ItemType Directory -Force -Path $OutputDirectory | Out-Null
     /p:AppxPackageSigningEnabled=false
 
 if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed with exit code $LASTEXITCODE." }
+
+$bundles = @(Get-ChildItem $OutputDirectory -Recurse -File -Filter *.msixbundle)
+if ($bundles.Count -ne 1) { throw "Expected exactly one Store MSIX bundle, found $($bundles.Count)." }
+python .\scripts\verify-msix-bundle.py $bundles[0].FullName --root $root --require-store-identity
+if ($LASTEXITCODE -ne 0) { throw 'Packaged Store MSIX contract verification failed.' }
+
+$hash = (Get-FileHash -Algorithm SHA256 $bundles[0].FullName).Hash.ToLowerInvariant()
+$checksumPath = "$($bundles[0].FullName).sha256"
+"$hash  $($bundles[0].Name)" | Set-Content -Encoding ascii -NoNewline $checksumPath
 Write-Host "Store package output: $OutputDirectory" -ForegroundColor Green
+Write-Host "Bundle SHA256: $hash" -ForegroundColor Green

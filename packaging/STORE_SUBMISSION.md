@@ -31,8 +31,8 @@ Commercial launch baseline:
 ```text
 App                             Free forever
 Plus                            Trial only; not sold
-Pro Lifetime regular US MSRP    $29.99
-Pro Lifetime US launch          $19.99
+Pro Lifetime regular US MSRP    $14.99
+Pro Lifetime US launch          $9.99
 Launch duration                 90 consecutive days from public Pro availability
 Subscription                    None
 ```
@@ -219,8 +219,8 @@ Test at minimum on clean x64 and ARM64 Windows environments:
 - [ ] Free app remains $0.
 - [ ] Plus has no Store SKU/add-on.
 - [ ] Pro add-on is Durable / Forever.
-- [ ] US Pro base price configured at $29.99-equivalent tier.
-- [ ] US launch sale configured at $19.99 for 90 consecutive days.
+- [ ] US Pro base price configured at $14.99-equivalent tier.
+- [ ] US launch sale configured at $9.99 for 90 consecutive days.
 - [ ] Sale ends back at the regular base price.
 - [ ] Non-US localized pricing reviewed.
 - [ ] Plan page reads Store current price instead of hard-coded USD.

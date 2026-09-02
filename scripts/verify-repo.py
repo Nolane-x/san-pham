@@ -303,7 +303,7 @@ commerce_checks = {
     ROOT / 'src/Magic.Capture.App/Views/CaptureOverlayWindow.xaml': ['Text', 'Table', 'QR', 'Edit', 'Color'],
     ROOT / 'src/Magic.Capture.App/Views/CompareWindow.xaml': ['Side by side', 'Overlay', 'Difference'],
     ROOT / 'src/Magic.Capture.App/MainWindow.xaml': ['ProPriceText', 'Price shown by Microsoft Store'],
-    ROOT / 'packaging/STORE_SUBMISSION.md': ['$29.99', '$19.99', '90 consecutive days'],
+    ROOT / 'packaging/STORE_SUBMISSION.md': ['magiccapture.desktop.pro', 'Durable', 'Forever', '90 consecutive days'],
 }
 for path, needles in commerce_checks.items():
     if not path.exists():

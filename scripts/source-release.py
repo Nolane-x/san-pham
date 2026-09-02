@@ -13,7 +13,7 @@ VERSION = json.loads((ROOT / 'release/version.json').read_text(encoding='utf-8')
 OUTPUT = ROOT.parent / f'Magic-Capture-Desktop-{VERSION}-source.zip'
 EXCLUDED_PARTS = {'.git', '.vs', 'bin', 'obj', 'artifacts', '__pycache__'}
 
-for verifier in ('verify-repo.py', 'verify-structure.py', 'verify-csharp-lexical.py', 'verify-workflow-triggers.py', 'verify-workflow-control-flow.py', 'verify-history-intelligence.py', 'verify-settings-personalization.py', 'verify-settings-consistency.py', 'verify-work-recovery.py'):
+for verifier in ('verify-repo.py', 'verify-structure.py', 'verify-csharp-lexical.py', 'verify-workflow-triggers.py', 'verify-workflow-control-flow.py', 'verify-history-intelligence.py', 'verify-settings-personalization.py', 'verify-settings-consistency.py', 'verify-work-recovery.py', 'verify-release-metadata.py', 'verify-commercial-metadata.py'):
     verify = subprocess.run([sys.executable, str(ROOT / 'scripts' / verifier)], cwd=ROOT)
     if verify.returncode != 0:
         raise SystemExit(verify.returncode)
