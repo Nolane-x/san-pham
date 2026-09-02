@@ -10,11 +10,13 @@ ROOT_AUTHORITY_COUNT = 142
 ROOT_AUTHORITY_MANIFEST = 'fadd44d9766341d1727d5109f6f2502416113afd7454665ff3bcaba19a3a30c8'
 WORKFLOW_PRE_SHA = 'bf05bbf854278a26f1476e5710902f978f08f53884d8572eadb6d706b9a89ccc'
 WORKFLOW_POST_SHA = '53492ad1957691f3a53dfa1734998f6c051f6741c42d548a3db5ad656571bbd6'
+FINAL_SOURCE_MANIFEST = '17b5ed16627508a5bdee1579ace53254707afbae8512625f70d2cb7005b78647'
 
 
 def file_manifest(files: list[Path]) -> str:
     digest = hashlib.sha256()
-    for path in sorted(files):
+    ordered = sorted(files, key=lambda path: path.relative_to(ROOT).as_posix())
+    for path in ordered:
         rel = path.relative_to(ROOT).as_posix().encode('utf-8')
         digest.update(rel + b'\0' + hashlib.sha256(path.read_bytes()).digest())
     return digest.hexdigest()
@@ -71,6 +73,10 @@ for forbidden in ('bootstrap-appv7', 'bootstrap-tests-v416', 'bootstrap-ci', 'pr
         raise SystemExit(f'bootstrap transport leaked into clean source: {forbidden}')
 
 final_manifest = file_manifest(all_files)
+if final_manifest != FINAL_SOURCE_MANIFEST:
+    raise SystemExit(
+        f'clean-source manifest mismatch: {final_manifest} != {FINAL_SOURCE_MANIFEST}'
+    )
 print(
     f'GREEN clean source: counts={counts} root_authority={root_manifest} '
     f'windows_ci={WORKFLOW_POST_SHA} manifest={final_manifest}'
