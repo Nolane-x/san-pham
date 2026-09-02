@@ -12,8 +12,8 @@ jobs:
       matrix:
         platform: [x64, ARM64]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-dotnet@v6.0.0
         with:
           dotnet-version: '10.0.400'
       - name: Static source verification
@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore
       - name: Upload build output
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: magic-capture-desktop-${{ matrix.platform }}
           path: src/Magic.Capture.App/bin/${{ matrix.platform }}/Release/**
@@ -56,7 +56,7 @@ jobs:
   source-release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7.0.1
       - name: Source release dry run
         run: python scripts/source-release.py
       - name: Stage deterministic source bundle
@@ -65,7 +65,7 @@ jobs:
           cp ../Magic-Capture-Desktop-*-source.zip release-artifacts/
           cp ../Magic-Capture-Desktop-*-source.zip.sha256 release-artifacts/
       - name: Upload deterministic source bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7.0.1
         with:
           name: magic-capture-desktop-source
           path: release-artifacts/**
