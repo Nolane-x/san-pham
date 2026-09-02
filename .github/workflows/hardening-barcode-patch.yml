@@ -1,0 +1,61 @@
+name: Hardening barcode verifier patch
+
+on:
+  push:
+    branches: [hardening-barcode-core-v416]
+
+permissions:
+  contents: write
+
+jobs:
+  patch-verifier:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          ref: hardening-barcode-core-v416
+          fetch-depth: 0
+
+      - name: Patch ZXing dependency contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('scripts/verify-repo.py')
+          text = path.read_text(encoding='utf-8')
+          old = 'ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.16"'
+          new = 'ZXing.Net" Version="0.16.11"'
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one old ZXing pin, found {text.count(old)}')
+          text = text.replace(old, new)
+
+          anchor = "        'Microsoft.WindowsAppSDK.Search': 'Windows App SDK Search component',\n"
+          addition = "        'ZXing.Net.Bindings.Windows.Compatibility': 'Windows-specific ZXing compatibility binding',\n"
+          if text.count(anchor) != 1:
+              raise SystemExit(f'Expected exactly one forbidden-ref anchor, found {text.count(anchor)}')
+          if addition in text:
+              raise SystemExit('ZXing compatibility binding is already forbidden')
+          text = text.replace(anchor, anchor + addition)
+
+          path.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify exact verifier diff
+        shell: bash
+        run: |
+          git diff --check
+          test "$(git diff --name-only | wc -l)" -eq 1
+          test "$(git diff --name-only)" = "scripts/verify-repo.py"
+          grep -F 'ZXing.Net" Version="0.16.11"' scripts/verify-repo.py
+          grep -F "'ZXing.Net.Bindings.Windows.Compatibility': 'Windows-specific ZXing compatibility binding'" scripts/verify-repo.py
+
+      - name: Commit verifier contract patch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/verify-repo.py
+          git diff --cached --quiet && { echo 'No verifier changes produced'; exit 1; }
+          git commit -m "test: pin ZXing core dependency contract"
+          git push origin HEAD:hardening-barcode-core-v416
