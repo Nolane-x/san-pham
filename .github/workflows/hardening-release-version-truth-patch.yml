@@ -1,0 +1,58 @@
+name: Hardening release version truth patch
+
+on:
+  push:
+    branches: [hardening-release-version-truth-v416]
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - name: Patch checklist and verifier contract
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          checklist_path = Path('docs/WINDOWS_RELEASE_CHECKLIST.md')
+          checklist = checklist_path.read_text(encoding='utf-8')
+          stale = '- [ ] MSIX version equals `release/version.json` (`4.15.0.0`).'
+          current = '- [ ] MSIX version equals `release/version.json` (`4.16.0.0`).'
+          if stale not in checklist:
+              raise SystemExit('expected stale 4.15.0.0 checklist line not found')
+          if checklist.count(stale) != 1:
+              raise SystemExit('stale checklist line must occur exactly once')
+          checklist_path.write_text(checklist.replace(stale, current), encoding='utf-8')
+
+          verifier_path = Path('scripts/verify-repo.py')
+          verifier = verifier_path.read_text(encoding='utf-8')
+          anchor = "    if release_meta.get('proOfferToken') != 'magiccapture.desktop.pro':\n        ERRORS.append('release/version.json Pro offer token mismatch')\n"
+          insertion = anchor + "\n    release_checklist_path = ROOT / 'docs/WINDOWS_RELEASE_CHECKLIST.md'\n    if release_checklist_path.exists():\n        release_checklist_text = release_checklist_path.read_text(encoding='utf-8', errors='replace')\n        expected_heading = f'# Magic Capture Desktop {release_meta.get(\"semver\")} — Windows Release Checklist'\n        expected_msix_line = f'- [ ] MSIX version equals `release/version.json` (`{release_meta.get(\"msixVersion\")}`).'\n        if expected_heading not in release_checklist_text:\n            ERRORS.append('Windows release checklist heading does not match release/version.json semver')\n        if expected_msix_line not in release_checklist_text:\n            ERRORS.append('Windows release checklist MSIX version does not match release/version.json')\n"
+          if anchor not in verifier:
+              raise SystemExit('release metadata verifier anchor not found')
+          if verifier.count(anchor) != 1:
+              raise SystemExit('release metadata verifier anchor must occur exactly once')
+          verifier_path.write_text(verifier.replace(anchor, insertion), encoding='utf-8')
+          PY
+      - name: Verify exact patch intent
+        shell: bash
+        run: |
+          git diff --check
+          git diff -- docs/WINDOWS_RELEASE_CHECKLIST.md scripts/verify-repo.py
+          test "$(git diff --name-only | sort | paste -sd ' ' -)" = "docs/WINDOWS_RELEASE_CHECKLIST.md scripts/verify-repo.py"
+          python scripts/verify-repo.py
+          python scripts/source-release.py
+      - name: Commit release truth hardening
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/WINDOWS_RELEASE_CHECKLIST.md scripts/verify-repo.py
+          git rm .github/workflows/hardening-release-version-truth-patch.yml
+          git commit -m 'fix: bind release checklist to version authority'
+          git push origin HEAD:hardening-release-version-truth-v416
