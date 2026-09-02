@@ -15,13 +15,104 @@ jobs:
       - uses: actions/checkout@v7.0.1
         with:
           fetch-depth: 0
-      - name: Apply deterministic patch
+      - name: Apply asserted release patch
         shell: bash
         run: |
           set -euo pipefail
-          echo 'ZGlmZiAtLWdpdCBhLy5naXRodWIvd29ya2Zsb3dzL3dpbmRvd3MtY2kueW1sIGIvLmdpdGh1Yi93b3JrZmxvd3Mvd2luZG93cy1jaS55bWwKaW5kZXggNTY5NzJlYS4uYzdiMmQ1MCAxMDA2NDQKLS0tIGEvLmdpdGh1Yi93b3JrZmxvd3Mvd2luZG93cy1jaS55bWwKKysrIGIvLmdpdGh1Yi93b3JrZmxvd3Mvd2luZG93cy1jaS55bWwKQEAgLTI5LDcgKzI5LDggQEAgam9iczoKICAgICAgICAgICAgICd2ZXJpZnktc2V0dGluZ3MtcGVyc29uYWxpemF0aW9uLnB5JywKICAgICAgICAgICAgICd2ZXJpZnktc2V0dGluZ3MtY29uc2lzdGVuY3kucHknLAogICAgICAgICAgICAgJ3ZlcmlmeS13b3JrLXJlY292ZXJ5LnB5JywKLSAgICAgICAgICAgICd2ZXJpZnktcmVsZWFzZS1tZXRhZGF0YS5weScKKyAgICAgICAgICAgICd2ZXJpZnktcmVsZWFzZS1tZXRhZGF0YS5weScsCisgICAgICAgICAgICAndmVyaWZ5LWNvbW1lcmNpYWwtbWV0YWRhdGEucHknCiAgICAgICAgICAgKQogICAgICAgICAgIGZvcmVhY2ggKCR2ZXJpZmllciBpbiAkdmVyaWZpZXJzKSB7CiAgICAgICAgICAgICBweXRob24gKEpvaW4tUGF0aCAnc2NyaXB0cycgJHZlcmlmaWVyKQpAQCAtOTQsNTEgKzk1LDMwIEBAIGpvYnM6CiAgICAgICAgICAgICAvcDpBcHB4UGFja2FnZURpcj0iJG91dFwiIGAKICAgICAgICAgICAgIC9wOkFwcHhQYWNrYWdlU2lnbmluZ0VuYWJsZWQ9ZmFsc2UKICAgICAgICAgICBpZiAoJExBU1RFWElUQ09ERSAtbmUgMCkgeyB0aHJvdyAiTVNJWCBwYWNrYWdpbmcgZmFpbGVkIHdpdGggZXhpdCBjb2RlICRMQVNURVhJVENPREUuIiB9Ci0gICAgICAtIG5hbWU6IFZlcmlmeSBidW5kbGUgYXJjaGl0ZWN0dXJlcworICAgICAgLSBuYW1lOiBWZXJpZnkgcGFja2FnZWQgTVNJWCBjb250cmFjdAogICAgICAgICBzaGVsbDogcHdzaAogICAgICAgICBydW46IHwKICAgICAgICAgICAkYnVuZGxlcyA9IEAoR2V0LUNoaWxkSXRlbSAuXGFydGlmYWN0c1xtc2l4LWNpIC1SZWN1cnNlIC1GaWxlIC1GaWx0ZXIgKi5tc2l4YnVuZGxlKQogICAgICAgICAgIGlmICgkYnVuZGxlcy5Db3VudCAtbmUgMSkgeyB0aHJvdyAiRXhwZWN0ZWQgZXhhY3RseSBvbmUgTVNJWCBidW5kbGUsIGZvdW5kICQoJGJ1bmRsZXMuQ291bnQpLiIgfQotCi0gICAgICAgICAgQWRkLVR5cGUgLUFzc2VtYmx5TmFtZSBTeXN0ZW0uSU8uQ29tcHJlc3Npb24uRmlsZVN5c3RlbQotICAgICAgICAgICR6aXAgPSBbU3lzdGVtLklPLkNvbXByZXNzaW9uLlppcEZpbGVdOjpPcGVuUmVhZCgkYnVuZGxlc1swXS5GdWxsTmFtZSkKLSAgICAgICAgICB0cnkgewotICAgICAgICAgICAgJGVudHJ5ID0gJHppcC5HZXRFbnRyeSgnQXBweE1ldGFkYXRhL0FwcHhCdW5kbGVNYW5pZmVzdC54bWwnKQotICAgICAgICAgICAgaWYgKC1ub3QgJGVudHJ5KSB7IHRocm93ICdBcHB4QnVuZGxlTWFuaWZlc3QueG1sIGlzIG1pc3NpbmcgZnJvbSB0aGUgTVNJWCBidW5kbGUuJyB9Ci0gICAgICAgICAgICAkcmVhZGVyID0gTmV3LU9iamVjdCBTeXN0ZW0uSU8uU3RyZWFtUmVhZGVyKCRlbnRyeS5PcGVuKCkpCi0gICAgICAgICAgICB0cnkgeyBbeG1sXSRidW5kbGVNYW5pZmVzdCA9ICRyZWFkZXIuUmVhZFRvRW5kKCkgfSBmaW5hbGx5IHsgJHJlYWRlci5EaXNwb3NlKCkgfQotICAgICAgICAgIH0gZmluYWxseSB7Ci0gICAgICAgICAgICAkemlwLkRpc3Bvc2UoKQotICAgICAgICAgIH0KLQotICAgICAgICAgICRucyA9IE5ldy1PYmplY3QgU3lzdGVtLlhtbC5YbWxOYW1lc3BhY2VNYW5hZ2VyKCRidW5kbGVNYW5pZmVzdC5OYW1lVGFibGUpCi0gICAgICAgICAgJG5zLkFkZE5hbWVzcGFjZSgnYicsICdodHRwOi8vc2NoZW1hcy5taWNyb3NvZnQuY29tL2FwcHgvMjAxMy9idW5kbGUnKQotICAgICAgICAgICRwYWNrYWdlcyA9IEAoJGJ1bmRsZU1hbmlmZXN0LlNlbGVjdE5vZGVzKCcvYjpCdW5kbGUvYjpQYWNrYWdlcy9iOlBhY2thZ2VbQFR5cGU9ImFwcGxpY2F0aW9uIl0nLCAkbnMpKQotICAgICAgICAgIGlmICgkcGFja2FnZXMuQ291bnQgLW5lIDIpIHsgdGhyb3cgIkV4cGVjdGVkIHR3byBhcHBsaWNhdGlvbiBwYWNrYWdlcyBpbiBidW5kbGUsIGZvdW5kICQoJHBhY2thZ2VzLkNvdW50KS4iIH0KLQotICAgICAgICAgICRhcmNoaXRlY3R1cmVzID0gQCgkcGFja2FnZXMgfCBGb3JFYWNoLU9iamVjdCB7ICRfLkdldEF0dHJpYnV0ZSgnQXJjaGl0ZWN0dXJlJykuVG9Mb3dlckludmFyaWFudCgpIH0gfCBTb3J0LU9iamVjdCAtVW5pcXVlKQotICAgICAgICAgIGlmICgoJGFyY2hpdGVjdHVyZXMgLWpvaW4gJywnKSAtbmUgJ2FybTY0LHg2NCcpIHsKLSAgICAgICAgICAgIHRocm93ICJNU0lYIGJ1bmRsZSBhcmNoaXRlY3R1cmVzIGFyZSAnJCgkYXJjaGl0ZWN0dXJlcyAtam9pbiAnLCcpJywgZXhwZWN0ZWQgJ2FybTY0LHg2NCcuIgotICAgICAgICAgIH0KLQotICAgICAgICAgICRyZWxlYXNlID0gR2V0LUNvbnRlbnQgLVJhdyAuXHJlbGVhc2VcdmVyc2lvbi5qc29uIHwgQ29udmVydEZyb20tSnNvbgotICAgICAgICAgIGZvcmVhY2ggKCRwYWNrYWdlIGluICRwYWNrYWdlcykgewotICAgICAgICAgICAgaWYgKCRwYWNrYWdlLkdldEF0dHJpYnV0ZSgnVmVyc2lvbicpIC1uZSAkcmVsZWFzZS5tc2l4VmVyc2lvbikgewotICAgICAgICAgICAgICB0aHJvdyAiQnVuZGxlIHBhY2thZ2UgdmVyc2lvbiAkKCRwYWNrYWdlLkdldEF0dHJpYnV0ZSgnVmVyc2lvbicpKSBkb2VzIG5vdCBtYXRjaCAkKCRyZWxlYXNlLm1zaXhWZXJzaW9uKS4iCi0gICAgICAgICAgICB9Ci0gICAgICAgICAgfQotICAgICAgICAgIFdyaXRlLUhvc3QgIlZlcmlmaWVkIE1TSVggYnVuZGxlOiB4NjQgKyBBUk02NCwgdmVyc2lvbiAkKCRyZWxlYXNlLm1zaXhWZXJzaW9uKS4iCisgICAgICAgICAgcHl0aG9uIHNjcmlwdHMvdmVyaWZ5LW1zaXgtYnVuZGxlLnB5ICRidW5kbGVzWzBdLkZ1bGxOYW1lIC0tcm9vdCAkUFdECisgICAgICAgICAgaWYgKCRMQVNURVhJVENPREUgLW5lIDApIHsgdGhyb3cgJ01TSVggYnVuZGxlIHZlcmlmaWNhdGlvbiBmYWlsZWQuJyB9CisgICAgICAgICAgJGhhc2ggPSAoR2V0LUZpbGVIYXNoIC1BbGdvcml0aG0gU0hBMjU2ICRidW5kbGVzWzBdLkZ1bGxOYW1lKS5IYXNoLlRvTG93ZXJJbnZhcmlhbnQoKQorICAgICAgICAgICIkaGFzaCAgJCgkYnVuZGxlc1swXS5OYW1lKSIgfCBTZXQtQ29udGVudCAtRW5jb2RpbmcgYXNjaWkgLU5vTmV3bGluZSAiJCgkYnVuZGxlc1swXS5GdWxsTmFtZSkuc2hhMjU2IgogICAgICAgLSBuYW1lOiBVcGxvYWQgTVNJWCBidW5kbGUKICAgICAgICAgdXNlczogYWN0aW9ucy91cGxvYWQtYXJ0aWZhY3RAdjcuMC4xCiAgICAgICAgIHdpdGg6CiAgICAgICAgICAgbmFtZTogbWFnaWMtY2FwdHVyZS1kZXNrdG9wLW1zaXgtYnVuZGxlCi0gICAgICAgICAgcGF0aDogYXJ0aWZhY3RzL21zaXgtY2kvKiovKi5tc2l4YnVuZGxlCisgICAgICAgICAgcGF0aDogfAorICAgICAgICAgICAgYXJ0aWZhY3RzL21zaXgtY2kvKiovKi5tc2l4YnVuZGxlCisgICAgICAgICAgICBhcnRpZmFjdHMvbXNpeC1jaS8qKi8qLm1zaXhidW5kbGUuc2hhMjU2CiAgICAgICAgICAgaWYtbm8tZmlsZXMtZm91bmQ6IGVycm9yCiAKICAgc291cmNlLXJlbGVhc2U6CiAgICAgcnVucy1vbjogdWJ1bnR1LWxhdGVzdAogICAgIHN0ZXBzOgogICAgICAgLSB1c2VzOiBhY3Rpb25zL2NoZWNrb3V0QHY3LjAuMQorICAgICAgLSBuYW1lOiBSZWxlYXNlIHZlcmlmaWVyIHJlZ3Jlc3Npb24gdGVzdHMKKyAgICAgICAgcnVuOiBweXRob24gLW0gdW5pdHRlc3QgdGVzdHMvcmVsZWFzZS90ZXN0X3JlbGVhc2VfdmVyaWZpZXJzLnB5CiAgICAgICAtIG5hbWU6IFNvdXJjZSByZWxlYXNlIGRyeSBydW4KICAgICAgICAgcnVuOiBweXRob24gc2NyaXB0cy9zb3VyY2UtcmVsZWFzZS5weQogICAgICAgLSBuYW1lOiBTdGFnZSBkZXRlcm1pbmlzdGljIHNvdXJjZSBidW5kbGUKZGlmZiAtLWdpdCBhL1JFQURNRS5tZCBiL1JFQURNRS5tZAppbmRleCAwYmYxYzQ1Li4yYzgyYWNmIDEwMDY0NAotLS0gYS9SRUFETUUubWQKKysrIGIvUkVBRE1FLm1kCkBAIC0xMDQsOCArMTA0LDggQEAgUGx1cyBuZXZlciBhc2tzIGZvciBhIHBheW1lbnQgbWV0aG9kLCBuZXZlciBhdXRvLXJlbmV3cyBhbmQgbmV2ZXIgY29udmVydHMgaW50bwogYGBgdGV4dAogQXBwICAgICAgICAgICAgICAgICAgICAgICAgICBGcmVlIGZvcmV2ZXIKIFBsdXMgICAgICAgICAgICAgICAgICAgICAgICAgNy1kYXkgdHJpYWwgb25seTsgbm90IHNvbGQKLVBybyBMaWZldGltZSBNU1JQIChVUykgICAgICAgJDI5Ljk5Ci1MYXVuY2ggcHJpY2UgKFVTKSAgICAgICAgICAgICQxOS45OQorUHJvIExpZmV0aW1lIE1TUlAgKFVTKSAgICAgICAkMTQuOTkKK0xhdW5jaCBwcmljZSAoVVMpICAgICAgICAgICAgJDkuOTkKIExhdW5jaC1wcmljZSBkdXJhdGlvbiAgICAgICAgOTAgY29uc2VjdXRpdmUgZGF5cwogU3Vic2NyaXB0aW9uICAgICAgICAgICAgICAgICBOb25lCiBEZXZlbG9wZXIgQUkgdG9rZW4gc2VydmljZSAgIE5vbmUKZGlmZiAtLWdpdCBhL3BhY2thZ2luZy9TVE9SRV9TVUJNSVNTSU9OLm1kIGIvcGFja2FnaW5nL1NUT1JFX1NVQk1JU1NJT04ubWQKaW5kZXggODA5NzFlNC4uODRjZTA2YiAxMDA2NDQKLS0tIGEvcGFja2FnaW5nL1NUT1JFX1NVQk1JU1NJT04ubWQKKysrIGIvcGFja2FnaW5nL1NUT1JFX1NVQk1JU1NJT04ubWQKQEAgLTMxLDggKzMxLDggQEAgQ29tbWVyY2lhbCBsYXVuY2ggYmFzZWxpbmU6CiBgYGB0ZXh0CiBBcHAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIEZyZWUgZm9yZXZlcgogUGx1cyAgICAgICAgICAgICAgICAgICAgICAgICAgICBUcmlhbCBvbmx5OyBub3Qgc29sZAotUHJvIExpZmV0aW1lIHJlZ3VsYXIgVVMgTVNSUCAgICAkMjkuOTkKLVBybyBMaWZldGltZSBVUyBsYXVuY2ggICAgICAgICAgJDE5Ljk5CitQcm8gTGlmZXRpbWUgcmVndWxhciBVUyBNU1JQICAgICQxNC45OQorUHJvIExpZmV0aW1lIFVTIGxhdW5jaCAgICAgICAgICAkOS45OQogTGF1bmNoIGR1cmF0aW9uICAgICAgICAgICAgICAgICA5MCBjb25zZWN1dGl2ZSBkYXlzIGZyb20gcHVibGljIFBybyBhdmFpbGFiaWxpdHkKIFN1YnNjcmlwdGlvbiAgICAgICAgICAgICAgICAgICAgTm9uZQogYGBgCkBAIC0yMTksOCArMjE5LDggQEAgVGVzdCBhdCBtaW5pbXVtIG9uIGNsZWFuIHg2NCBhbmQgQVJNNjQgV2luZG93cyBlbnZpcm9ubWVudHM6CiAtIFsgXSBGcmVlIGFwcCByZW1haW5zICQwLgogLSBbIF0gUGx1cyBoYXMgbm8gU3RvcmUgU0tVL2FkZC1vbi4KIC0gWyBdIFBybyBhZGQtb24gaXMgRHVyYWJsZSAvIEZvcmV2ZXIuCi0tIFsgXSBVUyBQcm8gYmFzZSBwcmljZSBjb25maWd1cmVkIGF0ICQyOS45OS1lcXVpdmFsZW50IHRpZXIuCi0tIFsgXSBVUyBsYXVuY2ggc2FsZSBjb25maWd1cmVkIGF0ICQxOS45OSBmb3IgOTAgY29uc2VjdXRpdmUgZGF5cy4KKy0gWyBdIFVTIFBybyBiYXNlIHByaWNlIGNvbmZpZ3VyZWQgYXQgJDE0Ljk5LWVxdWl2YWxlbnQgdGllci4KKy0gWyBdIFVTIGxhdW5jaCBzYWxlIGNvbmZpZ3VyZWQgYXQgJDkuOTkgZm9yIDkwIGNvbnNlY3V0aXZlIGRheXMuCiAtIFsgXSBTYWxlIGVuZHMgYmFjayBhdCB0aGUgcmVndWxhciBiYXNlIHByaWNlLgogLSBbIF0gTm9uLVVTIGxvY2FsaXplZCBwcmljaW5nIHJldmlld2VkLgogLSBbIF0gUGxhbiBwYWdlIHJlYWRzIFN0b3JlIGN1cnJlbnQgcHJpY2UgaW5zdGVhZCBvZiBoYXJkLWNvZGVkIFVTRC4KZGlmZiAtLWdpdCBhL3NjcmlwdHMvcGFjay5wczEgYi9zY3JpcHRzL3BhY2sucHMxCmluZGV4IDIxZjZlMzIuLjE2NmQ5NzIgMTAwNjQ0Ci0tLSBhL3NjcmlwdHMvcGFjay5wczEKKysrIGIvc2NyaXB0cy9wYWNrLnBzMQpAQCAtNDEsNCArNDEsMTQgQEAgTmV3LUl0ZW0gLUl0ZW1UeXBlIERpcmVjdG9yeSAtRm9yY2UgLVBhdGggJE91dHB1dERpcmVjdG9yeSB8IE91dC1OdWxsCiAgICAgL3A6QXBweFBhY2thZ2VTaWduaW5nRW5hYmxlZD1mYWxzZQogCiBpZiAoJExBU1RFWElUQ09ERSAtbmUgMCkgeyB0aHJvdyAiTVNJWCBwYWNrYWdpbmcgZmFpbGVkIHdpdGggZXhpdCBjb2RlICRMQVNURVhJVENPREUuIiB9CisKKyRidW5kbGVzID0gQChHZXQtQ2hpbGRJdGVtICRPdXRwdXREaXJlY3RvcnkgLVJlY3Vyc2UgLUZpbGUgLUZpbHRlciAqLm1zaXhidW5kbGUpCitpZiAoJGJ1bmRsZXMuQ291bnQgLW5lIDEpIHsgdGhyb3cgIkV4cGVjdGVkIGV4YWN0bHkgb25lIFN0b3JlIE1TSVggYnVuZGxlLCBmb3VuZCAkKCRidW5kbGVzLkNvdW50KS4iIH0KK3B5dGhvbiAuXHNjcmlwdHNcdmVyaWZ5LW1zaXgtYnVuZGxlLnB5ICRidW5kbGVzWzBdLkZ1bGxOYW1lIC0tcm9vdCAkcm9vdCAtLXJlcXVpcmUtc3RvcmUtaWRlbnRpdHkKK2lmICgkTEFTVEVYSVRDT0RFIC1uZSAwKSB7IHRocm93ICdQYWNrYWdlZCBTdG9yZSBNU0lYIGNvbnRyYWN0IHZlcmlmaWNhdGlvbiBmYWlsZWQuJyB9CisKKyRoYXNoID0gKEdldC1GaWxlSGFzaCAtQWxnb3JpdGhtIFNIQTI1NiAkYnVuZGxlc1swXS5GdWxsTmFtZSkuSGFzaC5Ub0xvd2VySW52YXJpYW50KCkKKyRjaGVja3N1bVBhdGggPSAiJCgkYnVuZGxlc1swXS5GdWxsTmFtZSkuc2hhMjU2IgorIiRoYXNoICAkKCRidW5kbGVzWzBdLk5hbWUpIiB8IFNldC1Db250ZW50IC1FbmNvZGluZyBhc2NpaSAtTm9OZXdsaW5lICRjaGVja3N1bVBhdGgKIFdyaXRlLUhvc3QgIlN0b3JlIHBhY2thZ2Ugb3V0cHV0OiAkT3V0cHV0RGlyZWN0b3J5IiAtRm9yZWdyb3VuZENvbG9yIEdyZWVuCitXcml0ZS1Ib3N0ICJCdW5kbGUgU0hBMjU2OiAkaGFzaCIgLUZvcmVncm91bmRDb2xvciBHcmVlbgpkaWZmIC0tZ2l0IGEvc2NyaXB0cy9zb3VyY2UtcmVsZWFzZS5weSBiL3NjcmlwdHMvc291cmNlLXJlbGVhc2UucHkKaW5kZXggM2MwOGYzMy4uYzc3MTFkYyAxMDA2NDQKLS0tIGEvc2NyaXB0cy9zb3VyY2UtcmVsZWFzZS5weQorKysgYi9zY3JpcHRzL3NvdXJjZS1yZWxlYXNlLnB5CkBAIC0xMyw3ICsxMyw3IEBAIFZFUlNJT04gPSBqc29uLmxvYWRzKChST09UIC8gJ3JlbGVhc2UvdmVyc2lvbi5qc29uJykucmVhZF90ZXh0KGVuY29kaW5nPSd1dGYtOCcpCiBPVVRQVVQgPSBST09ULnBhcmVudCAvIGYnTWFnaWMtQ2FwdHVyZS1EZXNrdG9wLXtWRVJTSU9OfS1zb3VyY2UuemlwJwogRVhDTFVERURfUEFSVFMgPSB7Jy5naXQnLCAnLnZzJywgJ2JpbicsICdvYjonLCAnYXJ0aWZhY3RzJywgJ19fcHljYWNoZV9fJ30KIAotZm9yIHZlcmlmaWVyIGluICgndmVyaWZ5LXJlcG8ucHknLCAndmVyaWZ5LXN0cnVjdHVyZS5weScsICd2ZXJpZnktY3NoYXJwLWxleGljYWwucHknLCAndmVyaWZ5LXdvcmtmbG93LXRyaWdnZXJzLnB5JywgJ3ZlcmlmeS13b3JrZmxvdy1jb250cm9sLWZsb3cucHknLCAndmVyaWZ5LWhpc3RvcnktaW50ZWxsaWdlbmNlLnB5JywgJ3ZlcmlmeS1zZXR0aW5ncy1wZXJzb25hbGl6YXRpb24ucHknLCAndmVyaWZ5LXNldHRpbmdzLWNvbnNpc3RlbmN5LnB5JywgJ3ZlcmlmeS13b3JrLXJlY292ZXJ5LnB5Jyk6Citmb3IgdmVyaWZpZXIgaW4gKCd2ZXJpZnktcmVwby5weScsICd2ZXJpZnktc3RydWN0dXJlLnB5JywgJ3ZlcmlmeS1jc2hhcnAtbGV4aWNhbC5weScsICd2ZXJpZnktd29ya2Zsb3ctdHJpZ2dlcnMucHknLCAndmVyaWZ5LXdvcmtmbG93LWNvbnRyb2wtZmxvdy5weScsICd2ZXJpZnktaGlzdG9yeS1pbnRlbGxpZ2VuY2UucHknLCAndmVyaWZ5LXNldHRpbmdzLXBlcnNvbmFsaXphdGlvbi5weScsICd2ZXJpZnktc2V0dGluZ3MtY29uc2lzdGVuY3kucHknLCAndmVyaWZ5LXdvcmstcmVjb3ZlcnkucHknLCAndmVyaWZ5LXJlbGVhc2UtbWV0YWRhdGEucHknLCAndmVyaWZ5LWNvbW1lcmNpYWwtbWV0YWRhdGEucHknKToKICAgICB2ZXJpZnkgPSBzdWJwcm9jZXNzLnJ1bihbc3lzLmV4ZWN1dGFibGUsIHN0cihST09UIC8gJ3NjcmlwdHMnIC8gdmVyaWZpZXIpXSwgY3dkPVJPT1QpCiAgICAgaWYgdmVyaWZ5LnJldHVybmNvZGUgIT0gMDoKICAgICAgICAgcmFpc2UgU3lzdGVtRXhpdCh2ZXJpZnkucmV0dXJuY29kZSkKZGlmZiAtLWdpdCBhL3NjcmlwdHMvc3RvcmUtcHJlZmxpZ2h0LnBzMSBiL3NjcmlwdHMvc3RvcmUtcHJlZmxpZ2h0LnBzMQppbmRleCA4YmJjNGJmLi4wMWUxZTVlIDEwMDY0NAotLS0gYS9zY3JpcHRzL3N0b3JlLXByZWZsaWdodC5wczEKKysrIGIvc2NyaXB0cy9zdG9yZS1wcmVmbGlnaHQucHMxCkBAIC0xMSw2ICsxMSw5IEBAIGlmICgkTEFTVEVYSVRDT0RFIC1uZSAwKSB7IHRocm93ICdSZXBvc2l0b3J5IHZlcmlmaWNhdGlvbiBmYWlsZWQuJyB9CiBweXRob24gLlxzY3JpcHRzXHZlcmlmeS1yZWxlYXNlLW1ldGFkYXRhLnB5CiBpZiAoJExBU1RFWElUQ09ERSAtbmUgMCkgeyB0aHJvdyAnUmVsZWFzZSBtZXRhZGF0YSB2ZXJpZmljYXRpb24gZmFpbGVkLicgfQogCitweXRob24gLlxzY3JpcHRzXHZlcmlmeS1jb21tZXJjaWFsLW1ldGFkYXRhLnB5CitpZiAoJExBU1RFWElUQ09ERSAtbmUgMCkgeyB0aHJvdyAnQ29tbWVyY2lhbCBtZXRhZGF0YSB2ZXJpZmljYXRpb24gZmFpbGVkLicgfQorCiBpZiAoLW5vdCAoVGVzdC1QYXRoICRNYW5pZmVzdFBhdGgpKSB7IHRocm93ICJQYWNrYWdlIG1hbmlmZXN0IG5vdCBmb3VuZDogJE1hbmlmZXN0UGF0aCIgfQogW3htbF0kbWFuaWZlc3QgPSBHZXQtQ29udGVudCAtUmF3ICRNYW5pZmVzdFBhdGgKICRucyA9IE5ldy1PYmplY3QgU3lzdGVtLlhtbC5YbWxOYW1lc3BhY2VNYW5hZ2VyKCRtYW5pZmVzdC5OYW1lVGFibGUpCmRpZmYgLS1naXQgYS9zY3JpcHRzL3ZlcmlmeS1yZXBvLnB5IGIvc2NyaXB0cy92ZXJpZnktcmVwby5weQppbmRleCAzMjUwMmZjLi4wM2NjZmYzIDEwMDY0NAotLS0gYS9zY3JpcHRzL3ZlcmlmeS1yZXBvLnB5CisrKyBiL3NjcmlwdHMvdmVyaWZ5LXJlcG8ucHkKQEAgLTMwMyw3ICszMDMsNyBAQCBjb21tZXJjZV9jaGVja3MgPSB7CiAgICAgUk9PVCAvICdzcmMvTWFnaWMuQ2FwdHVyZS5BcHAvVmlld3MvQ2FwdHVyZU92ZXJsYXlXaW5kb3cueGFtbCc6IFsnVGV4dCcsICdUYWJsZScsICdRUicsICdFZGl0JywgJ0NvbG9yJ10sCiAgICAgUk9PVCAvICdzcmMvTWFnaWMuQ2FwdHVyZS5BcHAvVmlld3MvQ29tcGFyZVdpbmRvdy54YW1sJzogWydTaWRlIGJ5IHNpZGUnLCAnT3ZlcmxheScsICdEaWZmZXJlbmNlJ10sCiAgICAgUk9PVCAvICdzcmMvTWFnaWMuQ2FwdHVyZS5BcHAvTWFpbldpbmRvdy54YW1sJzogWydQcm9QcmljZVRleHQnLCAnUHJpY2Ugc2hvd24gYnkgTWljcm9zb2Z0IFN0b3JlJ10sCi0gICAgUk9PVCAvICdwYWNrYWdpbmcvU1RPUkVfU1VCTUlTU0lPTi5tZCc6IFsnJDI5Ljk5JywgJyQxOS45OScsICc5MCBjb25zZWN1dGl2ZSBkYXlzJ10sCisgICAgUk9PVCAvICdwYWNrYWdpbmcvU1RPUkVfU1VCTUlTU0lPTi5tZCc6IFsnbWFnaWNjYXB0dXJlLmRlc2t0b3AucHJvJywgJ0R1cmFibGUnLCAnRm9yZXZlcicsICc5MCBjb25zZWN1dGl2ZSBkYXlzJ10sCiB9CiBmb3IgcGF0aCwgbmVlZGxlcyBpbiBjb21tZXJjZV9jaGVja3MuaXRlbXMoKToKICAgICBpZiBub3QgcGF0aC5leGlzdHMoKToK' | base64 -d > /tmp/release-hardening.patch
-          git apply --check /tmp/release-hardening.patch
-          git apply /tmp/release-hardening.patch
+          python - <<'PY'
+          from pathlib import Path
+
+          def rewrite(path: str, old: str, new: str, expected: int = 1) -> None:
+              p = Path(path)
+              text = p.read_text(encoding='utf-8')
+              count = text.count(old)
+              if count != expected:
+                  raise SystemExit(f'{path}: expected {expected} occurrence(s) of anchor, found {count}')
+              p.write_text(text.replace(old, new), encoding='utf-8')
+
+          rewrite('README.md', '$29.99', '$14.99')
+          rewrite('README.md', '$19.99', '$9.99')
+          rewrite('packaging/STORE_SUBMISSION.md', '$29.99', '$14.99', 2)
+          rewrite('packaging/STORE_SUBMISSION.md', '$19.99', '$9.99', 2)
+
+          rewrite(
+              'scripts/verify-repo.py',
+              "ROOT / 'packaging/STORE_SUBMISSION.md': ['$29.99', '$19.99', '90 consecutive days'],",
+              "ROOT / 'packaging/STORE_SUBMISSION.md': ['magiccapture.desktop.pro', 'Durable', 'Forever', '90 consecutive days'],",
+          )
+
+          preflight_old = """python .\\scripts\\verify-release-metadata.py
+          if ($LASTEXITCODE -ne 0) { throw 'Release metadata verification failed.' }
+          """
+          preflight_new = preflight_old + """
+          python .\\scripts\\verify-commercial-metadata.py
+          if ($LASTEXITCODE -ne 0) { throw 'Commercial metadata verification failed.' }
+          """
+          rewrite('scripts/store-preflight.ps1', preflight_old, preflight_new)
+
+          source_old = "for verifier in ('verify-repo.py', 'verify-structure.py', 'verify-csharp-lexical.py', 'verify-workflow-triggers.py', 'verify-workflow-control-flow.py', 'verify-history-intelligence.py', 'verify-settings-personalization.py', 'verify-settings-consistency.py', 'verify-work-recovery.py'):"
+          source_new = "for verifier in ('verify-repo.py', 'verify-structure.py', 'verify-csharp-lexical.py', 'verify-workflow-triggers.py', 'verify-workflow-control-flow.py', 'verify-history-intelligence.py', 'verify-settings-personalization.py', 'verify-settings-consistency.py', 'verify-work-recovery.py', 'verify-release-metadata.py', 'verify-commercial-metadata.py'):"
+          rewrite('scripts/source-release.py', source_old, source_new)
+
+          pack_old = """if ($LASTEXITCODE -ne 0) { throw \"MSIX packaging failed with exit code $LASTEXITCODE.\" }
+          Write-Host \"Store package output: $OutputDirectory\" -ForegroundColor Green
+          """
+          pack_new = """if ($LASTEXITCODE -ne 0) { throw \"MSIX packaging failed with exit code $LASTEXITCODE.\" }
+
+          $bundles = @(Get-ChildItem $OutputDirectory -Recurse -File -Filter *.msixbundle)
+          if ($bundles.Count -ne 1) { throw \"Expected exactly one Store MSIX bundle, found $($bundles.Count).\" }
+          python .\\scripts\\verify-msix-bundle.py $bundles[0].FullName --root $root --require-store-identity
+          if ($LASTEXITCODE -ne 0) { throw 'Packaged Store MSIX contract verification failed.' }
+
+          $hash = (Get-FileHash -Algorithm SHA256 $bundles[0].FullName).Hash.ToLowerInvariant()
+          $checksumPath = \"$($bundles[0].FullName).sha256\"
+          \"$hash  $($bundles[0].Name)\" | Set-Content -Encoding ascii -NoNewline $checksumPath
+          Write-Host \"Store package output: $OutputDirectory\" -ForegroundColor Green
+          Write-Host \"Bundle SHA256: $hash\" -ForegroundColor Green
+          """
+          rewrite('scripts/pack.ps1', pack_old, pack_new)
+
+          workflow = Path('.github/workflows/windows-ci.yml')
+          text = workflow.read_text(encoding='utf-8')
+
+          old_static = "            'verify-release-metadata.py'\n"
+          new_static = "            'verify-release-metadata.py',\n            'verify-commercial-metadata.py'\n"
+          if text.count(old_static) != 1:
+              raise SystemExit('windows-ci.yml: static verifier anchor mismatch')
+          text = text.replace(old_static, new_static, 1)
+
+          start_marker = '      - name: Verify bundle architectures\n'
+          end_marker = '      - name: Upload MSIX bundle\n'
+          if text.count(start_marker) != 1 or text.count(end_marker) != 1:
+              raise SystemExit('windows-ci.yml: MSIX verifier step anchors mismatch')
+          start = text.index(start_marker)
+          end = text.index(end_marker, start)
+          replacement = (
+              "      - name: Verify packaged MSIX contract\n"
+              "        shell: pwsh\n"
+              "        run: |\n"
+              "          $bundles = @(Get-ChildItem .\\artifacts\\msix-ci -Recurse -File -Filter *.msixbundle)\n"
+              "          if ($bundles.Count -ne 1) { throw \"Expected exactly one MSIX bundle, found $($bundles.Count).\" }\n"
+              "          python scripts/verify-msix-bundle.py $bundles[0].FullName --root $PWD\n"
+              "          if ($LASTEXITCODE -ne 0) { throw 'MSIX bundle verification failed.' }\n"
+              "          $hash = (Get-FileHash -Algorithm SHA256 $bundles[0].FullName).Hash.ToLowerInvariant()\n"
+              "          \"$hash  $($bundles[0].Name)\" | Set-Content -Encoding ascii -NoNewline \"$($bundles[0].FullName).sha256\"\n"
+          )
+          text = text[:start] + replacement + text[end:]
+
+          old_upload = '          path: artifacts/msix-ci/**/*.msixbundle\n'
+          new_upload = '          path: |\n            artifacts/msix-ci/**/*.msixbundle\n            artifacts/msix-ci/**/*.msixbundle.sha256\n'
+          if text.count(old_upload) != 1:
+              raise SystemExit('windows-ci.yml: artifact path anchor mismatch')
+          text = text.replace(old_upload, new_upload, 1)
+
+          old_source = "      - uses: actions/checkout@v7.0.1\n      - name: Source release dry run\n"
+          new_source = "      - uses: actions/checkout@v7.0.1\n      - name: Release verifier regression tests\n        run: python -m unittest tests/release/test_release_verifiers.py\n      - name: Source release dry run\n"
+          if text.count(old_source) != 1:
+              raise SystemExit('windows-ci.yml: source-release anchor mismatch')
+          text = text.replace(old_source, new_source, 1)
+          workflow.write_text(text, encoding='utf-8')
+          PY
       - name: Verify release hardening
         shell: bash
         run: |
