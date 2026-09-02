@@ -1,0 +1,25 @@
+namespace Magic.Capture.Core.History;
+
+public sealed record HistoryItem(
+    Guid Id,
+    DateTimeOffset CreatedUtc,
+    string RelativePath,
+    int Width,
+    int Height,
+    string SourceKind,
+    string? OcrPreview,
+    string? BarcodePreview,
+    long FileBytes,
+    string? ThumbnailRelativePath = null,
+    string? Title = null,
+    string? Notes = null,
+    IReadOnlyList<string>? Tags = null,
+    bool IsFavorite = false,
+    string? SessionId = null,
+    string? SourceDisplayName = null,
+    string? WindowTitle = null,
+    string? ProcessName = null,
+    string? MonitorName = null,
+    string? ContentSha256 = null,
+    ulong? PerceptualHash64 = null,
+    string? ExecutablePath = null);

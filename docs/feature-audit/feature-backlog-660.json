@@ -1,0 +1,3302 @@
+[
+  {
+    "id": 1,
+    "line": 7,
+    "name": "Automatic Scrolling Capture thật sự"
+  },
+  {
+    "id": 2,
+    "line": 13,
+    "name": "Horizontal Scrolling Capture"
+  },
+  {
+    "id": 3,
+    "line": 18,
+    "name": "2D scrolling capture"
+  },
+  {
+    "id": 4,
+    "line": 20,
+    "name": "Custom scrolling region"
+  },
+  {
+    "id": 5,
+    "line": 23,
+    "name": "Sticky-header detection"
+  },
+  {
+    "id": 6,
+    "line": 26,
+    "name": "Dynamic-content protection"
+  },
+  {
+    "id": 7,
+    "line": 28,
+    "name": "Scroll retry/alignment correction"
+  },
+  {
+    "id": 8,
+    "line": 35,
+    "name": "Freehand region capture"
+  },
+  {
+    "id": 9,
+    "line": 36,
+    "name": "Elliptical region capture"
+  },
+  {
+    "id": 10,
+    "line": 37,
+    "name": "Polygon region capture"
+  },
+  {
+    "id": 11,
+    "line": 38,
+    "name": "Multi-region capture"
+  },
+  {
+    "id": 12,
+    "line": 41,
+    "name": "Window-object capture"
+  },
+  {
+    "id": 13,
+    "line": 43,
+    "name": "UI Automation element snapping"
+  },
+  {
+    "id": 14,
+    "line": 47,
+    "name": "Menu capture"
+  },
+  {
+    "id": 15,
+    "line": 51,
+    "name": "Multi-level menu capture"
+  },
+  {
+    "id": 16,
+    "line": 52,
+    "name": "Multiple-window/object capture trong một lần"
+  },
+  {
+    "id": 17,
+    "line": 53,
+    "name": "Window menu"
+  },
+  {
+    "id": 18,
+    "line": 55,
+    "name": "Monitor menu"
+  },
+  {
+    "id": 19,
+    "line": 57,
+    "name": "Saved custom regions"
+  },
+  {
+    "id": 20,
+    "line": 59,
+    "name": "Exact dimensions"
+  },
+  {
+    "id": 21,
+    "line": 61,
+    "name": "Exact X/Y positioning"
+  },
+  {
+    "id": 22,
+    "line": 62,
+    "name": "Preset sizes"
+  },
+  {
+    "id": 23,
+    "line": 67,
+    "name": "Recently used capture regions"
+  },
+  {
+    "id": 24,
+    "line": 68,
+    "name": "Snap selection vào edge/window/control"
+  },
+  {
+    "id": 25,
+    "line": 69,
+    "name": "Magnifier/loupe khi chọn vùng"
+  },
+  {
+    "id": 26,
+    "line": 71,
+    "name": "Pixel coordinate HUD"
+  },
+  {
+    "id": 27,
+    "line": 73,
+    "name": "Adjust selection bằng handles sau khi kéo"
+  },
+  {
+    "id": 28,
+    "line": 75,
+    "name": "Undo/reselect capture region"
+  },
+  {
+    "id": 29,
+    "line": 76,
+    "name": "Transparent/light selection mode"
+  },
+  {
+    "id": 30,
+    "line": 78,
+    "name": "Capture preset/profile"
+  },
+  {
+    "id": 31,
+    "line": 96,
+    "name": "Windows Graphics Capture GPU path"
+  },
+  {
+    "id": 32,
+    "line": 97,
+    "name": "Desktop Duplication fallback"
+  },
+  {
+    "id": 33,
+    "line": 98,
+    "name": "Legacy GDI fallback khi cần"
+  },
+  {
+    "id": 34,
+    "line": 99,
+    "name": "Automatic engine selection"
+  },
+  {
+    "id": 35,
+    "line": 100,
+    "name": "HDR screenshot support"
+  },
+  {
+    "id": 36,
+    "line": 101,
+    "name": "HDR → SDR tone mapping khi export PNG/JPEG"
+  },
+  {
+    "id": 37,
+    "line": 102,
+    "name": "Wide-color / ICC awareness"
+  },
+  {
+    "id": 38,
+    "line": 103,
+    "name": "10-bit screen handling"
+  },
+  {
+    "id": 39,
+    "line": 104,
+    "name": "High-refresh monitor testing"
+  },
+  {
+    "id": 40,
+    "line": 105,
+    "name": "Mixed-DPI multi-monitor alignment hoàn chỉnh"
+  },
+  {
+    "id": 41,
+    "line": 106,
+    "name": "Negative monitor coordinate support"
+  },
+  {
+    "id": 42,
+    "line": 107,
+    "name": "Portrait-monitor edge cases"
+  },
+  {
+    "id": 43,
+    "line": 108,
+    "name": "Display scaling 100/125/150/175/200% torture tests"
+  },
+  {
+    "id": 44,
+    "line": 109,
+    "name": "Touch-screen capture gestures"
+  },
+  {
+    "id": 45,
+    "line": 110,
+    "name": "Capture fullscreen/D3D apps tốt hơn"
+  },
+  {
+    "id": 46,
+    "line": 122,
+    "name": "Record region"
+  },
+  {
+    "id": 47,
+    "line": 123,
+    "name": "Record window"
+  },
+  {
+    "id": 48,
+    "line": 124,
+    "name": "Record monitor"
+  },
+  {
+    "id": 49,
+    "line": 125,
+    "name": "Record virtual desktop"
+  },
+  {
+    "id": 50,
+    "line": 126,
+    "name": "Record multiple monitors"
+  },
+  {
+    "id": 51,
+    "line": 127,
+    "name": "System audio recording"
+  },
+  {
+    "id": 52,
+    "line": 128,
+    "name": "Microphone recording"
+  },
+  {
+    "id": 53,
+    "line": 129,
+    "name": "System + microphone cùng lúc"
+  },
+  {
+    "id": 54,
+    "line": 130,
+    "name": "Webcam capture"
+  },
+  {
+    "id": 55,
+    "line": 131,
+    "name": "Webcam Picture-in-Picture"
+  },
+  {
+    "id": 56,
+    "line": 132,
+    "name": "Position/resize webcam overlay"
+  },
+  {
+    "id": 57,
+    "line": 133,
+    "name": "Pause / Resume"
+  },
+  {
+    "id": 58,
+    "line": 134,
+    "name": "Recording countdown"
+  },
+  {
+    "id": 59,
+    "line": 135,
+    "name": "Recording elapsed timer"
+  },
+  {
+    "id": 60,
+    "line": 136,
+    "name": "Hide recording controls khỏi video"
+  },
+  {
+    "id": 61,
+    "line": 137,
+    "name": "Cursor recording toggle"
+  },
+  {
+    "id": 62,
+    "line": 138,
+    "name": "Cursor highlight"
+  },
+  {
+    "id": 63,
+    "line": 139,
+    "name": "Mouse-click ripple"
+  },
+  {
+    "id": 64,
+    "line": 140,
+    "name": "Left/right click visualization"
+  },
+  {
+    "id": 65,
+    "line": 141,
+    "name": "Mouse-click sound"
+  },
+  {
+    "id": 66,
+    "line": 142,
+    "name": "Draw while recording"
+  },
+  {
+    "id": 67,
+    "line": 147,
+    "name": "Live zoom/focus"
+  },
+  {
+    "id": 68,
+    "line": 148,
+    "name": "FPS selection"
+  },
+  {
+    "id": 69,
+    "line": 150,
+    "name": "Quality/bitrate control"
+  },
+  {
+    "id": 70,
+    "line": 151,
+    "name": "Resolution scaling"
+  },
+  {
+    "id": 71,
+    "line": 152,
+    "name": "MP4 H.264"
+  },
+  {
+    "id": 72,
+    "line": 153,
+    "name": "H.265/HEVC"
+  },
+  {
+    "id": 73,
+    "line": 154,
+    "name": "AV1 nếu hardware cho phép"
+  },
+  {
+    "id": 74,
+    "line": 155,
+    "name": "WebM/VP9"
+  },
+  {
+    "id": 75,
+    "line": 156,
+    "name": "GIF recording"
+  },
+  {
+    "id": 76,
+    "line": 157,
+    "name": "Animated WebP/APNG export"
+  },
+  {
+    "id": 77,
+    "line": 158,
+    "name": "Hardware encoding"
+  },
+  {
+    "id": 78,
+    "line": 163,
+    "name": "Scheduled recording"
+  },
+  {
+    "id": 79,
+    "line": 166,
+    "name": "Stop after N minutes"
+  },
+  {
+    "id": 80,
+    "line": 167,
+    "name": "Stop at maximum file size"
+  },
+  {
+    "id": 81,
+    "line": 168,
+    "name": "Repeat last recording region"
+  },
+  {
+    "id": 82,
+    "line": 169,
+    "name": "Crash/shutdown recording recovery"
+  },
+  {
+    "id": 83,
+    "line": 170,
+    "name": "Audio-only recording"
+  },
+  {
+    "id": 84,
+    "line": 194,
+    "name": "Trim đầu/cuối"
+  },
+  {
+    "id": 85,
+    "line": 195,
+    "name": "Cut đoạn giữa"
+  },
+  {
+    "id": 86,
+    "line": 196,
+    "name": "Combine nhiều clips"
+  },
+  {
+    "id": 87,
+    "line": 197,
+    "name": "Crop video"
+  },
+  {
+    "id": 88,
+    "line": 198,
+    "name": "Resize video"
+  },
+  {
+    "id": 89,
+    "line": 199,
+    "name": "Change playback speed"
+  },
+  {
+    "id": 90,
+    "line": 200,
+    "name": "Mute đoạn"
+  },
+  {
+    "id": 91,
+    "line": 201,
+    "name": "Change audio volume"
+  },
+  {
+    "id": 92,
+    "line": 202,
+    "name": "Extract audio → WAV/MP3/M4A"
+  },
+  {
+    "id": 93,
+    "line": 203,
+    "name": "Capture frame → PNG"
+  },
+  {
+    "id": 94,
+    "line": 204,
+    "name": "Add title card"
+  },
+  {
+    "id": 95,
+    "line": 205,
+    "name": "Add text/arrow/shape overlay"
+  },
+  {
+    "id": 96,
+    "line": 206,
+    "name": "Add zoom effect"
+  },
+  {
+    "id": 97,
+    "line": 207,
+    "name": "Blur/redact vùng trong video"
+  },
+  {
+    "id": 98,
+    "line": 208,
+    "name": "Track blur region"
+  },
+  {
+    "id": 99,
+    "line": 209,
+    "name": "Convert video formats"
+  },
+  {
+    "id": 100,
+    "line": 210,
+    "name": "Video thumbnail/contact sheet"
+  },
+  {
+    "id": 101,
+    "line": 211,
+    "name": "GIF conversion"
+  },
+  {
+    "id": 102,
+    "line": 212,
+    "name": "Animated WebP conversion"
+  },
+  {
+    "id": 103,
+    "line": 213,
+    "name": "Local subtitle generation"
+  },
+  {
+    "id": 104,
+    "line": 214,
+    "name": "Burn subtitles into video"
+  },
+  {
+    "id": 105,
+    "line": 215,
+    "name": "Export `.srt` / `.vtt`"
+  },
+  {
+    "id": 106,
+    "line": 239,
+    "name": "Select annotation sau khi tạo"
+  },
+  {
+    "id": 107,
+    "line": 240,
+    "name": "Move annotation"
+  },
+  {
+    "id": 108,
+    "line": 241,
+    "name": "Resize annotation"
+  },
+  {
+    "id": 109,
+    "line": 242,
+    "name": "Rotate annotation"
+  },
+  {
+    "id": 110,
+    "line": 243,
+    "name": "Change properties sau khi tạo"
+  },
+  {
+    "id": 111,
+    "line": 244,
+    "name": "Copy annotation"
+  },
+  {
+    "id": 112,
+    "line": 245,
+    "name": "Paste annotation"
+  },
+  {
+    "id": 113,
+    "line": 246,
+    "name": "Duplicate annotation"
+  },
+  {
+    "id": 114,
+    "line": 247,
+    "name": "Bring forward"
+  },
+  {
+    "id": 115,
+    "line": 248,
+    "name": "Send backward"
+  },
+  {
+    "id": 116,
+    "line": 249,
+    "name": "Bring to front"
+  },
+  {
+    "id": 117,
+    "line": 250,
+    "name": "Send to back"
+  },
+  {
+    "id": 118,
+    "line": 251,
+    "name": "Multi-select"
+  },
+  {
+    "id": 119,
+    "line": 252,
+    "name": "Group/ungroup"
+  },
+  {
+    "id": 120,
+    "line": 253,
+    "name": "Lock layer"
+  },
+  {
+    "id": 121,
+    "line": 254,
+    "name": "Align left/right/top/bottom"
+  },
+  {
+    "id": 122,
+    "line": 255,
+    "name": "Equal widths/heights"
+  },
+  {
+    "id": 123,
+    "line": 256,
+    "name": "Distribute evenly"
+  },
+  {
+    "id": 124,
+    "line": 257,
+    "name": "Snap guides"
+  },
+  {
+    "id": 125,
+    "line": 261,
+    "name": "Speech balloon"
+  },
+  {
+    "id": 126,
+    "line": 262,
+    "name": "Callout"
+  },
+  {
+    "id": 127,
+    "line": 263,
+    "name": "Numbered Step tool"
+  },
+  {
+    "id": 128,
+    "line": 264,
+    "name": "Alphabetic Step A/B/C"
+  },
+  {
+    "id": 129,
+    "line": 265,
+    "name": "Roman numeral Step I/II/III"
+  },
+  {
+    "id": 130,
+    "line": 266,
+    "name": "Cursor stamp"
+  },
+  {
+    "id": 131,
+    "line": 267,
+    "name": "Left/right mouse-click stamp"
+  },
+  {
+    "id": 132,
+    "line": 268,
+    "name": "Emoji"
+  },
+  {
+    "id": 133,
+    "line": 269,
+    "name": "Sticker"
+  },
+  {
+    "id": 134,
+    "line": 270,
+    "name": "Insert image"
+  },
+  {
+    "id": 135,
+    "line": 271,
+    "name": "Magnify annotation"
+  },
+  {
+    "id": 136,
+    "line": 272,
+    "name": "Spotlight"
+  },
+  {
+    "id": 137,
+    "line": 273,
+    "name": "Smart eraser"
+  },
+  {
+    "id": 138,
+    "line": 274,
+    "name": "Eraser"
+  },
+  {
+    "id": 139,
+    "line": 275,
+    "name": "Fill/bucket"
+  },
+  {
+    "id": 140,
+    "line": 276,
+    "name": "Clone/retouch"
+  },
+  {
+    "id": 141,
+    "line": 277,
+    "name": "Pencil"
+  },
+  {
+    "id": 142,
+    "line": 278,
+    "name": "Marker"
+  },
+  {
+    "id": 143,
+    "line": 279,
+    "name": "Brush"
+  },
+  {
+    "id": 144,
+    "line": 280,
+    "name": "Airbrush"
+  },
+  {
+    "id": 145,
+    "line": 281,
+    "name": "Calligraphy"
+  },
+  {
+    "id": 146,
+    "line": 282,
+    "name": "Polyline"
+  },
+  {
+    "id": 147,
+    "line": 283,
+    "name": "Polygon"
+  },
+  {
+    "id": 148,
+    "line": 284,
+    "name": "Filled polygon"
+  },
+  {
+    "id": 149,
+    "line": 285,
+    "name": "Curved line"
+  },
+  {
+    "id": 150,
+    "line": 286,
+    "name": "Curved arrow"
+  },
+  {
+    "id": 151,
+    "line": 287,
+    "name": "Bracket"
+  },
+  {
+    "id": 152,
+    "line": 288,
+    "name": "Cut-out / remove strip"
+  },
+  {
+    "id": 153,
+    "line": 292,
+    "name": "Multiple arrowheads"
+  },
+  {
+    "id": 154,
+    "line": 293,
+    "name": "Curved arrows"
+  },
+  {
+    "id": 155,
+    "line": 294,
+    "name": "Dashed/dotted borders"
+  },
+  {
+    "id": 156,
+    "line": 295,
+    "name": "Border styles"
+  },
+  {
+    "id": 157,
+    "line": 296,
+    "name": "Shape fill colors"
+  },
+  {
+    "id": 158,
+    "line": 297,
+    "name": "Shape opacity"
+  },
+  {
+    "id": 159,
+    "line": 298,
+    "name": "Gradient fill"
+  },
+  {
+    "id": 160,
+    "line": 299,
+    "name": "Text font selector"
+  },
+  {
+    "id": 161,
+    "line": 300,
+    "name": "Bold"
+  },
+  {
+    "id": 162,
+    "line": 301,
+    "name": "Italic"
+  },
+  {
+    "id": 163,
+    "line": 302,
+    "name": "Alignment"
+  },
+  {
+    "id": 164,
+    "line": 303,
+    "name": "Outline text"
+  },
+  {
+    "id": 165,
+    "line": 304,
+    "name": "Text background"
+  },
+  {
+    "id": 166,
+    "line": 305,
+    "name": "Text shadow"
+  },
+  {
+    "id": 167,
+    "line": 306,
+    "name": "Adjustable line spacing"
+  },
+  {
+    "id": 168,
+    "line": 307,
+    "name": "Font presets"
+  },
+  {
+    "id": 169,
+    "line": 308,
+    "name": "Custom annotation styles"
+  },
+  {
+    "id": 170,
+    "line": 309,
+    "name": "Quick Styles"
+  },
+  {
+    "id": 171,
+    "line": 310,
+    "name": "User themes"
+  },
+  {
+    "id": 172,
+    "line": 320,
+    "name": "Brightness"
+  },
+  {
+    "id": 173,
+    "line": 321,
+    "name": "Contrast"
+  },
+  {
+    "id": 174,
+    "line": 322,
+    "name": "Gamma"
+  },
+  {
+    "id": 175,
+    "line": 323,
+    "name": "Exposure"
+  },
+  {
+    "id": 176,
+    "line": 324,
+    "name": "Hue"
+  },
+  {
+    "id": 177,
+    "line": 325,
+    "name": "Saturation"
+  },
+  {
+    "id": 178,
+    "line": 326,
+    "name": "Vibrance"
+  },
+  {
+    "id": 179,
+    "line": 327,
+    "name": "Color balance"
+  },
+  {
+    "id": 180,
+    "line": 328,
+    "name": "Grayscale"
+  },
+  {
+    "id": 181,
+    "line": 329,
+    "name": "Sepia"
+  },
+  {
+    "id": 182,
+    "line": 330,
+    "name": "Invert"
+  },
+  {
+    "id": 183,
+    "line": 331,
+    "name": "Sharpen"
+  },
+  {
+    "id": 184,
+    "line": 332,
+    "name": "Noise reduction"
+  },
+  {
+    "id": 185,
+    "line": 333,
+    "name": "Edge detection"
+  },
+  {
+    "id": 186,
+    "line": 334,
+    "name": "Posterize"
+  },
+  {
+    "id": 187,
+    "line": 335,
+    "name": "Threshold"
+  },
+  {
+    "id": 188,
+    "line": 336,
+    "name": "Mosaic styles"
+  },
+  {
+    "id": 189,
+    "line": 337,
+    "name": "Drop shadow editor"
+  },
+  {
+    "id": 190,
+    "line": 338,
+    "name": "Frame generator"
+  },
+  {
+    "id": 191,
+    "line": 339,
+    "name": "Torn edges"
+  },
+  {
+    "id": 192,
+    "line": 340,
+    "name": "Fade edges"
+  },
+  {
+    "id": 193,
+    "line": 341,
+    "name": "Reflection"
+  },
+  {
+    "id": 194,
+    "line": 342,
+    "name": "Border presets"
+  },
+  {
+    "id": 195,
+    "line": 343,
+    "name": "Watermark text"
+  },
+  {
+    "id": 196,
+    "line": 344,
+    "name": "Watermark image/logo"
+  },
+  {
+    "id": 197,
+    "line": 345,
+    "name": "Date/time stamp"
+  },
+  {
+    "id": 198,
+    "line": 346,
+    "name": "Capture information stamp"
+  },
+  {
+    "id": 199,
+    "line": 354,
+    "name": "Auto-crop plain borders"
+  },
+  {
+    "id": 200,
+    "line": 355,
+    "name": "Expand canvas"
+  },
+  {
+    "id": 201,
+    "line": 356,
+    "name": "Make background transparent"
+  },
+  {
+    "id": 202,
+    "line": 357,
+    "name": "Tolerance-based transparent-color removal"
+  },
+  {
+    "id": 203,
+    "line": 358,
+    "name": "Rotate arbitrary degrees"
+  },
+  {
+    "id": 204,
+    "line": 359,
+    "name": "Color-key removal"
+  },
+  {
+    "id": 205,
+    "line": 360,
+    "name": "Batch apply effects"
+  },
+  {
+    "id": 206,
+    "line": 361,
+    "name": "Effect presets"
+  },
+  {
+    "id": 207,
+    "line": 362,
+    "name": "Import/export effect packs"
+  },
+  {
+    "id": 208,
+    "line": 363,
+    "name": "Effect pipeline"
+  },
+  {
+    "id": 209,
+    "line": 375,
+    "name": "Smart Redact"
+  },
+  {
+    "id": 210,
+    "line": 402,
+    "name": "Text editing inside screenshot"
+  },
+  {
+    "id": 211,
+    "line": 420,
+    "name": "Smart Move"
+  },
+  {
+    "id": 212,
+    "line": 442,
+    "name": "Screenshot Simplify"
+  },
+  {
+    "id": 213,
+    "line": 464,
+    "name": "Local background removal"
+  },
+  {
+    "id": 214,
+    "line": 486,
+    "name": "Start Step Recording"
+  },
+  {
+    "id": 215,
+    "line": 487,
+    "name": "Hook mouse clicks local"
+  },
+  {
+    "id": 216,
+    "line": 488,
+    "name": "Hook keyboard actions an toàn"
+  },
+  {
+    "id": 217,
+    "line": 489,
+    "name": "Capture quanh vùng click"
+  },
+  {
+    "id": 218,
+    "line": 490,
+    "name": "Detect clicked UI control bằng UI Automation"
+  },
+  {
+    "id": 219,
+    "line": 491,
+    "name": "Automatically number steps"
+  },
+  {
+    "id": 220,
+    "line": 492,
+    "name": "Automatically crop relevant region"
+  },
+  {
+    "id": 221,
+    "line": 493,
+    "name": "Generate short description"
+  },
+  {
+    "id": 222,
+    "line": 494,
+    "name": "Add arrow/click marker"
+  },
+  {
+    "id": 223,
+    "line": 495,
+    "name": "Allow reorder"
+  },
+  {
+    "id": 224,
+    "line": 496,
+    "name": "Add/remove steps"
+  },
+  {
+    "id": 225,
+    "line": 497,
+    "name": "Merge steps"
+  },
+  {
+    "id": 226,
+    "line": 498,
+    "name": "Generate title"
+  },
+  {
+    "id": 227,
+    "line": 499,
+    "name": "Export single long image"
+  },
+  {
+    "id": 228,
+    "line": 500,
+    "name": "Export PDF"
+  },
+  {
+    "id": 229,
+    "line": 501,
+    "name": "Export DOCX"
+  },
+  {
+    "id": 230,
+    "line": 502,
+    "name": "Export HTML"
+  },
+  {
+    "id": 231,
+    "line": 503,
+    "name": "Export Markdown + images"
+  },
+  {
+    "id": 232,
+    "line": 504,
+    "name": "Export self-contained offline HTML tutorial"
+  },
+  {
+    "id": 233,
+    "line": 524,
+    "name": "Screenshot sequence"
+  },
+  {
+    "id": 234,
+    "line": 525,
+    "name": "Drag reorder"
+  },
+  {
+    "id": 235,
+    "line": 526,
+    "name": "Caption per screenshot"
+  },
+  {
+    "id": 236,
+    "line": 527,
+    "name": "Title"
+  },
+  {
+    "id": 237,
+    "line": 528,
+    "name": "Section heading"
+  },
+  {
+    "id": 238,
+    "line": 529,
+    "name": "Step numbers"
+  },
+  {
+    "id": 239,
+    "line": 530,
+    "name": "Page template"
+  },
+  {
+    "id": 240,
+    "line": 531,
+    "name": "Header/footer"
+  },
+  {
+    "id": 241,
+    "line": 532,
+    "name": "Logo optional"
+  },
+  {
+    "id": 242,
+    "line": 533,
+    "name": "PDF output"
+  },
+  {
+    "id": 243,
+    "line": 534,
+    "name": "DOCX output"
+  },
+  {
+    "id": 244,
+    "line": 535,
+    "name": "HTML output"
+  },
+  {
+    "id": 245,
+    "line": 536,
+    "name": "Markdown output"
+  },
+  {
+    "id": 246,
+    "line": 537,
+    "name": "Single long PNG"
+  },
+  {
+    "id": 247,
+    "line": 538,
+    "name": "Table of contents"
+  },
+  {
+    "id": 248,
+    "line": 539,
+    "name": "Offline tutorial bundle"
+  },
+  {
+    "id": 249,
+    "line": 540,
+    "name": "Reopen document project"
+  },
+  {
+    "id": 250,
+    "line": 573,
+    "name": "Save editable project"
+  },
+  {
+    "id": 251,
+    "line": 574,
+    "name": "Reopen project"
+  },
+  {
+    "id": 252,
+    "line": 575,
+    "name": "Preserve annotation layers"
+  },
+  {
+    "id": 253,
+    "line": 576,
+    "name": "Version project schema"
+  },
+  {
+    "id": 254,
+    "line": 577,
+    "name": "Autosave recovery"
+  },
+  {
+    "id": 255,
+    "line": 578,
+    "name": "Export flattened image khi cần"
+  },
+  {
+    "id": 256,
+    "line": 592,
+    "name": "Tags"
+  },
+  {
+    "id": 257,
+    "line": 593,
+    "name": "Favorites"
+  },
+  {
+    "id": 258,
+    "line": 594,
+    "name": "Collections"
+  },
+  {
+    "id": 259,
+    "line": 595,
+    "name": "Workspaces"
+  },
+  {
+    "id": 260,
+    "line": 596,
+    "name": "Folders"
+  },
+  {
+    "id": 261,
+    "line": 597,
+    "name": "Sessions"
+  },
+  {
+    "id": 262,
+    "line": 598,
+    "name": "Custom title"
+  },
+  {
+    "id": 263,
+    "line": 599,
+    "name": "Notes"
+  },
+  {
+    "id": 264,
+    "line": 600,
+    "name": "Filter by date"
+  },
+  {
+    "id": 265,
+    "line": 601,
+    "name": "Filter by source app"
+  },
+  {
+    "id": 266,
+    "line": 602,
+    "name": "Filter by window title"
+  },
+  {
+    "id": 267,
+    "line": 603,
+    "name": "Filter by monitor"
+  },
+  {
+    "id": 268,
+    "line": 604,
+    "name": "Filter by capture type"
+  },
+  {
+    "id": 269,
+    "line": 605,
+    "name": "Filter by dimensions"
+  },
+  {
+    "id": 270,
+    "line": 606,
+    "name": "Filter by OCR text"
+  },
+  {
+    "id": 271,
+    "line": 607,
+    "name": "Filter by QR/barcode"
+  },
+  {
+    "id": 272,
+    "line": 608,
+    "name": "Filter by AI action"
+  },
+  {
+    "id": 273,
+    "line": 609,
+    "name": "Filter by workflow"
+  },
+  {
+    "id": 274,
+    "line": 610,
+    "name": "Sort by file size"
+  },
+  {
+    "id": 275,
+    "line": 611,
+    "name": "Sort by most-used"
+  },
+  {
+    "id": 276,
+    "line": 612,
+    "name": "Batch delete"
+  },
+  {
+    "id": 277,
+    "line": 613,
+    "name": "Batch export"
+  },
+  {
+    "id": 278,
+    "line": 614,
+    "name": "Batch tag"
+  },
+  {
+    "id": 279,
+    "line": 615,
+    "name": "Multi-select"
+  },
+  {
+    "id": 280,
+    "line": 616,
+    "name": "Drag-and-drop"
+  },
+  {
+    "id": 281,
+    "line": 617,
+    "name": "Import existing screenshots"
+  },
+  {
+    "id": 282,
+    "line": 618,
+    "name": "Near-duplicate detection"
+  },
+  {
+    "id": 283,
+    "line": 619,
+    "name": "Exact duplicate detection"
+  },
+  {
+    "id": 284,
+    "line": 620,
+    "name": "Capture grouping by session"
+  },
+  {
+    "id": 285,
+    "line": 621,
+    "name": "Timeline view"
+  },
+  {
+    "id": 286,
+    "line": 622,
+    "name": "App/process icon metadata"
+  },
+  {
+    "id": 287,
+    "line": 623,
+    "name": "Store executable/process name"
+  },
+  {
+    "id": 288,
+    "line": 624,
+    "name": "Local FTS index"
+  },
+  {
+    "id": 289,
+    "line": 625,
+    "name": "Optional local semantic search"
+  },
+  {
+    "id": 290,
+    "line": 631,
+    "name": "Search:"
+  },
+  {
+    "id": 291,
+    "line": 645,
+    "name": "Annotate directly on pin"
+  },
+  {
+    "id": 292,
+    "line": 646,
+    "name": "Step markers trên pin"
+  },
+  {
+    "id": 293,
+    "line": 647,
+    "name": "Text notes trên pin"
+  },
+  {
+    "id": 294,
+    "line": 648,
+    "name": "Crop pin"
+  },
+  {
+    "id": 295,
+    "line": 649,
+    "name": "Zoom pin"
+  },
+  {
+    "id": 296,
+    "line": 650,
+    "name": "Actual-size mode"
+  },
+  {
+    "id": 297,
+    "line": 651,
+    "name": "Fit mode"
+  },
+  {
+    "id": 298,
+    "line": 652,
+    "name": "Reset size"
+  },
+  {
+    "id": 299,
+    "line": 653,
+    "name": "Minimize pin"
+  },
+  {
+    "id": 300,
+    "line": 654,
+    "name": "Hide pin to screen edge"
+  },
+  {
+    "id": 301,
+    "line": 655,
+    "name": "Pin from clipboard"
+  },
+  {
+    "id": 302,
+    "line": 656,
+    "name": "Pin arbitrary image file"
+  },
+  {
+    "id": 303,
+    "line": 657,
+    "name": "Copy pin"
+  },
+  {
+    "id": 304,
+    "line": 658,
+    "name": "Save pin"
+  },
+  {
+    "id": 305,
+    "line": 659,
+    "name": "Open pin in editor"
+  },
+  {
+    "id": 306,
+    "line": 660,
+    "name": "Remember position"
+  },
+  {
+    "id": 307,
+    "line": 661,
+    "name": "Remember opacity"
+  },
+  {
+    "id": 308,
+    "line": 662,
+    "name": "Group pins"
+  },
+  {
+    "id": 309,
+    "line": 663,
+    "name": "Arrange pins grid"
+  },
+  {
+    "id": 310,
+    "line": 664,
+    "name": "Snap pins"
+  },
+  {
+    "id": 311,
+    "line": 665,
+    "name": "Lock position"
+  },
+  {
+    "id": 312,
+    "line": 666,
+    "name": "Always-ignore-mouse toggle"
+  },
+  {
+    "id": 313,
+    "line": 678,
+    "name": "Blink compare"
+  },
+  {
+    "id": 314,
+    "line": 679,
+    "name": "Difference heatmap"
+  },
+  {
+    "id": 315,
+    "line": 680,
+    "name": "Difference mask"
+  },
+  {
+    "id": 316,
+    "line": 681,
+    "name": "Threshold slider"
+  },
+  {
+    "id": 317,
+    "line": 682,
+    "name": "Ignore minor antialiasing"
+  },
+  {
+    "id": 318,
+    "line": 683,
+    "name": "Ignore transparent pixels"
+  },
+  {
+    "id": 319,
+    "line": 684,
+    "name": "Per-RGB-channel difference"
+  },
+  {
+    "id": 320,
+    "line": 685,
+    "name": "SSIM"
+  },
+  {
+    "id": 321,
+    "line": 686,
+    "name": "PSNR"
+  },
+  {
+    "id": 322,
+    "line": 687,
+    "name": "Perceptual hash"
+  },
+  {
+    "id": 323,
+    "line": 688,
+    "name": "Auto-align translation"
+  },
+  {
+    "id": 324,
+    "line": 689,
+    "name": "Auto-align scale"
+  },
+  {
+    "id": 325,
+    "line": 690,
+    "name": "Auto-align crop"
+  },
+  {
+    "id": 326,
+    "line": 691,
+    "name": "Select regions to ignore"
+  },
+  {
+    "id": 327,
+    "line": 692,
+    "name": "OCR text diff"
+  },
+  {
+    "id": 328,
+    "line": 693,
+    "name": "Highlight changed words"
+  },
+  {
+    "id": 329,
+    "line": 694,
+    "name": "Table-cell diff"
+  },
+  {
+    "id": 330,
+    "line": 695,
+    "name": "Layout diff"
+  },
+  {
+    "id": 331,
+    "line": 696,
+    "name": "Batch compare"
+  },
+  {
+    "id": 332,
+    "line": 697,
+    "name": "Export compare report"
+  },
+  {
+    "id": 333,
+    "line": 698,
+    "name": "Before / After / Diff triptych"
+  },
+  {
+    "id": 334,
+    "line": 699,
+    "name": "Compare against historical version"
+  },
+  {
+    "id": 335,
+    "line": 715,
+    "name": "Floating Screen Color Picker"
+  },
+  {
+    "id": 336,
+    "line": 716,
+    "name": "Magnified pixel preview"
+  },
+  {
+    "id": 337,
+    "line": 717,
+    "name": "Color history"
+  },
+  {
+    "id": 338,
+    "line": 718,
+    "name": "Saved swatches"
+  },
+  {
+    "id": 339,
+    "line": 719,
+    "name": "Color palette"
+  },
+  {
+    "id": 340,
+    "line": 720,
+    "name": "HEX"
+  },
+  {
+    "id": 341,
+    "line": 721,
+    "name": "RGB"
+  },
+  {
+    "id": 342,
+    "line": 722,
+    "name": "HSL"
+  },
+  {
+    "id": 343,
+    "line": 723,
+    "name": "HSV"
+  },
+  {
+    "id": 344,
+    "line": 724,
+    "name": "CMYK conversion"
+  },
+  {
+    "id": 345,
+    "line": 725,
+    "name": "CSS format"
+  },
+  {
+    "id": 346,
+    "line": 726,
+    "name": "C#/C++ format"
+  },
+  {
+    "id": 347,
+    "line": 727,
+    "name": "Average region color"
+  },
+  {
+    "id": 348,
+    "line": 728,
+    "name": "Dominant colors"
+  },
+  {
+    "id": 349,
+    "line": 729,
+    "name": "Palette extraction"
+  },
+  {
+    "id": 350,
+    "line": 730,
+    "name": "WCAG contrast checker"
+  },
+  {
+    "id": 351,
+    "line": 731,
+    "name": "Pixel ruler"
+  },
+  {
+    "id": 352,
+    "line": 732,
+    "name": "Horizontal ruler"
+  },
+  {
+    "id": 353,
+    "line": 733,
+    "name": "Vertical ruler"
+  },
+  {
+    "id": 354,
+    "line": 734,
+    "name": "Inches/cm/pixels"
+  },
+  {
+    "id": 355,
+    "line": 735,
+    "name": "Custom DPI calibration"
+  },
+  {
+    "id": 356,
+    "line": 736,
+    "name": "Crosshair"
+  },
+  {
+    "id": 357,
+    "line": 737,
+    "name": "Relative coordinates"
+  },
+  {
+    "id": 358,
+    "line": 738,
+    "name": "Screen magnifier"
+  },
+  {
+    "id": 359,
+    "line": 739,
+    "name": "Protractor"
+  },
+  {
+    "id": 360,
+    "line": 740,
+    "name": "Screen Focus"
+  },
+  {
+    "id": 361,
+    "line": 744,
+    "name": "Whiteboard / draw-on-desktop"
+  },
+  {
+    "id": 362,
+    "line": 756,
+    "name": "WebP"
+  },
+  {
+    "id": 363,
+    "line": 757,
+    "name": "GIF static/animated"
+  },
+  {
+    "id": 364,
+    "line": 758,
+    "name": "PDF"
+  },
+  {
+    "id": 365,
+    "line": 759,
+    "name": "Multi-page PDF"
+  },
+  {
+    "id": 366,
+    "line": 760,
+    "name": "AVIF optional"
+  },
+  {
+    "id": 367,
+    "line": 761,
+    "name": "HEIF optional"
+  },
+  {
+    "id": 368,
+    "line": 762,
+    "name": "Editable `.magiccapture`"
+  },
+  {
+    "id": 369,
+    "line": 763,
+    "name": "SVG cho annotations/documentation"
+  },
+  {
+    "id": 370,
+    "line": 764,
+    "name": "Copy image as Data URI"
+  },
+  {
+    "id": 371,
+    "line": 765,
+    "name": "Copy Base64"
+  },
+  {
+    "id": 372,
+    "line": 766,
+    "name": "Copy image file itself to clipboard"
+  },
+  {
+    "id": 373,
+    "line": 767,
+    "name": "Copy path"
+  },
+  {
+    "id": 374,
+    "line": 768,
+    "name": "Copy folder path"
+  },
+  {
+    "id": 375,
+    "line": 769,
+    "name": "Print"
+  },
+  {
+    "id": 376,
+    "line": 770,
+    "name": "Print batch"
+  },
+  {
+    "id": 377,
+    "line": 771,
+    "name": "PDF contact sheet"
+  },
+  {
+    "id": 378,
+    "line": 772,
+    "name": "PDF from multiple images"
+  },
+  {
+    "id": 379,
+    "line": 780,
+    "name": "JPEG compressor"
+  },
+  {
+    "id": 380,
+    "line": 781,
+    "name": "PNG lossless optimization"
+  },
+  {
+    "id": 381,
+    "line": 782,
+    "name": "PNG lossy optimization"
+  },
+  {
+    "id": 382,
+    "line": 783,
+    "name": "WebP compressor"
+  },
+  {
+    "id": 383,
+    "line": 784,
+    "name": "Target filesize"
+  },
+  {
+    "id": 384,
+    "line": 788,
+    "name": "Resize for target dimensions"
+  },
+  {
+    "id": 385,
+    "line": 789,
+    "name": "Strip metadata automatically"
+  },
+  {
+    "id": 386,
+    "line": 790,
+    "name": "Convert color profile"
+  },
+  {
+    "id": 387,
+    "line": 791,
+    "name": "Batch compression"
+  },
+  {
+    "id": 388,
+    "line": 792,
+    "name": "Compare before/after size"
+  },
+  {
+    "id": 389,
+    "line": 813,
+    "name": "Local Action profiles"
+  },
+  {
+    "id": 390,
+    "line": 814,
+    "name": "Executable allowlist"
+  },
+  {
+    "id": 391,
+    "line": 815,
+    "name": "Explicit per-program permission"
+  },
+  {
+    "id": 392,
+    "line": 816,
+    "name": "`$input`"
+  },
+  {
+    "id": 393,
+    "line": 817,
+    "name": "`$output`"
+  },
+  {
+    "id": 394,
+    "line": 818,
+    "name": "`$width/$height`"
+  },
+  {
+    "id": 395,
+    "line": 819,
+    "name": "`$ocrText`"
+  },
+  {
+    "id": 396,
+    "line": 820,
+    "name": "`$windowTitle`"
+  },
+  {
+    "id": 397,
+    "line": 821,
+    "name": "Timeout"
+  },
+  {
+    "id": 398,
+    "line": 822,
+    "name": "Max output size"
+  },
+  {
+    "id": 399,
+    "line": 823,
+    "name": "No shell interpolation by default"
+  },
+  {
+    "id": 400,
+    "line": 824,
+    "name": "User confirmation lần đầu"
+  },
+  {
+    "id": 401,
+    "line": 825,
+    "name": "Capture stdout"
+  },
+  {
+    "id": 402,
+    "line": 826,
+    "name": "Capture stderr"
+  },
+  {
+    "id": 403,
+    "line": 827,
+    "name": "Chain resulting output back into workflow"
+  },
+  {
+    "id": 404,
+    "line": 839,
+    "name": "Visual Workflow Builder"
+  },
+  {
+    "id": 405,
+    "line": 840,
+    "name": "Drag/drop steps"
+  },
+  {
+    "id": 406,
+    "line": 841,
+    "name": "Reorder"
+  },
+  {
+    "id": 407,
+    "line": 842,
+    "name": "Enable/disable step"
+  },
+  {
+    "id": 408,
+    "line": 843,
+    "name": "Per-step settings"
+  },
+  {
+    "id": 409,
+    "line": 844,
+    "name": "Per-workflow global hotkey"
+  },
+  {
+    "id": 410,
+    "line": 845,
+    "name": "Per-workflow capture source"
+  },
+  {
+    "id": 411,
+    "line": 846,
+    "name": "Per-workflow fixed region"
+  },
+  {
+    "id": 412,
+    "line": 847,
+    "name": "Per-workflow output folder"
+  },
+  {
+    "id": 413,
+    "line": 848,
+    "name": "Per-workflow filename template"
+  },
+  {
+    "id": 414,
+    "line": 849,
+    "name": "Conditional:"
+  },
+  {
+    "id": 415,
+    "line": 857,
+    "name": "Branching"
+  },
+  {
+    "id": 416,
+    "line": 858,
+    "name": "Fallback"
+  },
+  {
+    "id": 417,
+    "line": 859,
+    "name": "Retry"
+  },
+  {
+    "id": 418,
+    "line": 860,
+    "name": "Timeout"
+  },
+  {
+    "id": 419,
+    "line": 861,
+    "name": "Variables"
+  },
+  {
+    "id": 420,
+    "line": 862,
+    "name": "User input variable"
+  },
+  {
+    "id": 421,
+    "line": 863,
+    "name": "Choice dialog"
+  },
+  {
+    "id": 422,
+    "line": 864,
+    "name": "Confirmation step"
+  },
+  {
+    "id": 423,
+    "line": 865,
+    "name": "Delay step"
+  },
+  {
+    "id": 424,
+    "line": 866,
+    "name": "Loop over images"
+  },
+  {
+    "id": 425,
+    "line": 867,
+    "name": "Batch workflow"
+  },
+  {
+    "id": 426,
+    "line": 868,
+    "name": "Reusable subworkflow"
+  },
+  {
+    "id": 427,
+    "line": 869,
+    "name": "Workflow parameters"
+  },
+  {
+    "id": 428,
+    "line": 870,
+    "name": "Import/export"
+  },
+  {
+    "id": 429,
+    "line": 871,
+    "name": "Versioning"
+  },
+  {
+    "id": 430,
+    "line": 872,
+    "name": "Execution trace"
+  },
+  {
+    "id": 431,
+    "line": 873,
+    "name": "Step logs"
+  },
+  {
+    "id": 432,
+    "line": 874,
+    "name": "Resume failed workflow"
+  },
+  {
+    "id": 433,
+    "line": 875,
+    "name": "Test/dry-run mode"
+  },
+  {
+    "id": 434,
+    "line": 876,
+    "name": "Duplicate workflow"
+  },
+  {
+    "id": 435,
+    "line": 877,
+    "name": "Capture profile → Workflow link"
+  },
+  {
+    "id": 436,
+    "line": 878,
+    "name": "Run workflow from CLI by name"
+  },
+  {
+    "id": 437,
+    "line": 879,
+    "name": "CLI arguments for variables"
+  },
+  {
+    "id": 438,
+    "line": 880,
+    "name": "Windows Task Scheduler integration"
+  },
+  {
+    "id": 439,
+    "line": 881,
+    "name": "Schedule workflow locally"
+  },
+  {
+    "id": 440,
+    "line": 882,
+    "name": "File watcher trigger"
+  },
+  {
+    "id": 441,
+    "line": 883,
+    "name": "Clipboard trigger"
+  },
+  {
+    "id": 442,
+    "line": 884,
+    "name": "Target-window-change trigger"
+  },
+  {
+    "id": 443,
+    "line": 885,
+    "name": "Process-start trigger"
+  },
+  {
+    "id": 444,
+    "line": 886,
+    "name": "Hotkey trigger"
+  },
+  {
+    "id": 445,
+    "line": 887,
+    "name": "Capture Watch trigger — cái này Magic đã có nền tảng"
+  },
+  {
+    "id": 446,
+    "line": 895,
+    "name": "Explorer `Edit with Magic Capture`"
+  },
+  {
+    "id": 447,
+    "line": 896,
+    "name": "`OCR with Magic Capture`"
+  },
+  {
+    "id": 448,
+    "line": 897,
+    "name": "`Pin with Magic Capture`"
+  },
+  {
+    "id": 449,
+    "line": 898,
+    "name": "`Extract Table`"
+  },
+  {
+    "id": 450,
+    "line": 899,
+    "name": "`Magic Action…`"
+  },
+  {
+    "id": 451,
+    "line": 900,
+    "name": "Drag image into app"
+  },
+  {
+    "id": 452,
+    "line": 901,
+    "name": "Drag image into editor"
+  },
+  {
+    "id": 453,
+    "line": 902,
+    "name": "Drag image into Context Stack"
+  },
+  {
+    "id": 454,
+    "line": 903,
+    "name": "Drag folder into History/import"
+  },
+  {
+    "id": 455,
+    "line": 904,
+    "name": "File associations:"
+  },
+  {
+    "id": 456,
+    "line": 910,
+    "name": "Open image from command line"
+  },
+  {
+    "id": 457,
+    "line": 911,
+    "name": "Open compare A/B via CLI"
+  },
+  {
+    "id": 458,
+    "line": 912,
+    "name": "Process clipboard from CLI"
+  },
+  {
+    "id": 459,
+    "line": 913,
+    "name": "Run workflow from Explorer context menu"
+  },
+  {
+    "id": 460,
+    "line": 925,
+    "name": "Full image viewer"
+  },
+  {
+    "id": 461,
+    "line": 926,
+    "name": "Image browser"
+  },
+  {
+    "id": 462,
+    "line": 927,
+    "name": "Background remover"
+  },
+  {
+    "id": 463,
+    "line": 928,
+    "name": "Video converter"
+  },
+  {
+    "id": 464,
+    "line": 929,
+    "name": "Video thumbnailer"
+  },
+  {
+    "id": 465,
+    "line": 930,
+    "name": "Directory index generator"
+  },
+  {
+    "id": 466,
+    "line": 931,
+    "name": "Clipboard viewer"
+  },
+  {
+    "id": 467,
+    "line": 932,
+    "name": "Clipboard history mini-tool"
+  },
+  {
+    "id": 468,
+    "line": 933,
+    "name": "Borderless Window tool"
+  },
+  {
+    "id": 469,
+    "line": 934,
+    "name": "Window Inspector"
+  },
+  {
+    "id": 470,
+    "line": 935,
+    "name": "Window handle/class/process inspector"
+  },
+  {
+    "id": 471,
+    "line": 936,
+    "name": "UI Automation inspector"
+  },
+  {
+    "id": 472,
+    "line": 937,
+    "name": "Monitor test patterns"
+  },
+  {
+    "id": 473,
+    "line": 938,
+    "name": "Dead-pixel test"
+  },
+  {
+    "id": 474,
+    "line": 939,
+    "name": "Gradient test"
+  },
+  {
+    "id": 475,
+    "line": 940,
+    "name": "Color calibration test"
+  },
+  {
+    "id": 476,
+    "line": 941,
+    "name": "QR generator"
+  },
+  {
+    "id": 477,
+    "line": 942,
+    "name": "Barcode generator"
+  },
+  {
+    "id": 478,
+    "line": 943,
+    "name": "Local file checksum UI"
+  },
+  {
+    "id": 479,
+    "line": 944,
+    "name": "File compare hashes"
+  },
+  {
+    "id": 480,
+    "line": 945,
+    "name": "Image pixel/color statistics"
+  },
+  {
+    "id": 481,
+    "line": 946,
+    "name": "External editor launcher"
+  },
+  {
+    "id": 482,
+    "line": 956,
+    "name": "WIA scanner import"
+  },
+  {
+    "id": 483,
+    "line": 957,
+    "name": "TWAIN scanner optional"
+  },
+  {
+    "id": 484,
+    "line": 958,
+    "name": "Scan multiple pages"
+  },
+  {
+    "id": 485,
+    "line": 959,
+    "name": "Deskew"
+  },
+  {
+    "id": 486,
+    "line": 960,
+    "name": "Scanner auto-crop"
+  },
+  {
+    "id": 487,
+    "line": 961,
+    "name": "Scan → PDF"
+  },
+  {
+    "id": 488,
+    "line": 962,
+    "name": "Connected Android capture qua ADB local"
+  },
+  {
+    "id": 489,
+    "line": 976,
+    "name": "Automatic OCR language detection"
+  },
+  {
+    "id": 490,
+    "line": 977,
+    "name": "Multi-language OCR trong cùng một capture"
+  },
+  {
+    "id": 491,
+    "line": 978,
+    "name": "OCR language packs UI"
+  },
+  {
+    "id": 492,
+    "line": 979,
+    "name": "OCR confidence visualization"
+  },
+  {
+    "id": 493,
+    "line": 980,
+    "name": "Word/block selection"
+  },
+  {
+    "id": 494,
+    "line": 981,
+    "name": "Click word → copy"
+  },
+  {
+    "id": 495,
+    "line": 982,
+    "name": "Click line → copy"
+  },
+  {
+    "id": 496,
+    "line": 983,
+    "name": "Search OCR text trực tiếp trên screenshot"
+  },
+  {
+    "id": 497,
+    "line": 984,
+    "name": "Highlight all matches"
+  },
+  {
+    "id": 498,
+    "line": 985,
+    "name": "Preserve paragraph/layout structure"
+  },
+  {
+    "id": 499,
+    "line": 986,
+    "name": "Better code OCR mode"
+  },
+  {
+    "id": 500,
+    "line": 987,
+    "name": "Monospace/code block reconstruction"
+  },
+  {
+    "id": 501,
+    "line": 988,
+    "name": "Math expression detection"
+  },
+  {
+    "id": 502,
+    "line": 989,
+    "name": "Optional LaTeX extraction"
+  },
+  {
+    "id": 503,
+    "line": 990,
+    "name": "Handwriting OCR optional"
+  },
+  {
+    "id": 504,
+    "line": 991,
+    "name": "Optional local OCR engine:"
+  },
+  {
+    "id": 505,
+    "line": 997,
+    "name": "OCR benchmark and automatic engine selection"
+  },
+  {
+    "id": 506,
+    "line": 1007,
+    "name": "Merged cells"
+  },
+  {
+    "id": 507,
+    "line": 1008,
+    "name": "Multi-line cells"
+  },
+  {
+    "id": 508,
+    "line": 1009,
+    "name": "Header detection"
+  },
+  {
+    "id": 509,
+    "line": 1010,
+    "name": "Row/column span"
+  },
+  {
+    "id": 510,
+    "line": 1011,
+    "name": "Borderless tables"
+  },
+  {
+    "id": 511,
+    "line": 1012,
+    "name": "Irregular columns"
+  },
+  {
+    "id": 512,
+    "line": 1013,
+    "name": "Numeric type inference"
+  },
+  {
+    "id": 513,
+    "line": 1014,
+    "name": "Date type inference"
+  },
+  {
+    "id": 514,
+    "line": 1015,
+    "name": "Currency inference"
+  },
+  {
+    "id": 515,
+    "line": 1016,
+    "name": "Percent inference"
+  },
+  {
+    "id": 516,
+    "line": 1017,
+    "name": "Preserve empty cells"
+  },
+  {
+    "id": 517,
+    "line": 1018,
+    "name": "Spreadsheet-like editing preview"
+  },
+  {
+    "id": 518,
+    "line": 1019,
+    "name": "Manually move row/column separators"
+  },
+  {
+    "id": 519,
+    "line": 1020,
+    "name": "Add/delete row/column"
+  },
+  {
+    "id": 520,
+    "line": 1021,
+    "name": "Fix cell merge manually"
+  },
+  {
+    "id": 521,
+    "line": 1022,
+    "name": "Copy selected cells"
+  },
+  {
+    "id": 522,
+    "line": 1023,
+    "name": "XLSX export"
+  },
+  {
+    "id": 523,
+    "line": 1024,
+    "name": "Formula inference optional"
+  },
+  {
+    "id": 524,
+    "line": 1025,
+    "name": "CSV dialect selection"
+  },
+  {
+    "id": 525,
+    "line": 1026,
+    "name": "Locale decimal separator"
+  },
+  {
+    "id": 526,
+    "line": 1027,
+    "name": "Excel-friendly output"
+  },
+  {
+    "id": 527,
+    "line": 1028,
+    "name": "Compare two tables"
+  },
+  {
+    "id": 528,
+    "line": 1029,
+    "name": "Local anomaly detection deterministic"
+  },
+  {
+    "id": 529,
+    "line": 1048,
+    "name": "Windows UI Automation tree"
+  },
+  {
+    "id": 530,
+    "line": 1049,
+    "name": "Control type"
+  },
+  {
+    "id": 531,
+    "line": 1050,
+    "name": "Automation ID"
+  },
+  {
+    "id": 532,
+    "line": 1051,
+    "name": "Accessible name"
+  },
+  {
+    "id": 533,
+    "line": 1052,
+    "name": "Value"
+  },
+  {
+    "id": 534,
+    "line": 1053,
+    "name": "Enabled/disabled state"
+  },
+  {
+    "id": 535,
+    "line": 1054,
+    "name": "Checked state"
+  },
+  {
+    "id": 536,
+    "line": 1055,
+    "name": "Selected state"
+  },
+  {
+    "id": 537,
+    "line": 1056,
+    "name": "Bounding rectangle"
+  },
+  {
+    "id": 538,
+    "line": 1057,
+    "name": "Parent/child relationships"
+  },
+  {
+    "id": 539,
+    "line": 1058,
+    "name": "Focus state"
+  },
+  {
+    "id": 540,
+    "line": 1059,
+    "name": "Window/process identity"
+  },
+  {
+    "id": 541,
+    "line": 1060,
+    "name": "Keyboard shortcut/access key"
+  },
+  {
+    "id": 542,
+    "line": 1061,
+    "name": "Merge UIA node + OCR evidence"
+  },
+  {
+    "id": 543,
+    "line": 1088,
+    "name": "Local model download manager optional"
+  },
+  {
+    "id": 544,
+    "line": 1089,
+    "name": "Model health benchmark"
+  },
+  {
+    "id": 545,
+    "line": 1090,
+    "name": "Measure tokens/sec"
+  },
+  {
+    "id": 546,
+    "line": 1091,
+    "name": "Detect VRAM/RAM"
+  },
+  {
+    "id": 547,
+    "line": 1092,
+    "name": "Recommend local model automatically"
+  },
+  {
+    "id": 548,
+    "line": 1093,
+    "name": "Context-budget estimator"
+  },
+  {
+    "id": 549,
+    "line": 1094,
+    "name": "Prompt preview"
+  },
+  {
+    "id": 550,
+    "line": 1095,
+    "name": "Raw request preview"
+  },
+  {
+    "id": 551,
+    "line": 1096,
+    "name": "Raw response inspector"
+  },
+  {
+    "id": 552,
+    "line": 1097,
+    "name": "AI output history"
+  },
+  {
+    "id": 553,
+    "line": 1098,
+    "name": "Compare output between models"
+  },
+  {
+    "id": 554,
+    "line": 1099,
+    "name": "Run same action across 2 models"
+  },
+  {
+    "id": 555,
+    "line": 1100,
+    "name": "Offline embeddings"
+  },
+  {
+    "id": 556,
+    "line": 1101,
+    "name": "Local semantic History search"
+  },
+  {
+    "id": 557,
+    "line": 1102,
+    "name": "Local screenshot classifier"
+  },
+  {
+    "id": 558,
+    "line": 1103,
+    "name": "Local redaction model"
+  },
+  {
+    "id": 559,
+    "line": 1104,
+    "name": "Local image segmentation"
+  },
+  {
+    "id": 560,
+    "line": 1105,
+    "name": "Local background removal"
+  },
+  {
+    "id": 561,
+    "line": 1106,
+    "name": "Local Whisper"
+  },
+  {
+    "id": 562,
+    "line": 1107,
+    "name": "Local translation model optional"
+  },
+  {
+    "id": 563,
+    "line": 1108,
+    "name": "ScreenGraph-only mode guaranteed no pixels"
+  },
+  {
+    "id": 564,
+    "line": 1109,
+    "name": "Per-action privacy policy"
+  },
+  {
+    "id": 565,
+    "line": 1110,
+    "name": "Per-provider privacy policy"
+  },
+  {
+    "id": 566,
+    "line": 1111,
+    "name": "Per-workflow provider override"
+  },
+  {
+    "id": 567,
+    "line": 1112,
+    "name": "Model fallback chain"
+  },
+  {
+    "id": 568,
+    "line": 1113,
+    "name": "Cost estimator cho BYOK cloud API"
+  },
+  {
+    "id": 569,
+    "line": 1114,
+    "name": "Token-use estimate"
+  },
+  {
+    "id": 570,
+    "line": 1115,
+    "name": "Local-only indicator cực rõ"
+  },
+  {
+    "id": 571,
+    "line": 1125,
+    "name": "`Redact before Copy`"
+  },
+  {
+    "id": 572,
+    "line": 1126,
+    "name": "`Redact before Save`"
+  },
+  {
+    "id": 573,
+    "line": 1127,
+    "name": "`Redact before Pin`"
+  },
+  {
+    "id": 574,
+    "line": 1128,
+    "name": "`Redact before Workflow`"
+  },
+  {
+    "id": 575,
+    "line": 1129,
+    "name": "Email detection"
+  },
+  {
+    "id": 576,
+    "line": 1130,
+    "name": "Phone detection"
+  },
+  {
+    "id": 577,
+    "line": 1131,
+    "name": "Credit-card detection + Luhn check"
+  },
+  {
+    "id": 578,
+    "line": 1132,
+    "name": "IPv4/IPv6"
+  },
+  {
+    "id": 579,
+    "line": 1133,
+    "name": "API key"
+  },
+  {
+    "id": 580,
+    "line": 1134,
+    "name": "JWT"
+  },
+  {
+    "id": 581,
+    "line": 1135,
+    "name": "Private key"
+  },
+  {
+    "id": 582,
+    "line": 1136,
+    "name": "Password field recognition via UIA"
+  },
+  {
+    "id": 583,
+    "line": 1137,
+    "name": "User-defined regex"
+  },
+  {
+    "id": 584,
+    "line": 1138,
+    "name": "User-defined sensitive words"
+  },
+  {
+    "id": 585,
+    "line": 1139,
+    "name": "Preview redactions"
+  },
+  {
+    "id": 586,
+    "line": 1140,
+    "name": "Undo individual redaction"
+  },
+  {
+    "id": 587,
+    "line": 1141,
+    "name": "Auto-redact video frames"
+  },
+  {
+    "id": 588,
+    "line": 1149,
+    "name": "Custom hotkey cho mọi capture mode"
+  },
+  {
+    "id": 589,
+    "line": 1150,
+    "name": "Custom hotkey cho mọi workflow"
+  },
+  {
+    "id": 590,
+    "line": 1151,
+    "name": "Custom hotkey cho Magic Action"
+  },
+  {
+    "id": 591,
+    "line": 1152,
+    "name": "Custom hotkey cho editor"
+  },
+  {
+    "id": 592,
+    "line": 1153,
+    "name": "Hotkey conflict detector"
+  },
+  {
+    "id": 593,
+    "line": 1154,
+    "name": "Profile import/export"
+  },
+  {
+    "id": 594,
+    "line": 1155,
+    "name": "Settings export/import"
+  },
+  {
+    "id": 595,
+    "line": 1156,
+    "name": "History export/import"
+  },
+  {
+    "id": 596,
+    "line": 1157,
+    "name": "Reset individual section"
+  },
+  {
+    "id": 597,
+    "line": 1158,
+    "name": "Toolbar customization"
+  },
+  {
+    "id": 598,
+    "line": 1159,
+    "name": "Overlay action-bar customization"
+  },
+  {
+    "id": 599,
+    "line": 1160,
+    "name": "Reorder actions"
+  },
+  {
+    "id": 600,
+    "line": 1161,
+    "name": "Hide actions không dùng"
+  },
+  {
+    "id": 601,
+    "line": 1162,
+    "name": "Default annotation tool"
+  },
+  {
+    "id": 602,
+    "line": 1163,
+    "name": "Last-used tool memory"
+  },
+  {
+    "id": 603,
+    "line": 1164,
+    "name": "Multiple saved styles"
+  },
+  {
+    "id": 604,
+    "line": 1165,
+    "name": "Per-monitor preferences"
+  },
+  {
+    "id": 605,
+    "line": 1166,
+    "name": "Per-app capture rule"
+  },
+  {
+    "id": 606,
+    "line": 1174,
+    "name": "Autosave editor project"
+  },
+  {
+    "id": 607,
+    "line": 1175,
+    "name": "Restore editor after crash"
+  },
+  {
+    "id": 608,
+    "line": 1176,
+    "name": "Restore unfinished document"
+  },
+  {
+    "id": 609,
+    "line": 1177,
+    "name": "Restore unfinished recording"
+  },
+  {
+    "id": 610,
+    "line": 1178,
+    "name": "Atomic history database migration"
+  },
+  {
+    "id": 611,
+    "line": 1179,
+    "name": "Database corruption recovery"
+  },
+  {
+    "id": 612,
+    "line": 1180,
+    "name": "Cache repair"
+  },
+  {
+    "id": 613,
+    "line": 1181,
+    "name": "Thumbnail rebuild"
+  },
+  {
+    "id": 614,
+    "line": 1182,
+    "name": "OCR index rebuild"
+  },
+  {
+    "id": 615,
+    "line": 1183,
+    "name": "Safe schema migration"
+  },
+  {
+    "id": 616,
+    "line": 1184,
+    "name": "Version rollback handling"
+  },
+  {
+    "id": 617,
+    "line": 1185,
+    "name": "Backup settings locally"
+  },
+  {
+    "id": 618,
+    "line": 1186,
+    "name": "Backup user recipes/actions locally"
+  },
+  {
+    "id": 619,
+    "line": 1187,
+    "name": "Export full Magic Capture configuration ZIP"
+  },
+  {
+    "id": 620,
+    "line": 1195,
+    "name": "Full keyboard navigation"
+  },
+  {
+    "id": 621,
+    "line": 1196,
+    "name": "Screen reader labels"
+  },
+  {
+    "id": 622,
+    "line": 1197,
+    "name": "High-contrast mode"
+  },
+  {
+    "id": 623,
+    "line": 1198,
+    "name": "Reduced motion"
+  },
+  {
+    "id": 624,
+    "line": 1199,
+    "name": "Large text/DPI"
+  },
+  {
+    "id": 625,
+    "line": 1200,
+    "name": "Touch support"
+  },
+  {
+    "id": 626,
+    "line": 1201,
+    "name": "Pen support"
+  },
+  {
+    "id": 627,
+    "line": 1202,
+    "name": "RTL layout"
+  },
+  {
+    "id": 628,
+    "line": 1203,
+    "name": "Localization architecture"
+  },
+  {
+    "id": 629,
+    "line": 1204,
+    "name": "English"
+  },
+  {
+    "id": 630,
+    "line": 1205,
+    "name": "Vietnamese"
+  },
+  {
+    "id": 631,
+    "line": 1206,
+    "name": "Major European languages"
+  },
+  {
+    "id": 632,
+    "line": 1207,
+    "name": "Japanese/Korean/Chinese"
+  },
+  {
+    "id": 633,
+    "line": 1221,
+    "name": "Mixed DPI torture tests"
+  },
+  {
+    "id": 634,
+    "line": 1222,
+    "name": "1–6 monitors"
+  },
+  {
+    "id": 635,
+    "line": 1223,
+    "name": "Monitor hot-plug"
+  },
+  {
+    "id": 636,
+    "line": 1224,
+    "name": "Sleep/resume"
+  },
+  {
+    "id": 637,
+    "line": 1225,
+    "name": "RDP"
+  },
+  {
+    "id": 638,
+    "line": 1226,
+    "name": "Virtual desktops"
+  },
+  {
+    "id": 639,
+    "line": 1227,
+    "name": "Windows 10/11 differences"
+  },
+  {
+    "id": 640,
+    "line": 1228,
+    "name": "ARM64"
+  },
+  {
+    "id": 641,
+    "line": 1229,
+    "name": "Intel/AMD/NVIDIA GPUs"
+  },
+  {
+    "id": 642,
+    "line": 1230,
+    "name": "HDR"
+  },
+  {
+    "id": 643,
+    "line": 1231,
+    "name": "Clipboard contention"
+  },
+  {
+    "id": 644,
+    "line": 1232,
+    "name": "Hotkey conflicts"
+  },
+  {
+    "id": 645,
+    "line": 1233,
+    "name": "Explorer restarts"
+  },
+  {
+    "id": 646,
+    "line": 1234,
+    "name": "Store license offline"
+  },
+  {
+    "id": 647,
+    "line": 1235,
+    "name": "OCR language packs missing"
+  },
+  {
+    "id": 648,
+    "line": 1236,
+    "name": "Huge screenshots"
+  },
+  {
+    "id": 649,
+    "line": 1237,
+    "name": "100k+ history items"
+  },
+  {
+    "id": 650,
+    "line": 1238,
+    "name": "Very long scrolling captures"
+  },
+  {
+    "id": 651,
+    "line": 1239,
+    "name": "Low-memory conditions"
+  },
+  {
+    "id": 652,
+    "line": 1240,
+    "name": "Device loss/GPU reset"
+  },
+  {
+    "id": 653,
+    "line": 1241,
+    "name": "Recording crash recovery"
+  },
+  {
+    "id": 654,
+    "line": 1242,
+    "name": "Unicode/path edge cases"
+  },
+  {
+    "id": 655,
+    "line": 1243,
+    "name": "Long filenames"
+  },
+  {
+    "id": 656,
+    "line": 1244,
+    "name": "Read-only folders"
+  },
+  {
+    "id": 657,
+    "line": 1245,
+    "name": "removable drives"
+  },
+  {
+    "id": 658,
+    "line": 1246,
+    "name": "protected windows"
+  },
+  {
+    "id": 659,
+    "line": 1247,
+    "name": "security software interference"
+  },
+  {
+    "id": 660,
+    "line": 1248,
+    "name": "installer/update migration"
+  }
+]

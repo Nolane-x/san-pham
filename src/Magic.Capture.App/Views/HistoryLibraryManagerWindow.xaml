@@ -1,0 +1,52 @@
+<Window
+    x:Class="Magic.Capture.App.Views.HistoryLibraryManagerWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="History Library">
+    <ScrollViewer>
+        <StackPanel Padding="20" Spacing="16" MaxWidth="920">
+            <StackPanel Spacing="3">
+                <TextBlock Text="History Library" FontSize="26" FontWeight="SemiBold"/>
+                <TextBlock Text="Organize captures locally. Removing a workspace, folder, or collection never deletes image files." TextWrapping="Wrap" Opacity="0.65"/>
+            </StackPanel>
+            <Grid ColumnSpacing="16">
+                <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition/><ColumnDefinition/></Grid.ColumnDefinitions>
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Workspaces" FontSize="18" FontWeight="SemiBold"/>
+                    <ListView x:Name="WorkspaceList" Height="190" DisplayMemberPath="Name" SelectionChanged="WorkspaceList_SelectionChanged"/>
+                    <TextBox x:Name="WorkspaceNameBox" Header="Name" MaxLength="120"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6"><Button Content="Create" Click="CreateWorkspace_Click"/><Button Content="Rename" Click="RenameWorkspace_Click"/><Button Content="Delete" Click="DeleteWorkspace_Click"/></StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="1" Spacing="8">
+                    <TextBlock Text="Folders" FontSize="18" FontWeight="SemiBold"/>
+                    <ListView x:Name="FolderList" Height="190" DisplayMemberPath="Name"/>
+                    <TextBox x:Name="FolderNameBox" Header="Name" MaxLength="120"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6"><Button Content="Create" Click="CreateFolder_Click"/><Button Content="Rename" Click="RenameFolder_Click"/><Button Content="Delete" Click="DeleteFolder_Click"/></StackPanel>
+                </StackPanel>
+                <StackPanel Grid.Column="2" Spacing="8">
+                    <TextBlock Text="Collections" FontSize="18" FontWeight="SemiBold"/>
+                    <ListView x:Name="CollectionList" Height="190" DisplayMemberPath="Name"/>
+                    <TextBox x:Name="CollectionNameBox" Header="Name" MaxLength="120"/>
+                    <StackPanel Orientation="Horizontal" Spacing="6"><Button Content="Create" Click="CreateCollection_Click"/><Button Content="Rename" Click="RenameCollection_Click"/><Button Content="Delete" Click="DeleteCollection_Click"/></StackPanel>
+                </StackPanel>
+            </Grid>
+            <Border Padding="12" CornerRadius="6" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}">
+                <StackPanel Spacing="10">
+                    <TextBlock Text="Assign selected History captures" FontSize="18" FontWeight="SemiBold"/>
+                    <TextBlock x:Name="SelectionCountText" Opacity="0.65"/>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ComboBox x:Name="AssignWorkspaceCombo" Width="220" Header="Workspace" SelectionChanged="AssignWorkspaceCombo_SelectionChanged"/>
+                        <ComboBox x:Name="AssignFolderCombo" Width="220" Header="Folder"/>
+                        <Button Content="Assign workspace/folder" Click="AssignSelected_Click" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="8">
+                        <ComboBox x:Name="AssignCollectionCombo" Width="220" Header="Collection"/>
+                        <Button Content="Add to collection" Click="AddSelectedToCollection_Click" VerticalAlignment="Bottom"/>
+                        <Button Content="Remove from collection" Click="RemoveSelectedFromCollection_Click" VerticalAlignment="Bottom"/>
+                    </StackPanel>
+                </StackPanel>
+            </Border>
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Opacity="0.75"/>
+        </StackPanel>
+    </ScrollViewer>
+</Window>

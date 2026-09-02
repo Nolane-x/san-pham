@@ -1,0 +1,83 @@
+<Window
+    x:Class="Magic.Capture.App.Views.TableWorkspaceWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <Grid Padding="12" RowSpacing="8">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="150"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled" VerticalScrollBarVisibility="Disabled">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Content="Undo" Click="Undo_Click"/>
+                <Button Content="Redo" Click="Redo_Click"/>
+                <Button Content="Apply cell" Click="ApplyCell_Click"/>
+                <Button Content="Insert row ↓" Click="InsertRow_Click"/>
+                <Button Content="Delete row" Click="DeleteRow_Click"/>
+                <Button Content="Insert column →" Click="InsertColumn_Click"/>
+                <Button Content="Delete column" Click="DeleteColumn_Click"/>
+                <ToggleButton x:Name="ExtendSelectionToggle" Content="Extend selection"/>
+                <Button Content="Merge" Click="Merge_Click"/>
+                <Button Content="Unmerge" Click="Unmerge_Click"/>
+                <Button Content="Copy selection" Click="CopySelection_Click"/>
+                <Button Content="Export XLSX" Click="ExportXlsx_Click"/>
+                <Button Content="Compare CSV/TSV…" Click="CompareFile_Click"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="1" ColumnSpacing="8">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBlock x:Name="SelectionText" VerticalAlignment="Center" FontWeight="SemiBold"/>
+            <TextBox x:Name="CellEditorTextBox" Grid.Column="1" AcceptsReturn="True" MaxLength="4096" MaxHeight="96" TextWrapping="Wrap" ScrollViewer.VerticalScrollBarVisibility="Auto" PlaceholderText="Selected cell text"/>
+            <StackPanel Grid.Column="2" Orientation="Horizontal" Spacing="4">
+                <Button Content="◀ Rows" Click="PreviousRows_Click"/>
+                <Button Content="Rows ▶" Click="NextRows_Click"/>
+                <Button Content="◀ Cols" Click="PreviousColumns_Click"/>
+                <Button Content="Cols ▶" Click="NextColumns_Click"/>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="2" BorderThickness="1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}" CornerRadius="6">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto" HorizontalScrollMode="Enabled"
+                          VerticalScrollBarVisibility="Auto" VerticalScrollMode="Enabled">
+                <StackPanel Padding="6" Spacing="2">
+                    <StackPanel x:Name="ColumnHeaderPanel" Orientation="Horizontal" Spacing="2"/>
+                    <ItemsControl x:Name="TableRowsRepeater">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Spacing="2">
+                                    <TextBlock Text="{Binding RowLabel}" Width="54" Height="34" VerticalAlignment="Center" TextAlignment="Center" FontWeight="SemiBold"/>
+                                    <ItemsControl ItemsSource="{Binding Cells}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate><StackPanel Orientation="Horizontal" Spacing="2"/></ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate>
+                                                <Button Width="122" Height="34" Padding="6,2" Tag="{Binding}" Loaded="TableCell_Loaded" Click="TableCell_Click"
+                                                        HorizontalContentAlignment="Left" ToolTipService.ToolTip="{Binding ToolTip}">
+                                                    <TextBlock Text="{Binding DisplayText}" TextTrimming="CharacterEllipsis" MaxLines="1"/>
+                                                </Button>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <TextBox x:Name="DiffOutputTextBox" Grid.Row="3" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                 FontFamily="Consolas" PlaceholderText="Table comparison output appears here."/>
+        <TextBlock x:Name="StatusText" Grid.Row="4" Opacity="0.7" TextWrapping="Wrap"/>
+    </Grid>
+</Window>

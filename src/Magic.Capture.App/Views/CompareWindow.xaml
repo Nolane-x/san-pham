@@ -1,0 +1,116 @@
+<Window
+    x:Class="Magic.Capture.App.Views.CompareWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Magic Capture Desktop — Compare">
+
+    <Grid Padding="16" RowSpacing="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <StackPanel Spacing="8">
+            <CommandBar DefaultLabelPosition="Right" IsDynamicOverflowEnabled="True">
+                <AppBarButton Label="Side by side" Click="SideBySide_Click" />
+                <AppBarButton Label="Overlay" Click="Overlay_Click" />
+                <AppBarButton Label="Difference" Click="Difference_Click" />
+                <AppBarButton Label="Heatmap" Click="Heatmap_Click" />
+                <AppBarButton Label="Mask" Click="Mask_Click" />
+                <AppBarButton Label="Blink" Click="Blink_Click" />
+                <AppBarButton Label="Triptych" Click="Triptych_Click" />
+                <AppBarSeparator />
+                <AppBarButton Label="Auto-align" Click="AutoAlign_Click" />
+                <AppBarButton Label="Register content" Click="AutoRegister_Click" />
+                <AppBarButton Label="Semantic diff" Click="SemanticDiff_Click" />
+                <AppBarButton Label="Export report" Click="ExportReport_Click" />
+                <AppBarButton Label="Copy difference" Icon="Copy" Click="CopyDifference_Click" />
+                <AppBarButton Label="Save difference" Icon="Save" Click="SaveDifference_Click" />
+            </CommandBar>
+            <StackPanel Orientation="Horizontal" Spacing="10" Margin="4,0,4,0">
+                <TextBlock Text="Change threshold" VerticalAlignment="Center"/>
+                <Slider x:Name="ThresholdSlider" Width="220" Minimum="0" Maximum="64" Value="8" StepFrequency="1" ValueChanged="ThresholdSlider_ValueChanged"/>
+                <TextBlock x:Name="ThresholdText" Text="8" Width="34" VerticalAlignment="Center"/>
+                <CheckBox x:Name="IgnoreTransparentCheck" Content="Ignore fully transparent" Checked="CompareOption_Changed" Unchecked="CompareOption_Changed"/>
+                <TextBlock x:Name="AlignmentText" Text="Alignment: off" VerticalAlignment="Center" Opacity="0.7"/>
+                <TextBlock x:Name="PerceptualText" Text="dHash: —" VerticalAlignment="Center" Opacity="0.7"/>
+            </StackPanel>
+        </StackPanel>
+
+        <Grid Grid.Row="1">
+            <Grid x:Name="SideBySidePanel" ColumnSpacing="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock x:Name="FirstNameText" FontWeight="SemiBold" Margin="4" />
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Image x:Name="FirstImage" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </ScrollViewer>
+                </Grid>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <TextBlock x:Name="SecondNameText" FontWeight="SemiBold" Margin="4" />
+                    <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                            <Image x:Name="SecondImage" Stretch="None" />
+                            <Canvas x:Name="SemanticHighlightCanvas" IsHitTestVisible="False" />
+                        </Grid>
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+
+            <Grid x:Name="OverlayPanel" Visibility="Collapsed">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Spacing="10" Margin="4,0,4,8">
+                    <TextBlock Text="Image B opacity" VerticalAlignment="Center" />
+                    <Slider x:Name="OverlayOpacitySlider" Width="260" Minimum="0" Maximum="100" Value="50" ValueChanged="OverlayOpacity_ValueChanged" />
+                    <TextBlock x:Name="OverlayOpacityText" Text="50%" VerticalAlignment="Center" />
+                </StackPanel>
+                <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Image x:Name="OverlayFirstImage" Stretch="None" />
+                        <Image x:Name="OverlaySecondImage" Stretch="None" Opacity="0.5" />
+                    </Grid>
+                </ScrollViewer>
+            </Grid>
+
+            <Grid x:Name="DifferencePanel" Visibility="Collapsed">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Image x:Name="DifferenceImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </ScrollViewer>
+            </Grid>
+
+            <Grid x:Name="HeatmapPanel" Visibility="Collapsed">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Image x:Name="HeatmapImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </ScrollViewer>
+            </Grid>
+
+            <Grid x:Name="MaskPanel" Visibility="Collapsed">
+                <ScrollViewer HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+                    <Image x:Name="MaskImage" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </ScrollViewer>
+            </Grid>
+
+            <Grid x:Name="TriptychPanel" Visibility="Collapsed" ColumnSpacing="8">
+                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><TextBlock Text="Before" FontWeight="SemiBold" Margin="4"/><ScrollViewer Grid.Row="1"><Image x:Name="TriptychFirstImage" Stretch="Uniform"/></ScrollViewer></Grid>
+                <Grid Grid.Column="1"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><TextBlock Text="After (aligned)" FontWeight="SemiBold" Margin="4"/><ScrollViewer Grid.Row="1"><Image x:Name="TriptychSecondImage" Stretch="Uniform"/></ScrollViewer></Grid>
+                <Grid Grid.Column="2"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions><TextBlock Text="Difference" FontWeight="SemiBold" Margin="4"/><ScrollViewer Grid.Row="1"><Image x:Name="TriptychDifferenceImage" Stretch="Uniform"/></ScrollViewer></Grid>
+            </Grid>
+        </Grid>
+
+        <StackPanel Grid.Row="2" Spacing="4">
+            <TextBlock x:Name="SemanticSummaryText" TextWrapping="Wrap" Opacity="0.78" />
+            <TextBox x:Name="SemanticDetailsBox" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="120" Visibility="Collapsed" />
+            <TextBlock x:Name="StatusText" TextWrapping="Wrap" Opacity="0.7" />
+        </StackPanel>
+    </Grid>
+</Window>

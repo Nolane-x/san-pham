@@ -1,0 +1,30 @@
+<Window
+    x:Class="Magic.Capture.App.Views.MeasurementOverlayWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Magic Capture Desktop — Measure">
+    <Grid x:Name="Root" Background="Black">
+        <Image x:Name="DesktopImage" Stretch="Fill"/>
+        <Canvas x:Name="OverlayCanvas" Background="Transparent" PointerPressed="Overlay_PointerPressed" PointerMoved="Overlay_PointerMoved" PointerReleased="Overlay_PointerReleased">
+            <Rectangle x:Name="FocusTop" Fill="#99000000" Visibility="Collapsed"/>
+            <Rectangle x:Name="FocusLeft" Fill="#99000000" Visibility="Collapsed"/>
+            <Rectangle x:Name="FocusRight" Fill="#99000000" Visibility="Collapsed"/>
+            <Rectangle x:Name="FocusBottom" Fill="#99000000" Visibility="Collapsed"/>
+            <Line x:Name="CrosshairH" Stroke="#AA00E5FF" StrokeThickness="1" IsHitTestVisible="False"/>
+            <Line x:Name="CrosshairV" Stroke="#AA00E5FF" StrokeThickness="1" IsHitTestVisible="False"/>
+            <Line x:Name="MeasureLine" Stroke="#FFFFCC00" StrokeThickness="2" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Line x:Name="HorizontalLine" Stroke="#AAFFCC00" StrokeThickness="1" StrokeDashArray="4,3" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Line x:Name="VerticalLine" Stroke="#AAFFCC00" StrokeThickness="1" StrokeDashArray="4,3" Visibility="Collapsed" IsHitTestVisible="False"/>
+            <Rectangle x:Name="SelectionBox" Stroke="#FFFFCC00" StrokeThickness="2" Fill="Transparent" Visibility="Collapsed" IsHitTestVisible="False"/>
+        </Canvas>
+        <Border HorizontalAlignment="Left" VerticalAlignment="Top" Margin="12" Background="#E6202020" CornerRadius="7" Padding="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <TextBlock x:Name="ModeText" Foreground="White" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                <TextBlock x:Name="MeasurementText" Foreground="White" FontFamily="Consolas" VerticalAlignment="Center"/>
+                <Button Content="Clear" Click="Clear_Click"/>
+                <Button Content="Close" Click="Close_Click"/>
+            </StackPanel>
+        </Border>
+        <Grid.KeyboardAccelerators><KeyboardAccelerator Key="Escape" Invoked="Escape_Invoked"/></Grid.KeyboardAccelerators>
+    </Grid>
+</Window>

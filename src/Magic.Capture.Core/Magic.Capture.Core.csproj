@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TargetFramework>net10.0</TargetFramework>
+    <RootNamespace>Magic.Capture.Core</RootNamespace>
+    <AssemblyName>Magic.Capture.Core</AssemblyName>
+  </PropertyGroup>
+</Project>

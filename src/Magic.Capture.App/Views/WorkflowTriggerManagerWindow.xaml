@@ -1,0 +1,120 @@
+<Window
+    x:Class="Magic.Capture.App.Views.WorkflowTriggerManagerWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Workflow triggers">
+    <Grid Padding="20" ColumnSpacing="18" RowSpacing="14">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="300"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="230"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Column="0" Spacing="8">
+            <TextBlock Text="Workflow triggers" FontSize="26" FontWeight="SemiBold"/>
+            <TextBlock Text="Local automation for saved workflows. Resident sources exist only while enabled and entitled." TextWrapping="Wrap" Opacity="0.65"/>
+            <StackPanel Orientation="Horizontal" Spacing="8">
+                <Button Content="New" Click="NewTrigger_Click"/>
+                <Button Content="Refresh" Click="RefreshTriggers_Click"/>
+            </StackPanel>
+            <ListView x:Name="TriggerList" DisplayMemberPath="Name" SelectionMode="Single" SelectionChanged="TriggerList_SelectionChanged" MinHeight="420"/>
+        </StackPanel>
+
+        <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel Spacing="10" MaxWidth="720" HorizontalAlignment="Left">
+                <InfoBar x:Name="TriggerInfoBar" IsOpen="False" IsClosable="True"/>
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="220"/></Grid.ColumnDefinitions>
+                    <TextBox x:Name="TriggerNameBox" Header="Name" MaxLength="120"/>
+                    <ComboBox x:Name="TriggerKindCombo" Grid.Column="1" Header="Trigger type" SelectionChanged="TriggerKindCombo_SelectionChanged"/>
+                </Grid>
+                <Grid ColumnSpacing="12">
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                    <ComboBox x:Name="TriggerProfileCombo" Header="Capture profile" DisplayMemberPath="Name"/>
+                    <ComboBox x:Name="TriggerWorkflowCombo" Grid.Column="1" Header="Workflow" DisplayMemberPath="Name"/>
+                </Grid>
+                <StackPanel Orientation="Horizontal" Spacing="16">
+                    <CheckBox x:Name="TriggerEnabledCheck" Content="Enabled" IsChecked="True" VerticalAlignment="Bottom" Margin="0,0,0,8"/>
+                    <NumberBox x:Name="TriggerCooldownBox" Header="Cooldown (seconds)" Minimum="1" Maximum="3600" Value="5" Width="180" SpinButtonPlacementMode="Compact"/>
+                </StackPanel>
+
+                <Border x:Name="SchedulePanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Schedule" FontWeight="SemiBold"/>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="160"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <TextBox x:Name="ScheduleTimeBox" Header="Local time HH:mm" Text="09:00" MaxLength="5"/>
+                            <TextBox x:Name="ScheduleDaysBox" Grid.Column="1" Header="Days" Text="MON,TUE,WED,THU,FRI" PlaceholderText="ALL, WEEKDAYS, or MON,TUE,..."/>
+                        </Grid>
+                        <TextBlock Text="Windows Task Scheduler runs this under the current interactive user at LIMITED privilege." TextWrapping="Wrap" Opacity="0.6"/>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="FilePanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="File / folder change" FontWeight="SemiBold"/>
+                        <TextBox x:Name="FileFolderBox" Header="Local folder path" PlaceholderText="C:\Users\you\Documents"/>
+                        <Grid ColumnSpacing="12">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                            <TextBox x:Name="FileFilterBox" Header="Filter" Text="*.*" PlaceholderText="*.png"/>
+                            <CheckBox x:Name="FileRecursiveCheck" Grid.Column="1" Content="Include subfolders" VerticalAlignment="Bottom" Margin="0,0,0,8"/>
+                        </Grid>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="ClipboardPanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Clipboard change" FontWeight="SemiBold"/>
+                        <TextBlock Text="The trigger listens only for the Windows clipboard-change notification. It does not read or persist clipboard contents." TextWrapping="Wrap" Opacity="0.65"/>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="WindowPanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Foreground window" FontWeight="SemiBold"/>
+                        <TextBox x:Name="WindowPatternBox" Header="Title or process-name contains" MaxLength="240" PlaceholderText="Visual Studio"/>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="ProcessPanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Process start" FontWeight="SemiBold"/>
+                        <TextBox x:Name="ProcessNameBox" Header="Process name" MaxLength="128" PlaceholderText="notepad.exe"/>
+                        <TextBlock Text="Process-start monitoring uses a bounded two-second poll and exists only while at least one enabled process trigger is configured." TextWrapping="Wrap" Opacity="0.6"/>
+                    </StackPanel>
+                </Border>
+
+                <Border x:Name="HotkeyPanel" Padding="12" BorderThickness="1" BorderBrush="#33808080" CornerRadius="6" Visibility="Collapsed">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Global hotkey" FontWeight="SemiBold"/>
+                        <TextBox x:Name="HotkeyBox" Header="Gesture" PlaceholderText="Ctrl+Shift+K" MaxLength="48"/>
+                        <TextBlock Text="At least one modifier is required. Workflow trigger hotkeys are capped at 16 and may not duplicate each other." TextWrapping="Wrap" Opacity="0.6"/>
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <Button Content="Save" Click="SaveTrigger_Click" Style="{StaticResource AccentButtonStyle}"/>
+                    <Button Content="Test now" Click="TestTrigger_Click"/>
+                    <Button Content="Delete" Click="DeleteTrigger_Click"/>
+                </StackPanel>
+                <TextBlock x:Name="HotkeyRegistrationStatusText" TextWrapping="Wrap" Opacity="0.65"/>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Border Grid.Row="1" Grid.ColumnSpan="2" BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,12,0,0">
+            <Grid RowSpacing="8">
+                <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal" Spacing="8">
+                    <TextBlock Text="Recent trigger history" FontSize="18" FontWeight="SemiBold" VerticalAlignment="Center"/>
+                    <Button Content="Refresh" Click="RefreshHistory_Click"/>
+                    <Button Content="Clear" Click="ClearHistory_Click"/>
+                    <TextBlock Text="Metadata only: trigger, type, status, reason code and timing." VerticalAlignment="Center" Opacity="0.6"/>
+                </StackPanel>
+                <ListView x:Name="TriggerHistoryList" Grid.Row="1"/>
+            </Grid>
+        </Border>
+    </Grid>
+</Window>

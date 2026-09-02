@@ -1,0 +1,936 @@
+<Window
+    x:Class="Magic.Capture.App.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    Title="Magic Capture Desktop">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <NavigationView x:Name="Nav" PaneDisplayMode="Left" SelectionChanged="Nav_SelectionChanged" IsBackButtonVisible="Collapsed" Header="Magic Capture Desktop">
+            <NavigationView.MenuItems>
+                <NavigationViewItem Content="Home" Tag="home" />
+                <NavigationViewItem Content="History" Tag="history" />
+                <NavigationViewItem Content="Workflows" Tag="workflows" />
+                <NavigationViewItem Content="Utilities" Tag="utilities" />
+                <NavigationViewItem Content="Destinations · PRO" Tag="destinations" />
+                <NavigationViewItem Content="Stitch · PLUS" Tag="stitch" />
+                <NavigationViewItem Content="Compare · PRO" Tag="compare" />
+                <NavigationViewItem Content="AI &amp; Magic · PRO" Tag="ai" />
+            </NavigationView.MenuItems>
+            <NavigationView.FooterMenuItems>
+                <NavigationViewItem Content="Settings" Tag="settings" />
+                <NavigationViewItem Content="Upgrade / Plan" Tag="plan" />
+                <NavigationViewItem Content="About" Tag="about" />
+            </NavigationView.FooterMenuItems>
+
+            <Grid Padding="24">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <InfoBar x:Name="GlobalInfoBar" Grid.Row="0" IsOpen="False" Margin="0,0,0,12" IsClosable="True" />
+
+                <Grid x:Name="HomePage" Grid.Row="1">
+                    <ScrollViewer>
+                        <StackPanel Spacing="16" MaxWidth="900" HorizontalAlignment="Left">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="Magic Capture Desktop" FontSize="30" FontWeight="SemiBold" />
+                                <TextBlock Text="Runs in the tray. Press Win + Shift + X anywhere to freeze the screen and capture." Opacity="0.7" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="14">
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock x:Name="PlanStatusText" Text="Plan: loading…" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="TrialStatusText" Text="" Opacity="0.7" />
+                                    </StackPanel>
+                                    <Button x:Name="HomeUpgradeButton" Grid.Column="1" Content="Upgrade to Pro" Click="UpgradeToPro_Click" />
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="EditableProjectRecoveryCard" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="14">
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Unsaved editor work found" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="EditableProjectRecoveryText" Text="A local autosave is available." TextWrapping="Wrap" Opacity="0.75"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <Button Content="Recover" Click="RecoverEditableProject_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                        <Button Content="Discard" Click="DiscardEditableProjectRecovery_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="DocumentationRecoveryCard" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="14">
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Unsaved documentation work found" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="DocumentationRecoveryText" Text="A local documentation autosave is available." TextWrapping="Wrap" Opacity="0.75"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <Button Content="Recover" Click="RecoverDocumentationProject_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                        <Button Content="Discard" Click="DiscardDocumentationRecovery_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <Border x:Name="VideoEditRecoveryCard" Visibility="Collapsed" Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="14">
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="Unsaved video-edit work found" FontWeight="SemiBold" />
+                                        <TextBlock x:Name="VideoEditRecoveryText" Text="A local video-edit autosave is available." TextWrapping="Wrap" Opacity="0.75"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                                        <Button Content="Recover" Click="RecoverVideoEditProject_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                        <Button Content="Discard" Click="DiscardVideoEditRecovery_Click"/>
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+
+                            <TextBlock Text="Capture" FontSize="20" FontWeight="SemiBold" />
+                            <StackPanel Spacing="8">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="Capture region" Click="CaptureRegion_Click" Style="{StaticResource AccentButtonStyle}" />
+                                    <Button Content="Repeat last · PRO" Click="RepeatRegion_Click" />
+                                    <Button Content="Auto scroll · PLUS" Click="CaptureAutoScroll_Click" />
+                                    <Button Content="Virtual desktop" Click="CaptureVirtual_Click" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="Active monitor" Click="CaptureMonitor_Click" />
+                                    <Button Content="Choose monitor…" Click="CaptureMonitorMenu_Click" />
+                                    <Button Content="Foreground window" Click="CaptureWindow_Click" />
+                                    <Button Content="Choose window…" Click="CaptureWindowMenu_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <TextBlock Text="Default hotkey" VerticalAlignment="Center" />
+                                <TextBlock x:Name="HotkeyStatusText" Text="Win + Shift + X" FontSize="20" FontWeight="SemiBold" VerticalAlignment="Center" />
+                                <ComboBox x:Name="CaptureDelayCombo" Width="130" SelectedIndex="0">
+                                    <ComboBoxItem Content="No delay" Tag="0" />
+                                    <ComboBoxItem Content="3 seconds" Tag="3" />
+                                    <ComboBoxItem Content="5 seconds" Tag="5" />
+                                    <ComboBoxItem Content="10 seconds" Tag="10" />
+                                </ComboBox>
+                            </StackPanel>
+                            <TextBlock x:Name="HotkeyErrorText" Foreground="{ThemeResource SystemFillColorCriticalBrush}" TextWrapping="Wrap" />
+
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="12">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Capture profiles &amp; exact regions" FontWeight="SemiBold"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <ComboBox x:Name="CaptureProfileCombo" Width="250" DisplayMemberPath="Name" PlaceholderText="Saved profile"/>
+                                        <Button Content="Run profile" Click="RunCaptureProfile_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                        <Button Content="New profile…" Click="NewCaptureProfile_Click"/>
+                                        <Button Content="Delete" Click="DeleteCaptureProfile_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <ComboBox x:Name="RecentRegionCombo" Width="250" DisplayMemberPath="Label" PlaceholderText="Recently used region"/>
+                                        <Button Content="Capture recent region" Click="CaptureRecentRegion_Click"/>
+                                        <Button Content="Exact region…" Click="CaptureExactRegion_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Background="{ThemeResource CardBackgroundFillColorDefaultBrush}" CornerRadius="6" Padding="12">
+                                <StackPanel Spacing="10">
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <TextBlock Text="Screen recording" FontWeight="SemiBold" FontSize="18"/>
+                                        <TextBlock x:Name="RecordingElapsedText" Text="00:00:00" Opacity="0.7" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                    <TextBlock Text="Local MP4/H.264, GIF and APNG recording. Capture frames use the same WGC → Desktop Duplication → GDI router as screenshots; effects are composited locally and recording controls are excluded from capture on supported Windows builds." TextWrapping="Wrap" Opacity="0.68"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <ComboBox x:Name="RecordingTargetCombo" Header="Target" Width="180" SelectedIndex="0">
+                                            <ComboBoxItem Content="Region" Tag="Region"/>
+                                            <ComboBoxItem Content="Window" Tag="Window"/>
+                                            <ComboBoxItem Content="Monitor" Tag="Monitor"/>
+                                            <ComboBoxItem Content="Virtual desktop" Tag="VirtualDesktop"/>
+                                        </ComboBox>
+                                        <NumberBox x:Name="RecordingFpsBox" Header="FPS" Width="90" Minimum="5" Maximum="60" Value="30" SpinButtonPlacementMode="Compact"/>
+                                        <NumberBox x:Name="RecordingBitrateBox" Header="Mbps" Width="100" Minimum="1" Maximum="50" Value="8" SpinButtonPlacementMode="Compact"/>
+                                        <NumberBox x:Name="RecordingScaleBox" Header="Scale %" Width="110" Minimum="25" Maximum="100" Value="100" SpinButtonPlacementMode="Compact"/>
+                                        <NumberBox x:Name="RecordingCountdownBox" Header="Countdown" Width="115" Minimum="0" Maximum="10" Value="3" SpinButtonPlacementMode="Compact"/>
+                                        <NumberBox x:Name="RecordingStopAfterBox" Header="Stop min (0=manual)" Width="155" Minimum="0" Maximum="240" Value="0" SpinButtonPlacementMode="Compact"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <CheckBox x:Name="RecordingCursorCheck" Content="Include mouse cursor" IsChecked="True" VerticalAlignment="Center"/>
+                                        <ComboBox x:Name="RecordingOutputFormatCombo" Header="Output" Width="190" SelectedIndex="0" SelectionChanged="RecordingOutputFormat_SelectionChanged">
+                                            <ComboBoxItem Content="MP4 / H.264" Tag="Mp4"/>
+                                            <ComboBoxItem Content="Animated GIF" Tag="Gif"/>
+                                            <ComboBoxItem Content="Animated PNG (APNG)" Tag="Apng"/>
+                                            <ComboBoxItem Content="M4A / AAC audio only" Tag="M4a"/>
+                                        </ComboBox>
+                                    </StackPanel>
+                                    <StackPanel Spacing="6">
+                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                            <CheckBox x:Name="RecordingCursorHighlightCheck" Content="Cursor highlight"/>
+                                            <CheckBox x:Name="RecordingClickVisualizationCheck" Content="Left/right click ripple"/>
+                                            <CheckBox x:Name="RecordingSafeKeyOverlayCheck" Content="Safe shortcut keys"/>
+                                            <CheckBox x:Name="RecordingDrawCheck" Content="Draw: Ctrl+Alt+drag"/>
+                                            <CheckBox x:Name="RecordingLiveZoomCheck" Content="Live zoom: Ctrl+Alt+Z"/>
+                                            <NumberBox x:Name="RecordingZoomBox" Header="Zoom %" Width="105" Minimum="150" Maximum="300" Value="200" SpinButtonPlacementMode="Compact"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="RecordingEffectsStatusText" Text="Effects are local-only. Safe keys never retain plain typed characters; only shortcuts/function/navigation keys are rendered." TextWrapping="Wrap" Opacity="0.62"/>
+                                    </StackPanel>
+                                    <StackPanel Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <CheckBox x:Name="RecordingSystemAudioCheck" Content="System audio" VerticalAlignment="Center"/>
+                                            <ComboBox x:Name="RecordingSystemAudioDeviceCombo" Header="Output device" Width="300" DisplayMemberPath="Name" PlaceholderText="Windows default output"/>
+                                            <NumberBox x:Name="RecordingSystemAudioGainBox" Header="System gain %" Width="120" Minimum="0" Maximum="200" Value="100" SpinButtonPlacementMode="Compact"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <CheckBox x:Name="RecordingMicrophoneCheck" Content="Microphone" VerticalAlignment="Center"/>
+                                            <ComboBox x:Name="RecordingMicrophoneDeviceCombo" Header="Input device" Width="300" DisplayMemberPath="Name" PlaceholderText="Windows default microphone"/>
+                                            <NumberBox x:Name="RecordingMicrophoneGainBox" Header="Mic gain %" Width="120" Minimum="0" Maximum="200" Value="100" SpinButtonPlacementMode="Compact"/>
+                                            <NumberBox x:Name="RecordingAudioBitrateBox" Header="AAC kbps" Width="110" Minimum="96" Maximum="320" Value="192" SpinButtonPlacementMode="Compact"/>
+                                            <Button Content="Refresh audio devices" Click="RecordingRefreshAudioDevices_Click" VerticalAlignment="Bottom"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="RecordingAudioStatusText" Text="Audio off." TextWrapping="Wrap" Opacity="0.62"/>
+                                    </StackPanel>
+                                    <StackPanel Spacing="8">
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <CheckBox x:Name="RecordingWebcamCheck" Content="Webcam / Picture-in-Picture" VerticalAlignment="Center"/>
+                                            <ComboBox x:Name="RecordingWebcamDeviceCombo" Header="Camera" Width="310" DisplayMemberPath="Name" PlaceholderText="Windows default camera"/>
+                                            <Button Content="Refresh cameras" Click="RecordingRefreshCameras_Click" VerticalAlignment="Bottom"/>
+                                            <CheckBox x:Name="RecordingWebcamMirrorCheck" Content="Mirror" IsChecked="True" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <ComboBox x:Name="RecordingWebcamPositionCombo" Header="Position" Width="150" SelectedIndex="3">
+                                                <ComboBoxItem Content="Top left" Tag="TopLeft"/>
+                                                <ComboBoxItem Content="Top right" Tag="TopRight"/>
+                                                <ComboBoxItem Content="Bottom left" Tag="BottomLeft"/>
+                                                <ComboBoxItem Content="Bottom right" Tag="BottomRight"/>
+                                                <ComboBoxItem Content="Custom X/Y" Tag="Custom"/>
+                                            </ComboBox>
+                                            <NumberBox x:Name="RecordingWebcamXBox" Header="X %" Width="90" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact"/>
+                                            <NumberBox x:Name="RecordingWebcamYBox" Header="Y %" Width="90" Minimum="0" Maximum="100" Value="100" SpinButtonPlacementMode="Compact"/>
+                                            <NumberBox x:Name="RecordingWebcamWidthBox" Header="Width %" Width="105" Minimum="10" Maximum="50" Value="25" SpinButtonPlacementMode="Compact"/>
+                                            <ComboBox x:Name="RecordingWebcamShapeCombo" Header="Shape" Width="130" SelectedIndex="1">
+                                                <ComboBoxItem Content="Rectangle" Tag="Rectangle"/>
+                                                <ComboBoxItem Content="Rounded" Tag="Rounded"/>
+                                                <ComboBoxItem Content="Circle" Tag="Circle"/>
+                                            </ComboBox>
+                                            <NumberBox x:Name="RecordingWebcamOpacityBox" Header="Opacity %" Width="110" Minimum="20" Maximum="100" Value="100" SpinButtonPlacementMode="Compact"/>
+                                            <NumberBox x:Name="RecordingWebcamBorderBox" Header="Border px" Width="105" Minimum="0" Maximum="12" Value="2" SpinButtonPlacementMode="Compact"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="RecordingWebcamStatusText" Text="Webcam off." TextWrapping="Wrap" Opacity="0.62"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button x:Name="StartRecordingButton" Content="Start recording…" Click="RecordingStart_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                        <Button x:Name="RepeatRecordingRegionButton" Content="Repeat last region…" Click="RecordingRepeatRegion_Click"/>
+                                        <Button x:Name="PauseRecordingButton" Content="Pause" Click="RecordingPause_Click" IsEnabled="False"/>
+                                        <Button x:Name="ResumeRecordingButton" Content="Resume" Click="RecordingResume_Click" IsEnabled="False"/>
+                                        <Button x:Name="StopRecordingButton" Content="Stop &amp; finalize" Click="RecordingStop_Click" IsEnabled="False"/>
+                                        <Button x:Name="RecordingDiscardRecoveryButton" Content="Discard recovery marker" Click="RecordingDiscardRecovery_Click" Visibility="Collapsed"/>
+                                        <Button Content="Open Clip Editor…" Click="OpenVideoEditor_Click"/>
+                                    </StackPanel>
+                                    <TextBlock x:Name="RecordingStatusText" Text="Ready." TextWrapping="Wrap" Opacity="0.72"/>
+                                </StackPanel>
+                            </Border>
+
+                            <TextBlock Text="Recent captures" FontSize="20" FontWeight="SemiBold" />
+                            <ListView x:Name="RecentHistoryList" IsItemClickEnabled="True" ItemClick="HistoryList_ItemClick" MaxHeight="340">
+                                <ListView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Grid Padding="8" ColumnSpacing="12">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="72"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <Border Width="64" Height="44" Background="#FF202020" CornerRadius="4"><Image Source="{Binding Thumbnail}" Stretch="Uniform"/></Border>
+                                            <StackPanel Grid.Column="1"><TextBlock Text="{Binding SourceKind}" FontWeight="SemiBold"/><TextBlock Text="{Binding Dimensions}" Opacity="0.65" FontSize="12"/></StackPanel>
+                                            <TextBlock Grid.Column="2" Text="{Binding CreatedUtc}" VerticalAlignment="Center" Opacity="0.65"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </ListView.ItemTemplate>
+                            </ListView>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="HistoryPage" Grid.Row="1" Visibility="Collapsed" AllowDrop="True" DragOver="History_DragOver" Drop="History_Drop">
+                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/></Grid.RowDefinitions>
+                    <CommandBar Grid.Row="0" DefaultLabelPosition="Right">
+                        <AppBarButton Label="Refresh" Click="RefreshHistory_Click"/>
+                        <AppBarButton Label="Filters" Click="HistoryFilters_Click"/>
+                        <AppBarButton Label="Library" Click="HistoryLibraryManager_Click"/>
+                        <AppBarButton Label="Sessions" Click="HistorySessions_Click"/>
+                        <AppBarButton Label="Duplicates" Click="HistoryDuplicates_Click"/>
+                        <AppBarButton Label="History Doctor" Click="HistoryDoctor_Click"/>
+                        <AppBarButton Label="Export archive" Click="HistoryArchiveExport_Click"/>
+                        <AppBarButton Label="Import archive" Click="HistoryArchiveImport_Click"/>
+                        <AppBarButton Label="Tag selected" Click="HistoryBatchTag_Click"/>
+                        <AppBarButton Label="Export selected" Click="HistoryBatchExport_Click"/>
+                        <AppBarButton Label="Import images" Click="HistoryImport_Click"/>
+                        <AppBarButton Label="Delete selected" Click="HistoryBatchDelete_Click"/>
+                        <AppBarButton Label="Add selected to AI context · PRO" Click="AddSelectedHistoryToAiContext_Click"/>
+                        <AppBarButton Label="Clear history" Click="ClearHistory_Click"/>
+                        <CommandBar.Content>
+                            <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Center">
+                                <TextBlock Text="History" FontSize="26" FontWeight="SemiBold" Margin="4,0,6,0"/>
+                                <TextBox x:Name="HistorySearchBox" Width="300" PlaceholderText="Search captures" TextChanged="HistorySearchBox_TextChanged"/>
+                                <TextBlock x:Name="HistorySearchCountText" VerticalAlignment="Center" Opacity="0.6"/>
+                                <TextBlock x:Name="HistoryFilterStatusText" VerticalAlignment="Center" Opacity="0.55"/>
+                            </StackPanel>
+                        </CommandBar.Content>
+                    </CommandBar>
+                    <Border Grid.Row="1" Padding="8,6" BorderThickness="0,0,0,1" BorderBrush="{ThemeResource CardStrokeColorDefaultBrush}">
+                        <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                            <ComboBox x:Name="HistoryWorkspaceCombo" Width="180" Header="Workspace" SelectionChanged="HistoryOrganizationFilter_SelectionChanged"/>
+                            <ComboBox x:Name="HistoryFolderCombo" Width="190" Header="Folder" SelectionChanged="HistoryOrganizationFilter_SelectionChanged"/>
+                            <ComboBox x:Name="HistoryCollectionCombo" Width="180" Header="Collection" SelectionChanged="HistoryOrganizationFilter_SelectionChanged"/>
+                            <ComboBox x:Name="HistoryViewCombo" Width="120" Header="View" SelectionChanged="HistoryOrganizationFilter_SelectionChanged">
+                                <ComboBoxItem Content="List" Tag="list" IsSelected="True"/>
+                                <ComboBoxItem Content="Timeline" Tag="timeline"/>
+                            </ComboBox>
+                            <TextBlock Text="Drop images or a folder here to import" VerticalAlignment="Bottom" Margin="10,0,0,7" Opacity="0.55"/>
+                        </StackPanel>
+                    </Border>
+                    <ListView x:Name="HistoryList" Grid.Row="2" IsItemClickEnabled="True" ItemClick="HistoryList_ItemClick" SelectionMode="Multiple">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="10" ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="132"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                    <Border Width="120" Height="76" Background="#FF202020" CornerRadius="4"><Image Source="{Binding Thumbnail}" Stretch="Uniform"/></Border>
+                                    <StackPanel Grid.Column="1" Spacing="3">
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Image Source="{Binding ProcessIcon}" Width="18" Height="18" Stretch="Uniform"/>
+                                            <TextBlock Text="{Binding FavoriteGlyph}" Foreground="#FFFFC107"/>
+                                            <TextBlock Text="{Binding DisplayTitle}" FontWeight="SemiBold"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="{Binding Dimensions}" Opacity="0.65"/><TextBlock Text="{Binding FileSizeText}" Opacity="0.55"/><TextBlock Text="{Binding SessionText}" Opacity="0.55"/></StackPanel>
+                                        <TextBlock Text="{Binding SourceMetadataText}" TextTrimming="CharacterEllipsis" Opacity="0.58"/>
+                                        <TextBlock Text="{Binding TagsText}" TextTrimming="CharacterEllipsis" Opacity="0.7"/>
+                                        <TextBlock Text="{Binding OcrPreview}" TextTrimming="CharacterEllipsis" MaxLines="2" Opacity="0.6"/>
+                                        <TextBlock Text="{Binding RelativePath}" TextTrimming="CharacterEllipsis" FontSize="11" Opacity="0.45"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="2" Spacing="6" HorizontalAlignment="Right">
+                                        <TextBlock Text="{Binding CreatedUtc}" HorizontalAlignment="Right"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="6" HorizontalAlignment="Right">
+                                            <Button Content="Open" Click="HistoryOpen_Click"/><Button Content="Details…" Click="HistoryDetails_Click"/><Button Content="Reveal" Click="HistoryReveal_Click"/><Button Content="Delete" Click="HistoryDelete_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                    <ListView x:Name="HistoryTimelineList" Grid.Row="2" Visibility="Collapsed" IsItemClickEnabled="True" ItemClick="HistoryTimelineList_ItemClick" SelectionMode="Multiple">
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Padding="8,4" Spacing="5">
+                                    <TextBlock Text="{Binding DayLabel}" FontSize="18" FontWeight="SemiBold" Opacity="0.8"/>
+                                    <Grid Padding="8" ColumnSpacing="14">
+                                        <Grid.ColumnDefinitions><ColumnDefinition Width="116"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                        <Border Width="104" Height="66" Background="#FF202020" CornerRadius="4"><Image Source="{Binding Display.Thumbnail}" Stretch="Uniform"/></Border>
+                                        <StackPanel Grid.Column="1" Spacing="3">
+                                            <StackPanel Orientation="Horizontal" Spacing="6"><Image Source="{Binding Display.ProcessIcon}" Width="18" Height="18"/><TextBlock Text="{Binding Display.DisplayTitle}" FontWeight="SemiBold"/></StackPanel>
+                                            <TextBlock Text="{Binding Display.SourceMetadataText}" TextTrimming="CharacterEllipsis" Opacity="0.6"/>
+                                            <TextBlock Text="{Binding Display.TagsText}" TextTrimming="CharacterEllipsis" Opacity="0.65"/>
+                                        </StackPanel>
+                                        <StackPanel Grid.Column="2" HorizontalAlignment="Right"><TextBlock Text="{Binding Display.CreatedUtc}"/><TextBlock Text="{Binding Display.Dimensions}" Opacity="0.55"/></StackPanel>
+                                    </Grid>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+                </Grid>
+
+                <ScrollViewer x:Name="WorkflowsPage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="18" MaxWidth="980" HorizontalAlignment="Left" Padding="0,0,12,24">
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Capture Workflows" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="Declarative after-capture pipelines. Run them from the Win + Shift + X overlay, Capture Profiles, CLI, or replay them on History items." TextWrapping="Wrap" Opacity="0.7"/>
+                        </StackPanel>
+                        <Grid ColumnSpacing="16" Height="330">
+                            <Grid.ColumnDefinitions><ColumnDefinition Width="360"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <ListView x:Name="WorkflowList" SelectionChanged="WorkflowList_SelectionChanged" DisplayMemberPath="Name"/>
+                            <StackPanel Grid.Column="1" Spacing="8">
+                                <TextBlock x:Name="WorkflowNameText" FontSize="20" FontWeight="SemiBold" Text="Select a workflow"/>
+                                <TextBlock x:Name="WorkflowDescriptionText" TextWrapping="Wrap" Opacity="0.7"/>
+                                <TextBlock x:Name="WorkflowTierText"/>
+                                <ListView x:Name="WorkflowStepList" MaxHeight="190"/>
+                                <TextBlock Text="Select one or more captures in History, then run this workflow here — or choose it from Capture Profiles/CLI." TextWrapping="Wrap" Opacity="0.6"/>
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Refresh" Click="RefreshWorkflows_Click"/>
+                            <Button Content="Run on selected History capture(s)" Click="RunWorkflowOnHistory_Click" Style="{StaticResource AccentButtonStyle}"/>
+                            <Button Content="Run once with selected History as image loop" Click="RunWorkflowLoopOnHistory_Click"/>
+                            <Button Content="Dry-run on one History capture" Click="WorkflowDryRun_Click"/>
+                            <Button Content="Edit selected in Studio" Click="WorkflowBuilderEditSelected_Click"/>
+                            <Button Content="Automation triggers…" Click="WorkflowTriggerManager_Click"/>
+                            <TextBlock x:Name="WorkflowStatusText" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                        </StackPanel>
+
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,16,0,0">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Workflow Studio · PLUS / PRO" FontSize="20" FontWeight="SemiBold"/>
+                                <TextBlock Text="Build local after-capture pipelines visually. Steps can be dragged, reordered, disabled, retried, timed out, conditioned, imported/exported, and parameterized with bounded variables." TextWrapping="Wrap" Opacity="0.68"/>
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="330"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <StackPanel Spacing="7">
+                                        <TextBox x:Name="WorkflowBuilderNameBox" Header="Workflow name"/>
+                                        <TextBox x:Name="WorkflowBuilderDescriptionBox" Header="Description" AcceptsReturn="True" TextWrapping="Wrap" Height="78"/>
+                                        <TextBox x:Name="WorkflowBuilderVariablesBox" Header="Default variables — one name=value per line" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" Height="90" PlaceholderText="project=demo&#x0a;quality=high"/>
+                                        <TextBlock Text="Parameters · schema v4" FontWeight="SemiBold" Margin="0,4,0,0"/>
+                                        <ListView x:Name="WorkflowBuilderParameterList" Height="112" DisplayMemberPath="Display" SelectionMode="Single" SelectionChanged="WorkflowBuilderParameterList_SelectionChanged"/>
+                                        <Grid ColumnSpacing="7">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="132"/></Grid.ColumnDefinitions>
+                                            <TextBox x:Name="WorkflowBuilderParameterNameBox" Header="Parameter name" MaxLength="64"/>
+                                            <ComboBox x:Name="WorkflowBuilderParameterKindCombo" Grid.Column="1" Header="Type"/>
+                                        </Grid>
+                                        <TextBox x:Name="WorkflowBuilderParameterPromptBox" Header="Prompt" MaxLength="240"/>
+                                        <Grid ColumnSpacing="7">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+                                            <TextBox x:Name="WorkflowBuilderParameterDefaultBox" Header="Default value (optional)" MaxLength="4096"/>
+                                            <CheckBox x:Name="WorkflowBuilderParameterRequiredCheck" Grid.Column="1" Content="Required" VerticalAlignment="Bottom" Margin="0,0,0,6"/>
+                                        </Grid>
+                                        <TextBox x:Name="WorkflowBuilderParameterChoicesBox" Header="Choice values — one per line (Choice only)" AcceptsReturn="True" TextWrapping="NoWrap" Height="70" MaxLength="4096"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="7">
+                                            <Button Content="Add parameter" Click="WorkflowBuilderAddParameter_Click"/>
+                                            <Button Content="Apply" Click="WorkflowBuilderApplyParameter_Click"/>
+                                            <Button Content="Remove" Click="WorkflowBuilderRemoveParameter_Click"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="7">
+                                            <Button Content="New" Click="WorkflowBuilderNew_Click"/>
+                                            <Button Content="Duplicate selected" Click="WorkflowBuilderDuplicate_Click"/>
+                                            <Button Content="Save" Click="WorkflowBuilderSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                            <Button Content="Delete" Click="WorkflowBuilderDelete_Click"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="7">
+                                            <Button Content="Import…" Click="WorkflowBuilderImport_Click"/>
+                                            <Button Content="Export selected…" Click="WorkflowBuilderExport_Click"/>
+                                        </StackPanel>
+                                        <TextBlock Text="Custom workflows created here require Plus trial or Pro. Imported files are validated and loaded into the editor before you explicitly save them." TextWrapping="Wrap" Opacity="0.6"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1" Spacing="7">
+                                        <StackPanel Orientation="Horizontal" Spacing="7">
+                                            <ComboBox x:Name="WorkflowBuilderAddKindCombo" Header="Add step" Width="245"/>
+                                            <Button Content="Add" Click="WorkflowBuilderAddStep_Click" VerticalAlignment="Bottom"/>
+                                            <Button Content="Remove" Click="WorkflowBuilderRemoveStep_Click" VerticalAlignment="Bottom"/>
+                                            <Button Content="↑" Click="WorkflowBuilderMoveUp_Click" VerticalAlignment="Bottom"/>
+                                            <Button Content="↓" Click="WorkflowBuilderMoveDown_Click" VerticalAlignment="Bottom"/>
+                                        </StackPanel>
+                                        <ListView x:Name="WorkflowBuilderStepList" Height="240" DisplayMemberPath="Display" SelectionMode="Single" CanDragItems="True" CanReorderItems="True" AllowDrop="True" SelectionChanged="WorkflowBuilderStepList_SelectionChanged"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="12">
+                                            <CheckBox x:Name="WorkflowBuilderStepEnabledCheck" Content="Enabled" IsChecked="True"/>
+                                            <CheckBox x:Name="WorkflowBuilderStepRequiredCheck" Content="Required (stop workflow on failure)" IsChecked="True"/>
+                                        </StackPanel>
+                                        <Grid ColumnSpacing="8">
+                                            <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                            <TextBox x:Name="WorkflowBuilderStepArgumentBox" Header="Argument / profile id"/>
+                                            <TextBox x:Name="WorkflowBuilderStepOutputKeyBox" Grid.Column="1" Header="Output key (optional)"/>
+                                        </Grid>
+                                        <TextBox x:Name="WorkflowBuilderStepConditionBox" Header="Condition (e.g. exists:text &amp;&amp; contains:source:Chrome)" FontFamily="Consolas"/>
+                                        <TextBox x:Name="WorkflowBuilderStepOptionsBox" Header="Options — one key=value per line" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" Height="70"/>
+                                        <TextBlock Text="v5 hints: PromptText/Confirm use Argument as prompt · PromptChoice uses options choices=Low|Medium|High · Delay uses Argument milliseconds · RunWorkflow uses Argument workflow id · ForEachImage uses Argument child workflow id and option continueOnError=true|false." TextWrapping="Wrap" FontSize="11" Opacity="0.58"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <NumberBox x:Name="WorkflowBuilderStepAttemptsBox" Header="Attempts" Width="115" Minimum="1" Maximum="5" Value="1"/>
+                                            <NumberBox x:Name="WorkflowBuilderStepRetryBox" Header="Retry delay ms" Width="145" Minimum="0" Maximum="60000" Value="0"/>
+                                            <NumberBox x:Name="WorkflowBuilderStepTimeoutBox" Header="Step timeout ms" Width="155" Minimum="0" Maximum="600000" Value="0"/>
+                                            <Button Content="Apply step settings" Click="WorkflowBuilderApplyStep_Click" VerticalAlignment="Bottom"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+                                <TextBlock x:Name="WorkflowBuilderStatusText" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,16,0,0">
+                            <StackPanel Spacing="8">
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock Text="Workflow execution traces" FontSize="20" FontWeight="SemiBold"/>
+                                    <Button Content="Refresh" Click="RefreshWorkflowTraces_Click"/>
+                                    <Button Content="Clear local traces" Click="ClearWorkflowTraces_Click"/>
+                                    <Button Content="Resume selected failed trace" Click="ResumeWorkflowTrace_Click"/>
+                                </StackPanel>
+                                <TextBlock Text="Local metadata only: workflow/step ids, status, attempts, and timing. Capture pixels, OCR/AI text, variables, HTTP bodies, stdout/stderr, and result payloads are never written to this trace store." TextWrapping="Wrap" Opacity="0.68"/>
+                                <Grid ColumnSpacing="14" Height="240">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="390"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <ListView x:Name="WorkflowTraceList" DisplayMemberPath="Display" SelectionMode="Single" SelectionChanged="WorkflowTraceList_SelectionChanged"/>
+                                    <TextBox x:Name="WorkflowTraceDetailsBox" Grid.Column="1" Header="Trace details" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" FontFamily="Consolas"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,16,0,0">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Step Recorder &amp; Documentation Builder · PLUS / PRO" FontSize="20" FontWeight="SemiBold"/>
+                                <TextBlock Text="Turn an explicit click/shortcut session into an editable local guide with UI Automation evidence, numbered screenshots, click markers, and PNG/PDF/DOCX/HTML/Markdown exports." TextWrapping="Wrap" Opacity="0.68"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="Open Documentation Builder…" Click="OpenDocumentationBuilder_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                    <TextBlock Text="No cloud, no resident recorder, no printable keystroke capture." VerticalAlignment="Center" Opacity="0.6"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,16,0,0">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Capture Watch" FontSize="20" FontWeight="SemiBold"/>
+                                <TextBlock Text="Re-capture the last region on a timer. Free can capture every interval; PLUS/PRO can trigger only when pixels change enough. A selected workflow runs only for triggered captures." TextWrapping="Wrap" Opacity="0.65"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <NumberBox x:Name="WatchIntervalBox" Header="Interval (seconds)" Width="150" Minimum="1" Maximum="3600" Value="10"/>
+                                    <CheckBox x:Name="WatchChangedOnlyCheck" Content="Only when changed · PLUS" VerticalAlignment="Bottom"/>
+                                    <NumberBox x:Name="WatchThresholdBox" Header="Change threshold %" Width="160" Minimum="0" Maximum="100" Value="2"/>
+                                    <ComboBox x:Name="WatchWorkflowCombo" Header="Workflow after trigger" Width="250" DisplayMemberPath="Name"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button x:Name="WatchStartButton" Content="Start watch" Click="WatchStart_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                    <Button x:Name="WatchStopButton" Content="Stop" Click="WatchStop_Click" IsEnabled="False"/>
+                                    <TextBlock x:Name="WatchStatusText" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <Border BorderThickness="0,1,0,0" BorderBrush="#33808080" Padding="0,16,0,0">
+                            <StackPanel Spacing="10">
+                                <TextBlock Text="Local Actions · PLUS / PRO" FontSize="20" FontWeight="SemiBold"/>
+                                <TextBlock Text="Run a program you explicitly approve as a bounded workflow step. Magic Capture Desktop launches the executable directly with no shell; approval is pinned to the executable SHA-256 and is requested again if the binary changes." TextWrapping="Wrap" Opacity="0.68"/>
+                                <TextBlock Text="Variables: $input · $output · $width · $height · $ocrText · $windowTitle · $source · $captureId · workflow/CLI variables. Use $$ for a literal $." TextWrapping="Wrap" FontFamily="Consolas" Opacity="0.72"/>
+                                <Grid ColumnSpacing="16">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="300"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <ListView x:Name="LocalActionList" Height="430" DisplayMemberPath="Name" SelectionChanged="LocalActionList_SelectionChanged"/>
+                                    <StackPanel Grid.Column="1" Spacing="7">
+                                        <TextBox x:Name="LocalActionNameBox" Header="Name"/>
+                                        <TextBox x:Name="LocalActionExecutableBox" Header="Executable — full path to .exe or .com" PlaceholderText="C:\Tools\processor.exe"/>
+                                        <TextBox x:Name="LocalActionWorkingDirectoryBox" Header="Working directory (optional; full path)"/>
+                                        <TextBox x:Name="LocalActionArgumentsBox" Header="Arguments — one argument per line; variables are expanded inside each argument without shell parsing" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" Height="105" PlaceholderText="--input&#x0a;$input&#x0a;--output&#x0a;$output"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <ComboBox x:Name="LocalActionOutputCombo" Header="Chain output" Width="210" SelectedIndex="0">
+                                                <ComboBoxItem Content="stdout → text" Tag="StdoutText"/>
+                                                <ComboBoxItem Content="$output auto" Tag="OutputFileAuto"/>
+                                                <ComboBoxItem Content="$output UTF-8 text" Tag="OutputFileText"/>
+                                                <ComboBoxItem Content="$output PNG image" Tag="OutputFileImage"/>
+                                                <ComboBoxItem Content="No chained output" Tag="None"/>
+                                            </ComboBox>
+                                            <TextBox x:Name="LocalActionOutputExtensionBox" Header="$output extension" Width="130" Text=".out"/>
+                                            <CheckBox x:Name="LocalActionEnabledCheck" Content="Enabled" IsChecked="True" VerticalAlignment="Bottom"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <NumberBox x:Name="LocalActionTimeoutBox" Header="Timeout ms" Width="150" Minimum="100" Maximum="600000" Value="30000"/>
+                                            <NumberBox x:Name="LocalActionStdoutLimitBox" Header="stdout KiB" Width="130" Minimum="0" Maximum="8192" Value="1024"/>
+                                            <NumberBox x:Name="LocalActionStderrLimitBox" Header="stderr KiB" Width="130" Minimum="0" Maximum="8192" Value="256"/>
+                                            <NumberBox x:Name="LocalActionFileLimitBox" Header="$output MiB" Width="140" Minimum="0" Maximum="64" Value="16"/>
+                                        </StackPanel>
+                                        <StackPanel Orientation="Horizontal" Spacing="8">
+                                            <Button Content="New" Click="LocalActionNew_Click"/>
+                                            <Button Content="Save" Click="LocalActionSave_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                            <Button Content="Delete" Click="LocalActionDelete_Click"/>
+                                            <Button Content="Test with selected History capture" Click="LocalActionTest_Click"/>
+                                            <Button Content="Create workflow" Click="LocalActionCreateWorkflow_Click"/>
+                                            <Button Content="Revoke approval" Click="LocalActionRevokeApproval_Click"/>
+                                        </StackPanel>
+                                        <TextBlock x:Name="LocalActionStatusText" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <Grid x:Name="UtilitiesPage" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer>
+                        <StackPanel Spacing="14" MaxWidth="900" HorizontalAlignment="Left">
+                            <TextBlock Text="Utilities" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="Local deterministic tools. Select captures in History first; no AI or network is used." TextWrapping="Wrap" Opacity="0.7"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button Content="Inspect metadata + hashes" Click="UtilityInspect_Click"/>
+                                <Button Content="Beautify" Click="UtilityBeautify_Click"/>
+                                <Button Content="Strip metadata" Click="UtilityStripMetadata_Click"/>
+                                <Button Content="320×180 thumbnail" Click="UtilityThumbnail_Click"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button Content="Combine horizontal · PLUS" Click="UtilityCombineHorizontal_Click"/>
+                                <Button Content="Combine vertical · PLUS" Click="UtilityCombineVertical_Click"/>
+                                <Button Content="Split 2×2 · PLUS" Click="UtilitySplit_Click"/>
+                            </StackPanel>
+                            <Expander Header="Export &amp; clipboard" IsExpanded="True">
+                                <StackPanel Spacing="8" Padding="0,8,0,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="PDF" Click="UtilityPdf_Click"/>
+                                        <Button Content="Multi-page PDF" Click="UtilityMultiPdf_Click"/>
+                                        <Button Content="PDF contact sheet" Click="UtilityContactSheetPdf_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Copy Data URI" Click="UtilityCopyDataUri_Click"/>
+                                        <Button Content="Copy Base64" Click="UtilityCopyBase64_Click"/>
+                                        <Button Content="Copy image file" Click="UtilityCopyFile_Click"/>
+                                        <Button Content="Copy path" Click="UtilityCopyPath_Click"/>
+                                        <Button Content="Copy folder path" Click="UtilityCopyFolderPath_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Pin clipboard image" Click="UtilityPinClipboard_Click"/>
+                                        <Button Content="Pin image file…" Click="UtilityPinImageFile_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="Image optimization">
+                                <StackPanel Spacing="8" Padding="0,8,0,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="JPEG compressor…" Click="UtilityOptimizeJpeg_Click"/>
+                                        <Button Content="PNG lossless" Click="UtilityOptimizePngLossless_Click"/>
+                                        <Button Content="PNG lossy…" Click="UtilityOptimizePngLossy_Click"/>
+                                        <Button Content="Resize…" Click="UtilityResize_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Effect pipeline…" Click="UtilityEffectPipeline_Click"/>
+                                        <Button Content="Advanced canvas effects…" Click="UtilityCanvasEffects_Click"/>
+                                        <Button Content="Batch JPEG to target size…" Click="UtilityBatchOptimize_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Import effect pack…" Click="UtilityImportEffectPack_Click"/>
+                                        <Button Content="Export effect pack…" Click="UtilityExportEffectPack_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                            <Expander Header="Generators &amp; inspectors">
+                                <StackPanel Spacing="8" Padding="0,8,0,4">
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="QR generator…" Click="UtilityQrGenerator_Click"/>
+                                        <Button Content="Code 128 generator…" Click="UtilityBarcodeGenerator_Click"/>
+                                        <Button Content="Compare file hashes…" Click="UtilityFileHashCompare_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Directory index…" Click="UtilityDirectoryIndex_Click"/>
+                                        <Button Content="Clipboard viewer" Click="UtilityClipboardViewer_Click"/>
+                                        <Button Content="Window inspector" Click="UtilityWindowInspector_Click"/>
+                                        <Button Content="Pixel statistics" Click="UtilityPixelStatistics_Click"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8">
+                                        <Button Content="Monitor test…" Click="UtilityMonitorTest_Click"/>
+                                        <Button Content="Open in external editor…" Click="UtilityExternalEditor_Click"/>
+                                        <Button Content="Design tools…" Click="UtilityDesignTools_Click"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Expander>
+                            <TextBox x:Name="UtilityOutputBox" Header="Result / metadata" AcceptsReturn="True" TextWrapping="Wrap" IsReadOnly="True" Height="320" FontFamily="Consolas"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="DestinationsPage" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer>
+                        <StackPanel Spacing="14" MaxWidth="940" HorizontalAlignment="Left">
+                            <TextBlock Text="Destinations · PRO" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="Send captures directly to an endpoint you own. Magic Capture Desktop never hosts or proxies uploads." TextWrapping="Wrap" Opacity="0.7"/>
+                            <Grid ColumnSpacing="16">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="320"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <ListView x:Name="DestinationList" DisplayMemberPath="Name" SelectionChanged="DestinationList_SelectionChanged" Height="420"/>
+                                <StackPanel Grid.Column="1" Spacing="7">
+                                    <TextBox x:Name="DestinationNameBox" Header="Name"/>
+                                    <TextBox x:Name="DestinationEndpointBox" Header="Endpoint (HTTPS; HTTP only for local endpoints)"/>
+                                    <ComboBox x:Name="DestinationMethodCombo" Header="Method" SelectedIndex="1"><ComboBoxItem Content="GET"/><ComboBoxItem Content="POST"/><ComboBoxItem Content="PUT"/><ComboBoxItem Content="PATCH"/></ComboBox>
+                                    <ComboBox x:Name="DestinationBodyCombo" Header="Body" SelectedIndex="2"><ComboBoxItem Content="None" Tag="None"/><ComboBoxItem Content="JSON" Tag="Json"/><ComboBoxItem Content="Multipart image" Tag="Multipart"/></ComboBox>
+                                    <TextBox x:Name="DestinationHeadersBox" Header="Headers — one Name: Value per line; secrets use &#123;secret:id&#125;" AcceptsReturn="True" TextWrapping="Wrap" Height="86"/>
+                                    <TextBox x:Name="DestinationQueryBox" Header="Query — one Name=Value per line" AcceptsReturn="True" TextWrapping="Wrap" Height="70"/>
+                                    <TextBox x:Name="DestinationBodyTemplateBox" Header="Body / metadata template" AcceptsReturn="True" TextWrapping="Wrap" Height="80"/>
+                                    <TextBox x:Name="DestinationResultPathBox" Header="Result JSON property path (optional, e.g. data.url)"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><TextBox x:Name="DestinationSecretIdBox" Header="Secret id" Width="220"/><PasswordBox x:Name="DestinationSecretValueBox" Header="Secret value" Width="260"/></StackPanel>
+                                    <StackPanel Orientation="Horizontal" Spacing="8"><Button Content="New" Click="DestinationNew_Click"/><Button Content="Save" Click="DestinationSave_Click" Style="{StaticResource AccentButtonStyle}"/><Button Content="Delete" Click="DestinationDelete_Click"/><Button Content="Test with selected History capture" Click="DestinationTest_Click"/></StackPanel>
+                                    <TextBlock x:Name="DestinationStatusText" TextWrapping="Wrap"/>
+                                </StackPanel>
+                            </Grid>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="StitchPage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="14" MaxWidth="760" HorizontalAlignment="Left">
+                        <TextBlock Text="Vertical stitch" FontSize="28" FontWeight="SemiBold" />
+                        <TextBlock Text="PLUS — combine overlapping screenshots into one long image. Processing is local and deterministic." TextWrapping="Wrap" Opacity="0.7" />
+                        <StackPanel Orientation="Horizontal" Spacing="8"><Button Content="Add images" Click="AddStitchImages_Click"/><Button Content="Clear" Click="ClearStitch_Click"/><Button Content="Stitch" Click="Stitch_Click" Style="{StaticResource AccentButtonStyle}"/></StackPanel>
+                        <ListView x:Name="StitchFrameList" Height="360"/>
+                        <TextBlock x:Name="StitchStatusText" TextWrapping="Wrap"/>
+                    </StackPanel>
+                </Grid>
+
+                <Grid x:Name="ComparePage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="14" MaxWidth="760" HorizontalAlignment="Left">
+                        <TextBlock Text="Compare" FontSize="28" FontWeight="SemiBold" />
+                        <TextBlock Text="PRO — compare two local images side-by-side or as an adjustable overlay." Opacity="0.7" TextWrapping="Wrap" />
+                        <Grid ColumnSpacing="10"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                            <StackPanel Spacing="6"><Button Content="Choose image A" Click="ComparePickA_Click"/><TextBlock x:Name="CompareAText" Text="No image selected" TextTrimming="CharacterEllipsis"/></StackPanel>
+                            <StackPanel Grid.Column="1" Spacing="6"><Button Content="Choose image B" Click="ComparePickB_Click"/><TextBlock x:Name="CompareBText" Text="No image selected" TextTrimming="CharacterEllipsis"/></StackPanel>
+                        </Grid>
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <Button Content="Open pixel comparison" Click="CompareOpen_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Left"/>
+                            <Button Content="Latest History pair" Click="CompareLatestHistory_Click" HorizontalAlignment="Left"/>
+                            <Button Content="Batch compare…" Click="CompareBatch_Click" HorizontalAlignment="Left"/>
+                            <Button Content="Semantic Compare · PRO AI" Click="SemanticCompare_Click" HorizontalAlignment="Left"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
+
+
+                <Grid x:Name="AiPage" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer>
+                        <StackPanel Spacing="16" MaxWidth="900" HorizontalAlignment="Left">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="AI &amp; Magic" FontSize="28" FontWeight="SemiBold"/>
+                                <TextBlock Text="PRO — bring your own API key or local model. Magic Capture Desktop never sells tokens or proxies your model traffic." TextWrapping="Wrap" Opacity="0.7"/>
+                            </StackPanel>
+                            <InfoBar x:Name="AiLockedInfo" Title="Magic AI requires Pro Lifetime" Message="Free and Plus remain fully usable without AI. Upgrade to Pro to connect cloud or local models." Severity="Informational" IsOpen="False" IsClosable="False"/>
+
+                            <StackPanel x:Name="AiConfigurationPanel" Spacing="14">
+                                <TextBlock Text="Provider profiles" FontSize="20" FontWeight="SemiBold"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <ComboBox x:Name="AiProfileCombo" Width="320" Header="Saved profile" DisplayMemberPath="DisplayName" SelectionChanged="AiProfileCombo_SelectionChanged"/>
+                                    <Button Content="New" Click="AiNewProfile_Click" VerticalAlignment="Bottom"/>
+                                    <Button Content="Delete" Click="AiDeleteProfile_Click" VerticalAlignment="Bottom"/>
+                                </StackPanel>
+                                <Grid ColumnSpacing="12" RowSpacing="8">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+                                    <ComboBox x:Name="AiProviderKindCombo" Header="Provider" SelectionChanged="AiProviderKindCombo_SelectionChanged"/>
+                                    <TextBox x:Name="AiProfileNameBox" Grid.Column="1" Header="Profile name"/>
+                                    <TextBox x:Name="AiBaseUriBox" Grid.Row="1" Header="Base URL"/>
+                                    <TextBox x:Name="AiModelBox" Grid.Row="1" Grid.Column="1" Header="Model ID"/>
+                                    <PasswordBox x:Name="AiKeyBox" Grid.Row="2" Header="API key / token" PlaceholderText="Stored in Windows PasswordVault; leave blank to keep existing"/>
+                                    <ComboBox x:Name="AiContextSizeCombo" Grid.Row="2" Grid.Column="1" Header="Context size class" SelectedIndex="1"><ComboBoxItem Content="Small" Tag="Small"/><ComboBoxItem Content="Medium" Tag="Medium"/><ComboBoxItem Content="Large" Tag="Large"/></ComboBox>
+                                    <StackPanel Grid.Row="3" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="12">
+                                        <CheckBox x:Name="AiVisionCheck" Content="Vision input"/>
+                                        <CheckBox x:Name="AiMultiImageCheck" Content="Multiple images"/>
+                                        <CheckBox x:Name="AiStructuredCheck" Content="Structured JSON" IsChecked="True"/>
+                                        <CheckBox x:Name="AiReasoningCheck" Content="Reasoning"/>
+                                        <ComboBox x:Name="AiVisionQualityCombo" Width="130" SelectedIndex="0"><ComboBoxItem Content="No vision" Tag="None"/><ComboBoxItem Content="Basic vision" Tag="Basic"/><ComboBoxItem Content="Strong vision" Tag="Strong"/></ComboBox>
+                                    </StackPanel>
+                                </Grid>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <Button Content="Save &amp; use profile" Click="AiSaveProfile_Click" Style="{StaticResource AccentButtonStyle}"/>
+                                    <Button Content="Test connection" Click="AiTestProfile_Click"/>
+                                    <Button Content="Discover models" Click="AiDiscoverModels_Click"/>
+                                    <ComboBox x:Name="AiDiscoveredModelsCombo" Width="220" PlaceholderText="Discovered models" SelectionChanged="AiDiscoveredModelsCombo_SelectionChanged"/>
+                                    <TextBlock x:Name="AiProviderStatusText" VerticalAlignment="Center" TextWrapping="Wrap"/>
+                                </StackPanel>
+
+                                <TextBlock Text="Privacy &amp; routing" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <CheckBox x:Name="AiPreferTextCheck" Content="Prefer ScreenGraph/text-only context when possible (best for small models)" IsChecked="True"/>
+                                <CheckBox x:Name="AiNeverCloudImagesCheck" Content="Never send screenshot images to cloud providers"/>
+                                <CheckBox x:Name="AiLocalOnlyCheck" Content="Allow local AI providers only"/>
+                                <CheckBox x:Name="AiPayloadConfirmCheck" Content="Show payload summary before every cloud Magic Action" IsChecked="True"/>
+                                <ComboBox x:Name="AiRoutingModeCombo" Header="Provider routing" Width="300" SelectedIndex="0">
+                                    <ComboBoxItem Content="Active profile only" Tag="ActiveOnly"/>
+                                    <ComboBoxItem Content="Prefer compatible local model" Tag="PreferLocal"/>
+                                    <ComboBoxItem Content="Best compatible capability" Tag="BestCapability"/>
+                                </ComboBox>
+                                <TextBlock Text="Routing never sends a request to a disabled profile. Local-only privacy overrides routing and blocks cloud providers." TextWrapping="Wrap" Opacity="0.6"/>
+                                <Button Content="Save AI privacy settings" Click="AiSavePrivacy_Click" HorizontalAlignment="Left"/>
+
+                                <TextBlock Text="Magic Actions" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <TextBlock Text="Built-in actions are optimized for errors, code, tables, UI, documents and semantic comparison. Custom actions are stored locally and contain instructions only — no executable scripts." TextWrapping="Wrap" Opacity="0.7"/>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="1.1*"/><ColumnDefinition Width="1.4*"/></Grid.ColumnDefinitions>
+                                    <ListView x:Name="CustomActionList" DisplayMemberPath="Name" Height="200"/>
+                                    <StackPanel Grid.Column="1" Spacing="6">
+                                        <TextBox x:Name="CustomActionNameBox" Header="Custom action name"/>
+                                        <TextBox x:Name="CustomActionCategoryBox" Header="Category" Text="Custom"/>
+                                        <TextBox x:Name="CustomActionPromptBox" Header="Instruction" AcceptsReturn="True" TextWrapping="Wrap" Height="90"/>
+                                        <CheckBox x:Name="CustomActionVisionCheck" Content="Vision is useful"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Button Content="Save custom action" Click="SaveCustomAction_Click"/>
+                                            <Button Content="Delete selected" Click="DeleteCustomAction_Click"/>
+                                            <Button Content="Import .magicaction" Click="ImportCustomAction_Click"/>
+                                            <Button Content="Export selected" Click="ExportCustomAction_Click"/>
+                                        </StackPanel>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="Magic Recipes" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <TextBlock Text="PRO — hybrid pipelines that mix deterministic workflow steps with Magic Actions. Recipe files are declarative and contain no executable scripts." TextWrapping="Wrap" Opacity="0.7"/>
+                                <Grid ColumnSpacing="12">
+                                    <Grid.ColumnDefinitions><ColumnDefinition Width="1.05*"/><ColumnDefinition Width="1.45*"/></Grid.ColumnDefinitions>
+                                    <ListView x:Name="MagicRecipeList" DisplayMemberPath="Name" Height="220" SelectionChanged="MagicRecipeList_SelectionChanged"/>
+                                    <StackPanel Grid.Column="1" Spacing="6">
+                                        <TextBox x:Name="MagicRecipeNameBox" Header="Recipe name"/>
+                                        <TextBox x:Name="MagicRecipeStepsBox" Header="Steps — AI:action-id or STEP:WorkflowStepKind[:argument]" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" Height="120" PlaceholderText="STEP:RunOcr&#x0a;STEP:ExtractSignals&#x0a;AI:developer.bug-report&#x0a;STEP:CopyText:markdown"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="6">
+                                            <Button Content="New" Click="MagicRecipeNew_Click"/>
+                                            <Button Content="Save recipe" Click="MagicRecipeSave_Click"/>
+                                            <Button Content="Delete" Click="MagicRecipeDelete_Click"/>
+                                            <Button Content="Import .magicrecipe" Click="MagicRecipeImport_Click"/>
+                                            <Button Content="Export" Click="MagicRecipeExport_Click"/>
+                                        </StackPanel>
+                                        <Button Content="Run on selected History capture" Click="MagicRecipeRun_Click" HorizontalAlignment="Left" Style="{StaticResource AccentButtonStyle}"/>
+                                        <TextBlock x:Name="MagicRecipeStatusText" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </Grid>
+
+                                <TextBlock Text="Context Stack" FontSize="20" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                                <StackPanel Orientation="Horizontal" Spacing="8">
+                                    <TextBlock x:Name="AiContextStatusText" VerticalAlignment="Center" Text="0 / 8 captures"/>
+                                    <Button Content="Clear context" Click="ClearAiContext_Click"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="SettingsPage" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer>
+                        <StackPanel Spacing="18" MaxWidth="720" HorizontalAlignment="Left">
+                            <TextBlock Text="Settings" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock Text="Resident behavior" FontWeight="SemiBold"/>
+                            <ToggleSwitch x:Name="StartWithWindowsToggle" Header="Start Magic Capture Desktop with Windows" Toggled="StartWithWindows_Toggled"/>
+                            <TextBlock x:Name="StartupStatusText" Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="Closing this window always hides it to the tray. Use Exit Magic Capture Desktop in the tray to stop the resident process." Opacity="0.65" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="Theme" VerticalAlignment="Center"/><ComboBox x:Name="ThemeCombo" Width="150" SelectedIndex="0"><ComboBoxItem Content="System" Tag="System"/><ComboBoxItem Content="Light" Tag="Light"/><ComboBoxItem Content="Dark" Tag="Dark"/></ComboBox></StackPanel>
+
+                            <TextBlock Text="Capture hotkey" FontWeight="SemiBold"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Selection overlay" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="CaptureOverlayThemeCombo" Width="170" SelectedIndex="0">
+                                    <ComboBoxItem Content="Dark overlay" Tag="Dark"/>
+                                    <ComboBoxItem Content="Light overlay" Tag="Light"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><CheckBox x:Name="HotkeyWin" Content="Win" IsChecked="True"/><CheckBox x:Name="HotkeyCtrl" Content="Ctrl"/><CheckBox x:Name="HotkeyAlt" Content="Alt"/><CheckBox x:Name="HotkeyShift" Content="Shift" IsChecked="True"/><TextBox x:Name="HotkeyKey" Width="56" MaxLength="1" Text="X"/></StackPanel>
+                            <CheckBox x:Name="CaptureCursorCheck" Content="Include mouse cursor in captures"/>
+                            <Button Content="Reset capture section" Click="ResetCaptureSection_Click" HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Personal hotkeys" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <TextBlock Text="Add global shortcuts for capture modes, workflows, Magic Actions, or opening the last History capture in the editor." Opacity="0.65" TextWrapping="Wrap"/>
+                            <ListView x:Name="PersonalHotkeyList" Height="110" DisplayMemberPath="Name" SelectionChanged="PersonalHotkeyList_SelectionChanged"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox x:Name="PersonalHotkeyNameBox" Width="150" PlaceholderText="Name"/>
+                                <ComboBox x:Name="PersonalHotkeyKindCombo" Width="130" SelectedIndex="0">
+                                    <ComboBoxItem Content="Capture" Tag="Capture"/><ComboBoxItem Content="Workflow" Tag="Workflow"/><ComboBoxItem Content="Magic Action" Tag="MagicAction"/><ComboBoxItem Content="Editor" Tag="Editor"/>
+                                </ComboBox>
+                                <TextBox x:Name="PersonalHotkeyTargetBox" Width="190" PlaceholderText="Target ID / capture mode"/>
+                                <CheckBox x:Name="PersonalHotkeyEnabledCheck" Content="Enabled" IsChecked="True" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <CheckBox x:Name="PersonalHotkeyWinCheck" Content="Win"/><CheckBox x:Name="PersonalHotkeyCtrlCheck" Content="Ctrl" IsChecked="True"/><CheckBox x:Name="PersonalHotkeyAltCheck" Content="Alt"/><CheckBox x:Name="PersonalHotkeyShiftCheck" Content="Shift" IsChecked="True"/>
+                                <TextBox x:Name="PersonalHotkeyKeyBox" Width="70" PlaceholderText="M / F8"/>
+                                <Button Content="Save hotkey" Click="SavePersonalHotkey_Click"/><Button Content="Delete" Click="DeletePersonalHotkey_Click"/>
+                            </StackPanel>
+                            <Button Content="Reset hotkeys section" Click="ResetHotkeysSection_Click" HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Toolbar &amp; overlay personalization" FontWeight="SemiBold" Margin="0,8,0,0"/>
+                            <Grid ColumnSpacing="16">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <StackPanel Spacing="6">
+                                    <TextBlock Text="Editor toolbar"/>
+                                    <ListView x:Name="ToolbarActionList" Height="120" DisplayMemberPath="Display"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="5"><Button Content="Up" Click="MoveToolbarActionUp_Click"/><Button Content="Down" Click="MoveToolbarActionDown_Click"/><Button Content="Show / hide" Click="ToggleToolbarAction_Click"/></StackPanel>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="6">
+                                    <TextBlock Text="Capture overlay action bar"/>
+                                    <ListView x:Name="OverlayActionList" Height="120" DisplayMemberPath="Display"/>
+                                    <StackPanel Orientation="Horizontal" Spacing="5"><Button Content="Up" Click="MoveOverlayActionUp_Click"/><Button Content="Down" Click="MoveOverlayActionDown_Click"/><Button Content="Show / hide" Click="ToggleOverlayAction_Click"/></StackPanel>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Default editor tool" VerticalAlignment="Center"/><ComboBox x:Name="DefaultAnnotationToolCombo" Width="170"/>
+                                <CheckBox x:Name="RememberLastAnnotationToolCheck" Content="Remember last-used tool" VerticalAlignment="Center"/>
+                            </StackPanel>
+                            <TextBlock Text="Saved annotation styles"/>
+                            <ListView x:Name="AnnotationStylePresetList" Height="90" DisplayMemberPath="Name"/>
+                            <Button Content="Delete selected saved style" Click="DeleteAnnotationStylePreset_Click" HorizontalAlignment="Left"/>
+                            <Button Content="Reset personalization section" Click="ResetPersonalizationSection_Click" HorizontalAlignment="Left"/>
+                            <CheckBox x:Name="AutoCopyCheck" Content="Automatically copy image after capture"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="Default post-capture action" VerticalAlignment="Center"/><ComboBox x:Name="PostCaptureActionCombo" Width="180" SelectedIndex="0"><ComboBoxItem Content="Open result" Tag="ResultWindow"/><ComboBoxItem Content="Copy image" Tag="CopyImage"/><ComboBoxItem Content="Pin image" Tag="PinImage"/><ComboBoxItem Content="Save" Tag="Save"/></ComboBox></StackPanel>
+
+                            <TextBlock Text="OCR and output" FontWeight="SemiBold"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="OCR language" VerticalAlignment="Center"/><ComboBox x:Name="OcrLanguageCombo" Width="220"/></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="JPEG quality" VerticalAlignment="Center"/><NumberBox x:Name="JpegQualityBox" Width="110" Minimum="1" Maximum="100" Value="92"/></StackPanel>
+                            <TextBox x:Name="FilenameTemplateBox" Header="Filename template"/>
+                            <Button Content="Reset output section" Click="ResetOutputSection_Click" HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Privacy · local redaction" FontWeight="SemiBold"/>
+                            <TextBlock Text="Sensitive-data detection stays on this device. Enable only the outbound paths you want Magic Capture Desktop to sanitize." Opacity="0.65" TextWrapping="Wrap"/>
+                            <VariableSizedWrapGrid Orientation="Horizontal">
+                                <CheckBox x:Name="RedactBeforeCopyCheck" Content="Before Copy" Margin="0,0,16,0"/>
+                                <CheckBox x:Name="RedactBeforeSaveCheck" Content="Before Save" Margin="0,0,16,0"/>
+                                <CheckBox x:Name="RedactBeforePinCheck" Content="Before Pin" Margin="0,0,16,0"/>
+                                <CheckBox x:Name="RedactBeforeWorkflowCheck" Content="Before Workflow"/>
+                            </VariableSizedWrapGrid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <TextBlock Text="Redaction style" VerticalAlignment="Center"/>
+                                <ComboBox x:Name="RedactionStyleCombo" Width="150" SelectedIndex="0">
+                                    <ComboBoxItem Content="Pixelate" Tag="Pixelate"/>
+                                    <ComboBoxItem Content="Blur" Tag="Blur"/>
+                                </ComboBox>
+                            </StackPanel>
+                            <TextBox x:Name="SensitiveWordsBox" Header="Sensitive words · one per line" AcceptsReturn="True" TextWrapping="Wrap" Height="84" PlaceholderText="internal-project-name&#x0a;customer-secret"/>
+                            <TextBox x:Name="SensitivePatternsBox" Header="Custom patterns · Label=regular expression, one per line" AcceptsReturn="True" TextWrapping="NoWrap" FontFamily="Consolas" Height="96" PlaceholderText="Employee ID=EMP-\d{6}"/>
+                            <Button Content="Reset privacy section" Click="ResetPrivacySection_Click" HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="History" FontWeight="SemiBold"/>
+                            <CheckBox x:Name="HistoryEnabledCheck" Content="Keep local capture history" IsChecked="True"/>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><NumberBox x:Name="HistoryDaysBox" Header="Maximum days (0 = unlimited with Pro)" Width="210" Minimum="0" Maximum="3650" Value="30"/><NumberBox x:Name="HistoryCountBox" Header="Maximum items (0 = unlimited with Pro)" Width="210" Minimum="0" Maximum="100000" Value="500"/></StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="10"><TextBlock Text="Default pin opacity" VerticalAlignment="Center"/><NumberBox x:Name="PinOpacityBox" Width="110" Minimum="50" Maximum="100" Value="100"/></StackPanel>
+                            <Button Content="Reset history section" Click="ResetHistorySection_Click" HorizontalAlignment="Left"/>
+
+                            <TextBlock Text="Context preferences" FontWeight="SemiBold"/>
+                            <TextBlock Text="Override capture behavior for a monitor or choose a capture profile when a specific foreground app is active. Rules store executable file names only." Opacity="0.65" TextWrapping="Wrap"/>
+                            <TextBlock Text="Per-monitor"/>
+                            <ListView x:Name="MonitorPreferenceList" Height="90" DisplayMemberPath="DeviceName" SelectionChanged="MonitorPreferenceList_SelectionChanged"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox x:Name="MonitorDeviceNameBox" Width="200" PlaceholderText="\\.\DISPLAY1"/>
+                                <ComboBox x:Name="MonitorCursorOverrideCombo" Width="120" SelectedIndex="0"><ComboBoxItem Content="Cursor: inherit" Tag="Inherit"/><ComboBoxItem Content="Cursor: on" Tag="On"/><ComboBoxItem Content="Cursor: off" Tag="Off"/></ComboBox>
+                                <ComboBox x:Name="MonitorActionOverrideCombo" Width="155"/>
+                                <Button Content="Save" Click="SaveMonitorPreference_Click"/><Button Content="Delete" Click="DeleteMonitorPreference_Click"/>
+                            </StackPanel>
+                            <TextBlock Text="Per-app capture rules"/>
+                            <ListView x:Name="AppCaptureRuleList" Height="100" DisplayMemberPath="ExecutableName" SelectionChanged="AppCaptureRuleList_SelectionChanged"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <TextBox x:Name="AppRuleExecutableBox" Width="150" PlaceholderText="app.exe"/>
+                                <ComboBox x:Name="AppRuleProfileCombo" Width="190" DisplayMemberPath="Name"/>
+                                <ComboBox x:Name="AppRuleCursorOverrideCombo" Width="120" SelectedIndex="0"><ComboBoxItem Content="Cursor: inherit" Tag="Inherit"/><ComboBoxItem Content="Cursor: on" Tag="On"/><ComboBoxItem Content="Cursor: off" Tag="Off"/></ComboBox>
+                                <ComboBox x:Name="AppRuleActionOverrideCombo" Width="150"/>
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal" Spacing="8"><CheckBox x:Name="AppRuleEnabledCheck" Content="Enabled" IsChecked="True"/><Button Content="Save app rule" Click="SaveAppCaptureRule_Click"/><Button Content="Delete" Click="DeleteAppCaptureRule_Click"/><Button Content="Reset context preferences" Click="ResetContextPreferencesSection_Click"/></StackPanel>
+
+                            <TextBlock Text="Resilience &amp; portability" FontWeight="SemiBold"/>
+                            <TextBlock Text="Export/import local configuration without credentials or trust approvals. Repair disposable AI cache independently from History." Opacity="0.65" TextWrapping="Wrap"/>
+                            <StackPanel Orientation="Horizontal" Spacing="8">
+                                <Button Content="Export configuration" Click="ConfigurationArchiveExport_Click"/>
+                                <Button Content="Import configuration" Click="ConfigurationArchiveImport_Click"/>
+                                <Button Content="Repair AI result cache" Click="RepairAiCache_Click"/>
+                            </StackPanel>
+
+                            <Button Content="Save settings" Click="SaveSettings_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Left"/>
+                            <TextBlock x:Name="SettingsStatusText" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="PlanPage" Grid.Row="1" Visibility="Collapsed">
+                    <ScrollViewer>
+                        <StackPanel Spacing="16" MaxWidth="820" HorizontalAlignment="Left">
+                            <TextBlock Text="Plan" FontSize="28" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="PlanPageTierText" FontSize="20" FontWeight="SemiBold"/>
+                            <TextBlock x:Name="PlanPageDetailText" TextWrapping="Wrap" Opacity="0.7"/>
+                            <InfoBar x:Name="PlanFeatureInfo" IsOpen="False" IsClosable="False" Severity="Informational"/>
+                            <Grid ColumnSpacing="20">
+                                <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                                <StackPanel Spacing="8"><TextBlock Text="Free" FontSize="20" FontWeight="SemiBold"/><TextBlock Text="Free forever"/><TextBlock Text="• Freeze region capture&#x0a;• Window/monitor/desktop&#x0a;• Copy/save&#x0a;• Basic OCR&#x0a;• Basic editor&#x0a;• Basic pins/history" TextWrapping="Wrap"/></StackPanel>
+                                <StackPanel Grid.Column="1" Spacing="8"><TextBlock Text="Plus" FontSize="20" FontWeight="SemiBold"/><TextBlock Text="7-day trial only"/><TextBlock Text="• Everything in Free&#x0a;• Table extraction&#x0a;• QR/barcodes&#x0a;• Stitch&#x0a;• Advanced editor&#x0a;• Unlimited pins during trial" TextWrapping="Wrap"/></StackPanel>
+                                <StackPanel Grid.Column="2" Spacing="8"><TextBlock Text="Pro" FontSize="20" FontWeight="SemiBold"/><TextBlock Text="Lifetime purchase"/><TextBlock Text="• Everything in Plus&#x0a;• Repeat/fixed capture&#x0a;• Compare workspace&#x0a;• Click-through pins&#x0a;• Unlimited history&#x0a;• AI providers / local AI&#x0a;• Magic Actions&#x0a;• Context Stack&#x0a;• Evidence anchoring&#x0a;• Semantic Compare" TextWrapping="Wrap"/></StackPanel>
+                            </Grid>
+                            <StackPanel Orientation="Horizontal" Spacing="10">
+                                <Button x:Name="UpgradeButton" Content="Upgrade to Pro" Click="UpgradeToPro_Click" Style="{StaticResource AccentButtonStyle}" HorizontalAlignment="Left"/>
+                                <TextBlock x:Name="ProPriceText" VerticalAlignment="Center" Opacity="0.75" Text="Price shown by Microsoft Store"/>
+                            </StackPanel>
+                            <TextBlock x:Name="PurchaseStatusText" TextWrapping="Wrap"/>
+                            <TextBlock Text="Plus is never sold. The Plus trial requires no payment method and never auto-renews. Pro is a one-time Microsoft Store purchase. The displayed price comes directly from Microsoft Store for your market." Opacity="0.65" TextWrapping="Wrap"/>
+                        </StackPanel>
+                    </ScrollViewer>
+                </Grid>
+
+                <Grid x:Name="AboutPage" Grid.Row="1" Visibility="Collapsed">
+                    <StackPanel Spacing="10" MaxWidth="700" HorizontalAlignment="Left">
+                        <TextBlock Text="About Magic Capture Desktop" FontSize="28" FontWeight="SemiBold"/>
+                        <TextBlock Text="A local-first Windows capture utility."/>
+                        <TextBlock Text="Core capture and recognition are deterministic and local. Pro AI is optional BYOK/BYOM: connect your own cloud API or local endpoint. Magic Capture Desktop does not sell tokens or require a Magic Capture account." TextWrapping="Wrap" Opacity="0.7"/>
+                        <TextBlock Text="Win + Shift + X — freeze and capture"/>
+                        <TextBlock Text="The resident process exits only from the tray menu."/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+        </NavigationView>
+    </Grid>
+</Window>
