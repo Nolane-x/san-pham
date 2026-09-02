@@ -95,7 +95,7 @@ This checklist is mandatory before calling the 4.16.0 source candidate a Windows
 - [ ] App associated with real Partner Center product.
 - [ ] `store-preflight.ps1` passes.
 - [ ] Package Identity/Publisher are production Store values.
-- [ ] MSIX version equals `release/version.json` (`4.15.0.0`).
+- [ ] MSIX version equals `release/version.json` (`4.16.0.0`).
 - [ ] x64 + ARM64 Store upload produced.
 - [ ] Full-trust capability accepted.
 - [ ] StartupTask and appExecutionAlias install correctly.
