@@ -1,0 +1,63 @@
+name: Maintenance verifier v416
+
+on:
+  push:
+    branches: [maintenance-verifier-v416]
+
+permissions:
+  contents: write
+
+jobs:
+  patch-main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Patch strict dependency contract and remove dead local
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          verifier = Path('scripts/verify-repo.py')
+          text = verifier.read_text(encoding='utf-8')
+          old = 'ZXing.Net.Bindings.Windows.Compatibility\\" Version=\\"0.16.14\\"'
+          new = 'ZXing.Net.Bindings.Windows.Compatibility\\" Version=\\"0.16.16\\"'
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one ZXing verifier pin, found {text.count(old)}')
+          text = text.replace(old, new)
+          verifier.write_text(text, encoding='utf-8')
+
+          history = Path('src/Magic.Capture.App/Persistence/HistoryStore.cs')
+          htext = history.read_text(encoding='utf-8')
+          dead = '            var removed = 0;\n            var removedIds = new HashSet<Guid>();'
+          replacement = '            var removedIds = new HashSet<Guid>();'
+          if htext.count(dead) != 1:
+              raise SystemExit(f'Expected exactly one dead HistoryStore local, found {htext.count(dead)}')
+          history.write_text(htext.replace(dead, replacement), encoding='utf-8')
+          PY
+
+      - name: Verify patched source contract
+        run: |
+          python scripts/verify-repo.py
+          python scripts/verify-structure.py
+          python scripts/verify-csharp-lexical.py
+          python scripts/verify-workflow-triggers.py
+          python scripts/verify-workflow-control-flow.py
+          python scripts/verify-history-intelligence.py
+          python scripts/verify-settings-personalization.py
+          python scripts/verify-settings-consistency.py
+          python scripts/verify-work-recovery.py
+
+      - name: Commit maintenance patch to main
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add scripts/verify-repo.py src/Magic.Capture.App/Persistence/HistoryStore.cs
+          git diff --cached --quiet && { echo 'No changes produced'; exit 1; }
+          git commit -m "chore: align verifier and remove dead history local"
+          git push origin HEAD:main
