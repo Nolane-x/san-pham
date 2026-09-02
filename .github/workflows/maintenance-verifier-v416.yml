@@ -24,8 +24,8 @@ jobs:
 
           verifier = Path('scripts/verify-repo.py')
           text = verifier.read_text(encoding='utf-8')
-          old = 'ZXing.Net.Bindings.Windows.Compatibility\\" Version=\\"0.16.14\\"'
-          new = 'ZXing.Net.Bindings.Windows.Compatibility\\" Version=\\"0.16.16\\"'
+          old = 'ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.14"'
+          new = 'ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.16"'
           if text.count(old) != 1:
               raise SystemExit(f'Expected exactly one ZXing verifier pin, found {text.count(old)}')
           text = text.replace(old, new)
