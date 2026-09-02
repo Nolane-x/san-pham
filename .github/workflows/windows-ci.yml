@@ -45,7 +45,7 @@ jobs:
         run: dotnet restore src/Magic.Capture.App/Magic.Capture.App.csproj -p:Platform=${{ matrix.platform }}
       - name: Build WinUI app
         shell: pwsh
-        run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore
+        run: dotnet build src/Magic.Capture.App/Magic.Capture.App.csproj -c Release -p:Platform=${{ matrix.platform }} --no-restore -warnAsError:MSB3277
       - name: Upload build output
         uses: actions/upload-artifact@v7.0.1
         with:
