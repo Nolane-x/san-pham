@@ -59,10 +59,14 @@ jobs:
       - uses: actions/checkout@v4
       - name: Source release dry run
         run: python scripts/source-release.py
+      - name: Stage deterministic source bundle
+        run: |
+          mkdir -p release-artifacts
+          cp ../Magic-Capture-Desktop-*-source.zip release-artifacts/
+          cp ../Magic-Capture-Desktop-*-source.zip.sha256 release-artifacts/
       - name: Upload deterministic source bundle
         uses: actions/upload-artifact@v4
         with:
           name: magic-capture-desktop-source
-          path: |
-            ../Magic-Capture-Desktop-*-source.zip
-            ../Magic-Capture-Desktop-*-source.zip.sha256
+          path: release-artifacts/**
+          if-no-files-found: error
