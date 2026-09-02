@@ -9,7 +9,7 @@ import tarfile
 from pathlib import Path, PurePosixPath
 
 PAYLOAD_BRANCH = 'promotion-root-v416'
-PAYLOAD_COMMIT = '3ee8a9d473d613deb9ae063d4b544eb98b6754e5'
+PAYLOAD_COMMIT = '355e3075784b84b7736959492e418e8ebe35fce6'
 PAYLOAD_DIR = 'promotion-root-clean'
 PIECES = 153
 FULL_PIECE_CHARS = 2000
@@ -67,6 +67,9 @@ def main() -> None:
     output = Path(sys.argv[1]) if len(sys.argv) > 1 else Path('reconstructed')
 
     subprocess.run(['git', 'fetch', 'origin', PAYLOAD_BRANCH], check=True)
+    branch_head = subprocess.check_output(['git', 'rev-parse', f'origin/{PAYLOAD_BRANCH}'], text=True).strip()
+    if branch_head != PAYLOAD_COMMIT:
+        fail(f'canonical payload branch drift: {branch_head} != {PAYLOAD_COMMIT}')
     subprocess.run(['git', 'cat-file', '-e', f'{PAYLOAD_COMMIT}^{{commit}}'], check=True)
 
     payload = b''.join(load_piece(index) for index in range(PIECES))
