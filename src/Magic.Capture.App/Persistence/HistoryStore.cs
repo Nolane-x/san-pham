@@ -154,7 +154,6 @@ internal sealed partial class HistoryStore
         try
         {
             var items = (await LoadIndexUnsafeAsync(cancellationToken)).ToList();
-            var removed = 0;
             var removedIds = new HashSet<Guid>();
             foreach (var item in items.Where(item => selected.Contains(item.Id)).ToArray())
             {

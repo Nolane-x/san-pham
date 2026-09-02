@@ -178,7 +178,7 @@ if app_project.exists():
         'Microsoft.WindowsAppSDK.Runtime" Version="2.4.0"': 'Windows App SDK 2.4 runtime',
         'Microsoft.Windows.SDK.BuildTools.MSIX" Version="1.7.260610101"': 'MSIX build tools',
         '<WindowsAppSDKSelfContained>false</WindowsAppSDKSelfContained>': 'framework-dependent Windows App SDK deployment',
-        'ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.14"': 'ZXing binding',
+        'ZXing.Net.Bindings.Windows.Compatibility" Version="0.16.16"': 'ZXing binding',
         'Vortice.Direct3D11" Version="3.8.3"': 'Vortice Direct3D11 binding',
         'Vortice.DXGI" Version="3.8.3"': 'Vortice DXGI binding',
         '<AllowUnsafeBlocks>true</AllowUnsafeBlocks>': 'unsafe interop support',
