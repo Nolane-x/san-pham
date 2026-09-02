@@ -45,14 +45,26 @@ jobs:
           python promotion-v416/reconstruct_legacy_root.py ../promote-source
           python promotion-v416/prepare_main_source.py ../promote-source
 
+      - name: Stage partial reconstructed source
+        if: always()
+        shell: pwsh
+        run: |
+          if (-not (Test-Path ../promote-source)) { throw "Partial source directory was not created" }
+          if (Test-Path promotion-partial-source) { Remove-Item promotion-partial-source -Recurse -Force }
+          Copy-Item ../promote-source promotion-partial-source -Recurse -Force
+          $count = (Get-ChildItem promotion-partial-source -Recurse -File | Measure-Object).Count
+          if ($count -lt 1) { throw "Partial source staging is empty" }
+          Write-Host "Partial source staged files=$count"
+
       - name: Upload partial reconstructed source
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: promotion-partial-source
-          path: ../promote-source
+          path: promotion-partial-source
           if-no-files-found: error
           retention-days: 7
+          include-hidden-files: true
 
       - name: Static verification on clean source
         shell: pwsh
