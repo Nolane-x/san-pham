@@ -29,14 +29,16 @@ jobs:
         run: |
           $out = Join-Path $PWD 'artifacts\msix-smoke\'
           New-Item -ItemType Directory -Force -Path $out | Out-Null
-          & '${{ steps.msbuild.outputs.path }}' .\src\Magic.Capture.App\Magic.Capture.App.csproj `
+          & '${{ steps.msbuild.outputs.path }}' .\Magic-Capture-Desktop.sln `
             /restore `
             /m `
+            /t:Build `
             /p:Configuration=Release `
             /p:Platform=x64 `
             /p:AppxPackageDir="$out" `
             /p:UapAppxPackageBuildMode=SideloadOnly `
             /p:AppxBundle=Never `
+            /p:GenerateAppInstallerFile=false `
             /p:GenerateAppxPackageOnBuild=true `
             /p:AppxPackageSigningEnabled=false
           if ($LASTEXITCODE -ne 0) { throw "MSIX smoke packaging failed with exit code $LASTEXITCODE." }
