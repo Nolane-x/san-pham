@@ -29,7 +29,8 @@ jobs:
             'verify-settings-personalization.py',
             'verify-settings-consistency.py',
             'verify-work-recovery.py',
-            'verify-release-metadata.py'
+            'verify-release-metadata.py',
+            'verify-commercial-metadata.py'
           )
           foreach ($verifier in $verifiers) {
             python (Join-Path 'scripts' $verifier)
@@ -94,51 +95,30 @@ jobs:
             /p:AppxPackageDir="$out\" `
             /p:AppxPackageSigningEnabled=false
           if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed with exit code $LASTEXITCODE." }
-      - name: Verify bundle architectures
+      - name: Verify packaged MSIX contract
         shell: pwsh
         run: |
           $bundles = @(Get-ChildItem .\artifacts\msix-ci -Recurse -File -Filter *.msixbundle)
           if ($bundles.Count -ne 1) { throw "Expected exactly one MSIX bundle, found $($bundles.Count)." }
-
-          Add-Type -AssemblyName System.IO.Compression.FileSystem
-          $zip = [System.IO.Compression.ZipFile]::OpenRead($bundles[0].FullName)
-          try {
-            $entry = $zip.GetEntry('AppxMetadata/AppxBundleManifest.xml')
-            if (-not $entry) { throw 'AppxBundleManifest.xml is missing from the MSIX bundle.' }
-            $reader = New-Object System.IO.StreamReader($entry.Open())
-            try { [xml]$bundleManifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
-          } finally {
-            $zip.Dispose()
-          }
-
-          $ns = New-Object System.Xml.XmlNamespaceManager($bundleManifest.NameTable)
-          $ns.AddNamespace('b', 'http://schemas.microsoft.com/appx/2013/bundle')
-          $packages = @($bundleManifest.SelectNodes('/b:Bundle/b:Packages/b:Package[@Type="application"]', $ns))
-          if ($packages.Count -ne 2) { throw "Expected two application packages in bundle, found $($packages.Count)." }
-
-          $architectures = @($packages | ForEach-Object { $_.GetAttribute('Architecture').ToLowerInvariant() } | Sort-Object -Unique)
-          if (($architectures -join ',') -ne 'arm64,x64') {
-            throw "MSIX bundle architectures are '$($architectures -join ',')', expected 'arm64,x64'."
-          }
-
-          $release = Get-Content -Raw .\release\version.json | ConvertFrom-Json
-          foreach ($package in $packages) {
-            if ($package.GetAttribute('Version') -ne $release.msixVersion) {
-              throw "Bundle package version $($package.GetAttribute('Version')) does not match $($release.msixVersion)."
-            }
-          }
-          Write-Host "Verified MSIX bundle: x64 + ARM64, version $($release.msixVersion)."
+          python scripts/verify-msix-bundle.py $bundles[0].FullName --root $PWD
+          if ($LASTEXITCODE -ne 0) { throw 'MSIX bundle verification failed.' }
+          $hash = (Get-FileHash -Algorithm SHA256 $bundles[0].FullName).Hash.ToLowerInvariant()
+          "$hash  $($bundles[0].Name)" | Set-Content -Encoding ascii -NoNewline "$($bundles[0].FullName).sha256"
       - name: Upload MSIX bundle
         uses: actions/upload-artifact@v7.0.1
         with:
           name: magic-capture-desktop-msix-bundle
-          path: artifacts/msix-ci/**/*.msixbundle
+          path: |
+            artifacts/msix-ci/**/*.msixbundle
+            artifacts/msix-ci/**/*.msixbundle.sha256
           if-no-files-found: error
 
   source-release:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Release verifier regression tests
+        run: python -m unittest tests/release/test_release_verifiers.py
       - name: Source release dry run
         run: python scripts/source-release.py
       - name: Stage deterministic source bundle

@@ -11,6 +11,9 @@ if ($LASTEXITCODE -ne 0) { throw 'Repository verification failed.' }
 python .\scripts\verify-release-metadata.py
 if ($LASTEXITCODE -ne 0) { throw 'Release metadata verification failed.' }
 
+python .\scripts\verify-commercial-metadata.py
+if ($LASTEXITCODE -ne 0) { throw 'Commercial metadata verification failed.' }
+
 if (-not (Test-Path $ManifestPath)) { throw "Package manifest not found: $ManifestPath" }
 [xml]$manifest = Get-Content -Raw $ManifestPath
 $ns = New-Object System.Xml.XmlNamespaceManager($manifest.NameTable)

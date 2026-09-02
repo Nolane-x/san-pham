@@ -104,8 +104,8 @@ Plus never asks for a payment method, never auto-renews and never converts into 
 ```text
 App                          Free forever
 Plus                         7-day trial only; not sold
-Pro Lifetime MSRP (US)       $29.99
-Launch price (US)            $19.99
+Pro Lifetime MSRP (US)       $14.99
+Launch price (US)            $9.99
 Launch-price duration        90 consecutive days
 Subscription                 None
 Developer AI token service   None

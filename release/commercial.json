@@ -1,0 +1,14 @@
+{
+  "market": "US",
+  "currency": "USD",
+  "appPrice": "0.00",
+  "plusTrialHours": 168,
+  "plusSold": false,
+  "proSkuType": "Durable",
+  "proLifetime": true,
+  "proMsrp": "14.99",
+  "proLaunchPrice": "9.99",
+  "launchDurationDays": 90,
+  "subscription": false,
+  "developerAiCreditsIncluded": false
+}
