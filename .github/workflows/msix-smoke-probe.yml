@@ -1,0 +1,51 @@
+name: MSIX smoke probe
+
+on:
+  push:
+    branches: [hardening-msix-smoke-v416]
+
+jobs:
+  package-smoke:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: '10.0.400'
+      - name: Locate MSBuild
+        id: msbuild
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          if (-not (Test-Path $vswhere)) { throw 'vswhere.exe not found.' }
+          $install = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          if (-not $install) { throw 'Visual Studio MSBuild installation not found.' }
+          $path = Join-Path $install 'MSBuild\Current\Bin\MSBuild.exe'
+          if (-not (Test-Path $path)) { throw "MSBuild.exe not found: $path" }
+          "path=$path" >> $env:GITHUB_OUTPUT
+          Write-Host "MSBuild: $path"
+      - name: Build unsigned development MSIX smoke package
+        shell: pwsh
+        run: |
+          $out = Join-Path $PWD 'artifacts\msix-smoke\'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          & '${{ steps.msbuild.outputs.path }}' .\src\Magic.Capture.App\Magic.Capture.App.csproj `
+            /restore `
+            /m `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /p:AppxPackageDir="$out" `
+            /p:UapAppxPackageBuildMode=SideloadOnly `
+            /p:AppxBundle=Never `
+            /p:GenerateAppxPackageOnBuild=true `
+            /p:AppxPackageSigningEnabled=false
+          if ($LASTEXITCODE -ne 0) { throw "MSIX smoke packaging failed with exit code $LASTEXITCODE." }
+          $packages = Get-ChildItem -Path $out -Recurse -File | Where-Object { $_.Extension -in '.msix', '.appx' }
+          if (-not $packages) { throw 'MSIX smoke packaging produced no .msix/.appx package.' }
+          $packages | ForEach-Object { Write-Host "PACKAGE $($_.FullName) $($_.Length) bytes" }
+      - name: Upload MSIX smoke output
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: magic-capture-desktop-msix-smoke
+          path: artifacts/msix-smoke/**
+          if-no-files-found: error
