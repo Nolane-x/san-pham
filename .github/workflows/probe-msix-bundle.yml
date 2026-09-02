@@ -29,6 +29,8 @@ jobs:
           "path=$path" >> $env:GITHUB_OUTPUT
           Write-Host "MSBuild: $path"
       - name: Build unsigned x64+ARM64 MSIX bundle
+        id: package
+        continue-on-error: true
         shell: pwsh
         run: |
           $out = Join-Path $PWD 'artifacts\msix-probe'
@@ -44,7 +46,39 @@ jobs:
             /p:UapAppxPackageBuildMode=SideloadOnly `
             /p:AppxPackageDir="$out\" `
             /p:AppxPackageSigningEnabled=false
-          if ($LASTEXITCODE -ne 0) { throw "MSIX probe failed with exit code $LASTEXITCODE." }
+          "exit_code=$LASTEXITCODE" >> $env:GITHUB_OUTPUT
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Inspect generated packaging manifests
+        if: always()
+        shell: pwsh
+        run: |
+          $manifests = Get-ChildItem .\src\Magic.Capture.App\obj -Recurse -File -Filter AppxManifest.xml -ErrorAction SilentlyContinue
+          if (-not $manifests) {
+            Write-Host 'No generated AppxManifest.xml found.'
+          } else {
+            foreach ($manifest in $manifests) {
+              Write-Host "===== $($manifest.FullName) ====="
+              Get-Content $manifest.FullName | Select-String -Pattern 'Application|Extension|EntryPoint|Executable|startupTask|appExecutionAlias|Identity|TargetDeviceFamily' -Context 1,1
+            }
+          }
+          $pri = Get-ChildItem .\src\Magic.Capture.App\obj -Recurse -File -ErrorAction SilentlyContinue | Where-Object { $_.Name -match 'manifest|appx|pri|recipe' }
+          $pri | Select-Object FullName, Length | Format-Table -AutoSize
+      - name: Upload packaging diagnostics
+        if: always()
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: magic-capture-desktop-msix-diagnostics
+          path: |
+            src/Magic.Capture.App/obj/**/AppxManifest.xml
+            src/Magic.Capture.App/obj/**/*.appxrecipe
+          if-no-files-found: warn
+      - name: Require successful package output
+        shell: pwsh
+        run: |
+          if ('${{ steps.package.outcome }}' -ne 'success') {
+            throw 'MSIX packaging step failed; see generated manifest diagnostics above.'
+          }
+          $out = Join-Path $PWD 'artifacts\msix-probe'
           $packages = Get-ChildItem $out -Recurse -File | Where-Object { $_.Extension -in @('.msix', '.msixbundle', '.appx', '.appxbundle') }
           if (-not $packages) { throw 'MSIX probe produced no package or bundle.' }
           $packages | Select-Object FullName, Length | Format-Table -AutoSize
