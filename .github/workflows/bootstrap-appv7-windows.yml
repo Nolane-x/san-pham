@@ -239,15 +239,21 @@ jobs:
           git checkout -B main origin/main
           Get-ChildItem -Force | Where-Object { $_.Name -ne '.git' } | Remove-Item -Recurse -Force
           Get-ChildItem -Force $source | ForEach-Object { Copy-Item $_.FullName -Destination . -Recurse -Force }
+          $workflow = '.github/workflows/windows-ci.yml'
+          if (-not (Test-Path $workflow)) { throw "Verified workflow missing before staged promotion" }
+          Remove-Item $workflow -Force
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           $tracked = (git ls-files | Measure-Object -Line).Lines
-          if ($tracked -ne 633) { throw "Expected 633 tracked clean-source files, got $tracked" }
+          if ($tracked -ne 632) { throw "Expected 632 staged clean-source files before external workflow install, got $tracked" }
+          if (git ls-files --error-unmatch $workflow 2>$null) {
+            throw "Workflow file must be installed externally after staged promotion"
+          }
           if (git ls-files | Select-String -Pattern '^bootstrap-|^promotion-v416/|^reconstructed/') {
             throw "Bootstrap transport leaked into main staging"
           }
           git diff --cached --quiet
           if ($LASTEXITCODE -eq 0) { throw "Promotion produced no changes" }
-          git commit -m "release: promote verified Magic Capture Desktop 4.16.0"
+          git commit -m "release: stage verified Magic Capture Desktop 4.16.0 source"
           git push origin HEAD:main
