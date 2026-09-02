@@ -28,6 +28,46 @@ jobs:
           if ($actual -ne $expected) { throw "Bootstrap authority moved: $actual != $expected" }
           git checkout $expected -- bootstrap-appv7 bootstrap-tests-v416
 
+      - name: Dump legacy v2 root transport for diagnosis
+        shell: pwsh
+        run: |
+          @'
+          import base64
+          import hashlib
+          import subprocess
+          from pathlib import Path
+
+          chunks = []
+          for index in range(15):
+              path = f'bootstrap-ci/chunk-{index:03d}.txt'
+              text = subprocess.check_output(
+                  ['git', 'show', f'origin/bootstrap-4.16-v2:{path}'],
+                  text=True,
+                  encoding='utf-8',
+              )
+              marker = 'payload_base64=\n'
+              if marker not in text:
+                  raise SystemExit(f'{path}: payload marker missing')
+              encoded = ''.join(text.split(marker, 1)[1].split())
+              if index == 14 and len(encoded) % 4:
+                  encoded += '=' * ((4 - len(encoded) % 4) % 4)
+              raw = base64.b64decode(encoded, validate=True)
+              chunks.append(raw)
+              print(f'{path}: bytes={len(raw)} sha256={hashlib.sha256(raw).hexdigest()}')
+
+          archive = b''.join(chunks)
+          Path('legacy-v2-root-transport.bin').write_bytes(archive)
+          print(f'legacy transport bytes={len(archive)} sha256={hashlib.sha256(archive).hexdigest()}')
+          '@ | python -
+
+      - name: Upload legacy v2 diagnostic transport
+        uses: actions/upload-artifact@v4
+        with:
+          name: legacy-v2-root-transport
+          path: legacy-v2-root-transport.bin
+          if-no-files-found: error
+          retention-days: 7
+
       - name: Reconstruct verified clean source
         shell: pwsh
         run: |
