@@ -28,7 +28,8 @@ jobs:
             'verify-history-intelligence.py',
             'verify-settings-personalization.py',
             'verify-settings-consistency.py',
-            'verify-work-recovery.py'
+            'verify-work-recovery.py',
+            'verify-release-metadata.py'
           )
           foreach ($verifier in $verifiers) {
             python (Join-Path 'scripts' $verifier)
@@ -51,6 +52,87 @@ jobs:
         with:
           name: magic-capture-desktop-${{ matrix.platform }}
           path: src/Magic.Capture.App/bin/${{ matrix.platform }}/Release/**
+          if-no-files-found: error
+
+  msix-package:
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-dotnet@v6.0.0
+        with:
+          dotnet-version: '10.0.400'
+      - name: Verify release metadata
+        shell: pwsh
+        run: python scripts/verify-release-metadata.py
+      - name: Locate MSBuild
+        id: msbuild
+        shell: pwsh
+        run: |
+          $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+          if (-not (Test-Path $vswhere)) { throw 'vswhere.exe not found.' }
+          $install = & $vswhere -latest -products * -requires Microsoft.Component.MSBuild -property installationPath
+          if (-not $install) { throw 'Visual Studio MSBuild installation not found.' }
+          $path = Join-Path $install 'MSBuild\Current\Bin\MSBuild.exe'
+          if (-not (Test-Path $path)) { throw "MSBuild.exe not found at $path" }
+          "path=$path" >> $env:GITHUB_OUTPUT
+          Write-Host "MSBuild: $path"
+      - name: Build unsigned x64+ARM64 MSIX bundle
+        shell: pwsh
+        run: |
+          $out = Join-Path $PWD 'artifacts\msix-ci'
+          New-Item -ItemType Directory -Force -Path $out | Out-Null
+          & '${{ steps.msbuild.outputs.path }}' .\src\Magic.Capture.App\Magic.Capture.App.csproj `
+            /restore `
+            /m `
+            /p:Configuration=Release `
+            /p:Platform=x64 `
+            /p:AppxBundle=Always `
+            '/p:AppxBundlePlatforms=x64|ARM64' `
+            /p:GenerateAppxPackageOnBuild=true `
+            /p:UapAppxPackageBuildMode=SideloadOnly `
+            /p:AppxPackageDir="$out\" `
+            /p:AppxPackageSigningEnabled=false
+          if ($LASTEXITCODE -ne 0) { throw "MSIX packaging failed with exit code $LASTEXITCODE." }
+      - name: Verify bundle architectures
+        shell: pwsh
+        run: |
+          $bundles = @(Get-ChildItem .\artifacts\msix-ci -Recurse -File -Filter *.msixbundle)
+          if ($bundles.Count -ne 1) { throw "Expected exactly one MSIX bundle, found $($bundles.Count)." }
+
+          Add-Type -AssemblyName System.IO.Compression.FileSystem
+          $zip = [System.IO.Compression.ZipFile]::OpenRead($bundles[0].FullName)
+          try {
+            $entry = $zip.GetEntry('AppxMetadata/AppxBundleManifest.xml')
+            if (-not $entry) { throw 'AppxBundleManifest.xml is missing from the MSIX bundle.' }
+            $reader = New-Object System.IO.StreamReader($entry.Open())
+            try { [xml]$bundleManifest = $reader.ReadToEnd() } finally { $reader.Dispose() }
+          } finally {
+            $zip.Dispose()
+          }
+
+          $ns = New-Object System.Xml.XmlNamespaceManager($bundleManifest.NameTable)
+          $ns.AddNamespace('b', 'http://schemas.microsoft.com/appx/2013/bundle')
+          $packages = @($bundleManifest.SelectNodes('/b:Bundle/b:Packages/b:Package[@Type="application"]', $ns))
+          if ($packages.Count -ne 2) { throw "Expected two application packages in bundle, found $($packages.Count)." }
+
+          $architectures = @($packages | ForEach-Object { $_.GetAttribute('Architecture').ToLowerInvariant() } | Sort-Object -Unique)
+          if (($architectures -join ',') -ne 'arm64,x64') {
+            throw "MSIX bundle architectures are '$($architectures -join ',')', expected 'arm64,x64'."
+          }
+
+          $release = Get-Content -Raw .\release\version.json | ConvertFrom-Json
+          foreach ($package in $packages) {
+            if ($package.GetAttribute('Version') -ne $release.msixVersion) {
+              throw "Bundle package version $($package.GetAttribute('Version')) does not match $($release.msixVersion)."
+            }
+          }
+          Write-Host "Verified MSIX bundle: x64 + ARM64, version $($release.msixVersion)."
+      - name: Upload MSIX bundle
+        uses: actions/upload-artifact@v7.0.1
+        with:
+          name: magic-capture-desktop-msix-bundle
+          path: artifacts/msix-ci/**/*.msixbundle
           if-no-files-found: error
 
   source-release:
